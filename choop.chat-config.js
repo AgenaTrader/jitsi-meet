@@ -1,5 +1,7 @@
 /* eslint-disable no-unused-vars, no-var */
 
+/* eslint-disable no-unused-vars, no-var */
+
 var config = {
     // Connection
     //
@@ -18,13 +20,12 @@ var config = {
         // jirecon: 'jirecon.jitsi-meet.example.com',
 
         // Call control component (Jigasi).
-
-	bridge: 'jitsi-videobridge.choop.chat',        
-
-// call_control: 'callcontrol.jitsi-meet.example.com',
+        // call_control: 'callcontrol.jitsi-meet.example.com',
 
         // Focus component domain. Defaults to focus.<domain>.
         focus: 'focus.choop.chat',
+
+        bridge: 'jitsi-videobridge.choop.chat',
 
         // XMPP MUC domain. FIXME: use XEP-0030 to discover it.
         muc: 'conference.choop.chat'
