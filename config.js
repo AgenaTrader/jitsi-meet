@@ -24,7 +24,7 @@ var config = {
 // call_control: 'callcontrol.jitsi-meet.example.com',
 
         // Focus component domain. Defaults to focus.<domain>.
-        focus: 'focus.choop.chat',
+        //focus: 'focus.choop.chat',
 
         // XMPP MUC domain. FIXME: use XEP-0030 to discover it.
         muc: 'conference.choop.chat'
@@ -37,7 +37,7 @@ var config = {
     clientNode: 'http://jitsi.org/jitsimeet',
 
     // The real JID of focus participant - can be overridden here
-    focusUserJid: 'focus@auth.choop.chat',
+   // focusUserJid: 'focus@auth.choop.chat',
 
 
     // Testing / experimental features.
