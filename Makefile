@@ -88,6 +88,7 @@ prod: all source-package
 	tar xjf jitsi-meet.tar.bz2 jitsi-meet
 	mkdir $(PROD_DEPLOY_DIR)
 	mv jitsi-meet/* $(PROD_DEPLOY_DIR)
+	rm -rf jitsi-meet
 	#cd ..
 	#rm -rf $(SOURCES_DIR)
 
