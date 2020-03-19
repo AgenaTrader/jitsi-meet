@@ -11,10 +11,10 @@ var interfaceConfig = {
      */
     DISABLE_VIDEO_BACKGROUND: false,
 
-    INITIAL_TOOLBAR_TIMEOUT: 20000,
+    INITIAL_TOOLBAR_TIMEOUT: 2000,
     TOOLBAR_TIMEOUT: 4000,
     TOOLBAR_ALWAYS_VISIBLE: false,
-    DEFAULT_REMOTE_DISPLAY_NAME: 'ChoopChat User',
+    DEFAULT_REMOTE_DISPLAY_NAME: 'Choop User',
     DEFAULT_LOCAL_DISPLAY_NAME: 'me',
     SHOW_JITSI_WATERMARK: false,
     JITSI_WATERMARK_LINK: '',
@@ -25,10 +25,9 @@ var interfaceConfig = {
     BRAND_WATERMARK_LINK: '',
     SHOW_POWERED_BY: false,
     SHOW_DEEP_LINKING_IMAGE: false,
-    GENERATE_ROOMNAMES_ON_WELCOME_PAGE: true,
+    GENERATE_ROOMNAMES_ON_WELCOME_PAGE: false,
     DISPLAY_WELCOME_PAGE_CONTENT: true,
-    DISPLAY_WELCOME_PAGE_TOOLBAR_ADDITIONAL_CONTENT: false,
-    APP_NAME: 'Jitsi Meet',
+    APP_NAME: 'Choop Chat',
     NATIVE_APP_NAME: 'Jitsi Meet',
     PROVIDER_NAME: 'Jitsi',
     LANG_DETECTION: true, // Allow i18n to detect the system language
@@ -48,8 +47,10 @@ var interfaceConfig = {
      */
     TOOLBAR_BUTTONS: [
         'microphone', 'camera', 'closedcaptions', 'desktop', 'fullscreen',
-        'fodeviceselection', 'hangup', 'profile', 'info', 'chat', 'recording',
-        'livestreaming', 'etherpad', 'sharedvideo', 'settings', 'raisehand',
+        'fodeviceselection', 'hangup', 'profile', 'info',
+
+        // 'chat', 'localrecording', 'recording', 'livestreaming',
+        'etherpad', 'sharedvideo', 'settings', 'raisehand',
         'videoquality', 'filmstrip', 'invite', 'feedback', 'stats', 'shortcuts',
         'tileview', 'videobackgroundblur', 'download', 'help', 'mute-everyone',
         'e2ee'
@@ -61,7 +62,7 @@ var interfaceConfig = {
     // screen, 'height' would fit the original video height to the height of the
     // screen, 'width' would fit the original video width to the width of the
     // screen respecting ratio.
-    VIDEO_LAYOUT_FIT: 'both',
+    VIDEO_LAYOUT_FIT: 'width',
 
     /**
      * Whether to only show the filmstrip (and hide the toolbar).
@@ -71,7 +72,7 @@ var interfaceConfig = {
     /**
      * Whether to show thumbnails in filmstrip as a column instead of as a row.
      */
-    VERTICAL_FILMSTRIP: false,
+    VERTICAL_FILMSTRIP: true,
 
     // A html text to be shown to guests on the close page, false disables it
     CLOSE_PAGE_GUEST_HINT: false,
@@ -129,7 +130,7 @@ var interfaceConfig = {
      * If indicated some of the error dialogs may point to the support URL for
      * help.
      */
-    SUPPORT_URL: 'https://community.jitsi.org/',
+    SUPPORT_URL: 'https://github.com/AgenaTrader/jitsi-meet/issues/new',
 
     /**
      * Whether the connection indicator icon should hide itself based on
@@ -190,7 +191,7 @@ var interfaceConfig = {
      *
      * Note: this mode is experimental and subject to breakage.
      */
-    AUTO_PIN_LATEST_SCREEN_SHARE: 'remote-only',
+    AUTO_PIN_LATEST_SCREEN_SHARE: false, // 'remote-only',
 
     /**
      * If true, presence status: busy, calling, connected etc. is not displayed.
