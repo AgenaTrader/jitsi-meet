@@ -19,9 +19,9 @@ var config = {
 
         // Call control component (Jigasi).
 
-	bridge: 'jitsi-videobridge.choop.chat',        
+        bridge: 'jitsi-videobridge.choop.chat',
 
-// call_control: 'callcontrol.jitsi-meet.example.com',
+        // call_control: 'callcontrol.jitsi-meet.example.com',
 
         // Focus component domain. Defaults to focus.<domain>.
         focus: 'focus.choop.chat',
