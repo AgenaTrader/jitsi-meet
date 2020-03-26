@@ -73,12 +73,11 @@ end
 local SpeakerStats = {};
 SpeakerStats.__index = SpeakerStats;
 
-function new_SpeakerStats(nick, context_user)
+function new_SpeakerStats(nick)
     return setmetatable({
         totalDominantSpeakerTime = 0;
         _dominantSpeakerStart = 0;
         nick = nick;
-        context_user = context_user;
         displayName = nil;
     }, SpeakerStats);
 end
@@ -118,7 +117,6 @@ end
 function occupant_joined(event)
     local room = event.room;
     local occupant = event.occupant;
-
     local nick = jid_resource(occupant.nick);
 
     if room.speakerStats then
@@ -163,8 +161,7 @@ function occupant_joined(event)
             room:route_stanza(stanza);
         end
 
-        local context_user = event.origin and event.origin.jitsi_meet_context_user or nil;
-        room.speakerStats[occupant.jid] = new_SpeakerStats(nick, context_user);
+        room.speakerStats[occupant.jid] = new_SpeakerStats(nick);
     end
 end
 

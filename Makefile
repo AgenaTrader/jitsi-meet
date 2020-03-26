@@ -7,10 +7,11 @@ RNNOISE_WASM_DIR = node_modules/rnnoise-wasm/dist/
 NODE_SASS = ./node_modules/.bin/node-sass
 NPM = npm
 OUTPUT_DIR = .
+PROD_DEPLOY_DIR = ../ChoopChat-Deployment
 STYLES_BUNDLE = css/all.bundle.css
 STYLES_DESTINATION = css/all.css
 STYLES_MAIN = css/main.scss
-WEBPACK = ./node_modules/.bin/webpack
+WEBPACK = "./node_modules/.bin/webpack"
 WEBPACK_DEV_SERVER = ./node_modules/.bin/webpack-dev-server
 
 all: compile deploy clean
@@ -81,6 +82,15 @@ deploy-local:
 
 dev: deploy-init deploy-css deploy-rnnoise-binary deploy-lib-jitsi-meet deploy-libflac
 	$(WEBPACK_DEV_SERVER)
+	
+prod: all source-package
+	rm -rf $(PROD_DEPLOY_DIR)
+	tar xjf jitsi-meet.tar.bz2 jitsi-meet
+	mkdir $(PROD_DEPLOY_DIR)
+	mv jitsi-meet/* $(PROD_DEPLOY_DIR)
+	rm -rf jitsi-meet
+	#cd ..
+	#rm -rf $(SOURCES_DIR)
 
 source-package:
 	mkdir -p source_package/jitsi-meet/css && \

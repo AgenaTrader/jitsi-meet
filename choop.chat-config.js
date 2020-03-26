@@ -1,8 +1,16 @@
 /* eslint-disable no-unused-vars, no-var */
 
-/* eslint-disable no-unused-vars, no-var */
-
 var config = {
+    // Configuration
+    //
+
+    // Alternative location for the configuration.
+    // configLocation: './config.json',
+
+    // Custom function which given the URL path should return a room name.
+    // getroomnode: function (path) { return 'someprefixpossiblybasedonpath'; },
+
+
     // Connection
     //
 
@@ -14,18 +22,18 @@ var config = {
         // anonymousdomain: 'guest.example.com',
 
         // Domain for authenticated users. Defaults to <domain>.
-        // authdomain: 'jitsi-meet.example.com',
+        // authdomain: 'choop.chat',
 
         // Jirecon recording component domain.
-        // jirecon: 'jirecon.jitsi-meet.example.com',
+        // jirecon: 'jirecon.choop.chat',
 
         // Call control component (Jigasi).
-        // call_control: 'callcontrol.jitsi-meet.example.com',
-
-        // Focus component domain. Defaults to focus.<domain>.
-        focus: 'focus.choop.chat',
+        // call_control: 'callcontrol.choop.chat',
 
         bridge: 'jitsi-videobridge.choop.chat',
+
+        // Focus component domain. Defaults to focus.<domain>.
+        // focus: 'focus.choop.chat',
 
         // XMPP MUC domain. FIXME: use XEP-0030 to discover it.
         muc: 'conference.choop.chat'
@@ -38,7 +46,7 @@ var config = {
     clientNode: 'http://jitsi.org/jitsimeet',
 
     // The real JID of focus participant - can be overridden here
-    focusUserJid: 'focus@auth.choop.chat',
+    // focusUserJid: 'focus@auth.choop.chat',
 
 
     // Testing / experimental features.
@@ -54,17 +62,13 @@ var config = {
 
         // Enables the test specific features consumed by jitsi-meet-torture
         // testMode: false
-
-        // Disables the auto-play behavior of *all* newly created video element.
-        // This is useful when the client runs on a host with limited resources.
-        // noAutoPlayVideo: false
     },
 
     // Disables ICE/UDP by filtering out local and remote UDP candidates in
     // signalling.
     // webrtcIceUdpDisable: false,
 
-    // Disables ICE/TCP by filtering out local and remote TCP candidates in
+	 // Disables ICE/TCP by filtering out local and remote TCP candidates in
     // signalling.
     // webrtcIceTcpDisable: false,
 
@@ -79,14 +83,17 @@ var config = {
 
     // Start the conference in audio only mode (no video is being received nor
     // sent).
-    // startAudioOnly: false,
+    startAudioOnly: false,
 
     // Every participant after the Nth will start audio muted.
-    // startAudioMuted: 10,
+    //startAudioMuted: false,
 
     // Start calls with audio muted. Unlike the option above, this one is only
     // applied locally. FIXME: having these 2 options is confusing.
-    // startWithAudioMuted: false,
+    startWithAudioMuted: false,
+
+    //startAudioMuted: false,
+    //startVideoMuted: false,
 
     // Enabling it (with #params) will disable local audio output of remote
     // participants and to enable it back a reload is needed.
@@ -106,10 +113,10 @@ var config = {
     //     video: {
     //         aspectRatio: 16 / 9,
     //         height: {
-    //             ideal: 720,
+    //             ideal: 240,
     //             max: 720,
     //             min: 240
-    //         }
+    //        }
     //     }
     // },
 
@@ -121,12 +128,16 @@ var config = {
     // are requested again.
     // enableLayerSuspension: false,
 
+    // Suspend sending video if bandwidth estimation is too low. This may cause
+    // problems with audio playback. Disabled until these are fixed.
+    disableSuspendVideo: true,
+
     // Every participant after the Nth will start video muted.
-    // startVideoMuted: 10,
+    startVideoMuted: false,
 
     // Start calls with video muted. Unlike the option above, this one is only
     // applied locally. FIXME: having these 2 options is confusing.
-    // startWithVideoMuted: false,
+    startWithVideoMuted: false,
 
     // If set to true, prefer to use the H.264 video codec (if supported).
     // Note that it's not recommended to do this because simulcast is not
@@ -168,15 +179,15 @@ var config = {
     // Recording
 
     // Whether to enable file recording or not.
-    // fileRecordingsEnabled: false,
+    // fileRecordingsEnabled: true,
     // Enable the dropbox integration.
     // dropbox: {
     //     appKey: '<APP_KEY>' // Specify your app key here.
     //     // A URL to redirect the user to, after authenticating
     //     // by default uses:
-    //     // 'https://jitsi-meet.example.com/static/oauth.html'
+    //     // 'https://choop.chat/static/oauth.html'
     //     redirectURI:
-    //          'https://jitsi-meet.example.com/subfolder/static/oauth.html'
+    //          'https://choop.chat/subfolder/static/oauth.html'
     // },
     // When integrations like dropbox are enabled only that will be shown,
     // by enabling fileRecordingsServiceEnabled, we show both the integrations
@@ -189,8 +200,9 @@ var config = {
     // fileRecordingsServiceSharingEnabled: false,
 
     // Whether to enable live streaming or not.
-    // liveStreamingEnabled: false,
+    // liveStreamingEnabled: true,
 
+    // hiddenDomain: 'recorder.choop.chat',
     // Transcription (in interface_config,
     // subtitles and buttons can be configured)
     // transcribingEnabled: false,
@@ -240,10 +252,10 @@ var config = {
     //
 
     // Use display name as XMPP nickname.
-    // useNicks: false,
+    useNicks: true,
 
     // Require users to always specify a display name.
-    // requireDisplayName: true,
+    requireDisplayName: true,
 
     // Whether to use a welcome page or not. In case it's false a random room
     // will be joined when no room is specified.
@@ -251,7 +263,7 @@ var config = {
 
     // Enabling the close page will ignore the welcome page redirection when
     // a call is hangup.
-    // enableClosePage: false,
+    enableClosePage: true,
 
     // Disable hiding of remote thumbnails when in a 1-on-1 conference call.
     // disable1On1Mode: false,
@@ -262,12 +274,12 @@ var config = {
     // If true all users without a token will be considered guests and all users
     // with token will be considered non-guests. Only guests will be allowed to
     // edit their profile.
-    enableUserRolesBasedOnToken: false,
+    enableUserRolesBasedOnToken: true,
 
     // Whether or not some features are checked based on token.
     // enableFeaturesBasedOnToken: false,
 
-    // Enable lock room for all moderators, even when userRolesBasedOnToken is enabled and participants are guests.
+	// Enable lock room for all moderators, even when userRolesBasedOnToken is enabled and participants are guests.
     // lockRoomGuestEnabled: false,
 
     // When enabled the password used for locking a room is restricted to up to the number of digits specified
@@ -301,7 +313,7 @@ var config = {
     // enableStatsID: false
 
     // enables sending participants display name to callstats
-    // enableDisplayNameInStats: false
+    enableDisplayNameInStats: true,
 
 
     // Privacy
@@ -376,7 +388,7 @@ var config = {
         // shard: "shard1",
         // region: "europe",
         // userRegion: "asia"
-    }
+    },
 
     // Local Recording
     //
@@ -387,14 +399,14 @@ var config = {
     // TOOLBAR_BUTTONS in interface_config.js for the Local Recording
     // button to show up on the toolbar.
     //
-    //     enabled: true,
+    // enabled: true,
     //
 
     // The recording format, can be one of 'ogg', 'flac' or 'wav'.
     //     format: 'flac'
     //
 
-    // }
+    // },
 
     // Options related to end-to-end (participant to participant) ping.
     // e2eping: {
@@ -403,7 +415,7 @@ var config = {
     //   pingInterval: 10000,
     //
     //   // The interval in milliseconds at which analytics events
-    //   // with the measured RTT will be sent. Defaults to 60000, set
+	//   // with the measured RTT will be sent. Defaults to 60000, set
     //   // to <= 0 to disable.
     //   analyticsInterval: 60000,
     //   }
@@ -423,15 +435,14 @@ var config = {
     // the menu has option to flip the locally seen video for local presentations
     // disableLocalVideoFlip: false
 
-    // Deployment specific URLs.
-    // deploymentUrls: {
-    //    // If specified a 'Help' button will be displayed in the overflow menu with a link to the specified URL for
-    //    // user documentation.
-    //    userDocumentationURL: 'https://docs.example.com/video-meetings.html',
-    //    // If specified a 'Download our apps' button will be displayed in the overflow menu with a link
-    //    // to the specified URL for an app download page.
-    //    downloadAppsUrl: 'https://docs.example.com/our-apps.html'
-    // }
+
+    //dialOutCodesUrl: 'https://jitsi-api.jitsi.net/countrycodes',
+    //dialOutAuthUrl: 'https://jitsi-api.jitsi.net/authorizephone',
+    peopleSearchUrl: '/peopleSearch',
+    inviteServiceUrl: '/conferenceInvite',
+    peopleSearchQueryTypes: ['user' /*, 'conferenceRooms'*/],
+
+    tokenAuthUrl: '/joinRoom?roomName={room}', //'https://' + tyHost + '/meeting/join-meeting?room_type={room}',
 
     // List of undocumented settings used in jitsi-meet
     /**
