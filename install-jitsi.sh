@@ -10,7 +10,8 @@ Usage: $0 options
 This script install jitsi meet configured with the jitsi videobridge
 OPTIONS:
    -d      Domain (Required)
-   -p      Password 1 (Default:choopchat)
+   -l      Location (Defaut: /srv)
+   -p      Password 1 (Default: choopchat)
 EOF
 
 #constants / settings
@@ -18,9 +19,12 @@ VIDEOBRIDGEVERSION="jitsi-videobridge-linux-x64-1132"
 INSTALLPATH="/srv"
 PROSODYPASSWORD="choopchat"
 
-while getopts “hd:p:” OPTION
+while getopts “ld:p:” OPTION
 do
     case $OPTION in
+        l)
+            INSTALLPATH=$OPTARG
+            ;;
         d)
             DOMAIN=$OPTARG
             ;;
@@ -41,8 +45,8 @@ fi
 
 echo "-------> Start installation required packages <-------"
 
-apt install -y unzip git curl ufw make
-sudo ufw enable
+apt install -y unzip git curl make
+
 sleep 2
 
 echo "-------> Start installation of JitsiMeet on $DOMAIN <-------"
@@ -121,12 +125,10 @@ Component \"focus.$DOMAIN\"
     # sudo prosodyctl cert generate "auth.$DOMAIN"
 
     sudo openssl genrsa -out /var/lib/prosody/$DOMAIN.key 2048
-    # sudo openssl req -new -x509 -key /var/lib/prosody/$DOMAIN.key -out /var/lib/prosody/$DOMAIN.crt -days 1095
-    sudo openssl req -nodes -newkey rsa:2048 -keyout /var/lib/prosody/$DOMAIN.key -out /var/lib/prosody/$DOMAIN.csr -days 1095 -subj "/C=GB/ST=London/L=London/O=Global Security/OU=IT Department/CN=example.com"
+    sudo openssl req -nodes -newkey rsa:2048 -keyout /var/lib/prosody/$DOMAIN.key -out /var/lib/prosody/$DOMAIN.crt -days 1095 -subj "/C=GB/ST=Germany/L=Germany/O=Global Security/OU=IT Department/CN=$DOMAIN"
 
     sudo openssl genrsa -out /var/lib/prosody/auth.$DOMAIN.key 2048
-    # sudo openssl req -new -x509 -key /var/lib/prosody/auth.$DOMAIN.key -out /var/lib/prosody/$DOMAIN.crt -days 1095
-    sudo openssl req -nodes -newkey rsa:2048 -keyout /var/lib/prosody/auth.$DOMAIN.key -out /var/lib/prosody/auth.$DOMAIN.csr -days 1095 -subj "/C=GB/ST=London/L=London/O=Global Security/OU=IT Department/CN=example.com"
+    sudo openssl req -nodes -newkey rsa:2048 -keyout /var/lib/prosody/auth.$DOMAIN.key -out /var/lib/prosody/auth.$DOMAIN.crt -days 1095 -subj "/C=GB/ST=Germany/L=Germany/O=Global Security/OU=IT Department/CN=$DOMAIN"
 fi
 
 echo "-------> Start installation nginx <-------"
@@ -135,10 +137,10 @@ then
     echo "NGINX already installed"
     nginx -v
 else
-    # sudo ./install-nginx.sh
     sudo apt install -y nginx
     sudo ufw app list
-    sudo ufw allow 'Nginx HTTP'
+#    sudo ufw allow 'Nginx HTTP'
+#    sudo ufw allow 'Nginx HTTPS'
     sudo ufw status
 fi
 
@@ -171,7 +173,7 @@ then
     cp -rf "$INSTALLPATH/$DOMAIN/doc/example-config-files/jitsi.example.com.example" /etc/nginx/sites-available/$DOMAIN.conf
 
     sed -i "s/server_name jitsi.example.com;/server_name $DOMAIN;/gi" /etc/nginx/sites-available/$DOMAIN.conf
-    sed "/index index.html/a ssl_certificate \/var\/lib\/prosody\/$DOMAIN.crt;\nssl_certificate_key \/var\/lib\/prosody\/$DOMAIN.key;" /etc/nginx/sites-available/$DOMAIN.conf
+    sed "/index index.html;/a ssl_certificate \/var\/lib\/prosody\/$DOMAIN.crt;\nssl_certificate_key \/var\/lib\/prosody\/$DOMAIN.key;" /etc/nginx/sites-available/$DOMAIN.conf
     sed -i "s/root \/srv\/jitsi.example.com;/root \/srv\/$DOMAIN;/g" /etc/nginx/sites-available/$DOMAIN.conf
 
     sudo ln -s /etc/nginx/sites-available/$DOMAIN.conf /etc/nginx/sites-enabled/$DOMAIN.conf
@@ -195,13 +197,6 @@ else
         exit
     fi
 fi
-
-echo "-------> Fix firewall <-------"
-sleep 2
-cd ~
-
-sudo ufw allow 80
-sudo ufw allow 5222
 
 echo "-------> Update current jitsi from git <-------"
 cd $INSTALLPATH/$DOMAIN
