@@ -51,7 +51,7 @@ var interfaceConfig = {
 //'chat',
 //'localrecording',
 //'recording',
-//'livestreaming',
+//'livestreaming', 
 'etherpad', 'sharedvideo', 'settings', 'raisehand',
         'videoquality', 'filmstrip',
 'invite',
@@ -231,3 +231,4 @@ var interfaceConfig = {
 };
 
 /* eslint-enable no-unused-vars, no-var, max-len */
+
