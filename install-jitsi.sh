@@ -138,6 +138,7 @@ then
     nginx -v
 else
     sudo apt install -y nginx
+
     sudo ufw app list
 #    sudo ufw allow 'Nginx HTTP'
 #    sudo ufw allow 'Nginx HTTPS'
@@ -177,7 +178,6 @@ then
     sed -i "s/ssl_certificate \/var\/lib\/prosody\/DOMAIN.crt;/ssl_certificate \/var\/lib\/prosody\/$DOMAIN.crt;/g" /etc/nginx/sites-available/$DOMAIN.conf
     sed -i "s/ssl_certificate_key \/var\/lib\/prosody\/DOMAIN.key;/ssl_certificate_key \/var\/lib\/prosody\/$DOMAIN.key;/g" /etc/nginx/sites-available/$DOMAIN.conf
 
-    sed -i "s/return 301 https://jitsi.example.com/return 301 https://$DOMAIN/g" /etc/nginx/sites-available/$DOMAIN.conf
     sed -i "s/root \/srv\/jitsi.example.com;/root \/srv\/$DOMAIN;/g" /etc/nginx/sites-available/$DOMAIN.conf
 
     sudo ln -s /etc/nginx/sites-available/$DOMAIN.conf /etc/nginx/sites-enabled/$DOMAIN.conf
