@@ -1,5 +1,12 @@
 server {
-    listen 80;
+    listen 443 ssl;
+
+    server_name jitsi.example.com;
+    return 301 https://jitsi.example.com$request_uri;
+}
+
+server {
+    listen 443 ssl;
 
     server_name jitsi.example.com;
     # set the root
