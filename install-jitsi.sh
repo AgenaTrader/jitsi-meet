@@ -95,12 +95,11 @@ VirtualHost \"$DOMAIN\"
     modules_enabled = {
         \"bosh\";
         \"pubsub\";
-        \"ping\";
     }
     c2s_require_encryption = false
 
 Component \"conference.$DOMAIN\" \"muc\"
-    storage = \"memory\"
+    storage = \"null\"
 admins = { \"focus@auth.$DOMAIN\" }
 
 Component \"jitsi-videobridge.$DOMAIN\"
@@ -138,6 +137,7 @@ then
     nginx -v
 else
     sudo apt install -y nginx
+    sudo service nginx start
 
     sudo ufw app list
 #    sudo ufw allow 'Nginx HTTP'
@@ -174,10 +174,6 @@ then
     cp -rf "$INSTALLPATH/$DOMAIN/doc/example-config-files/jitsi.example.com.example" /etc/nginx/sites-available/$DOMAIN.conf
 
     sed -i "s/server_name jitsi.example.com;/server_name $DOMAIN;/gi" /etc/nginx/sites-available/$DOMAIN.conf
-
-    sed -i "s/ssl_certificate \/var\/lib\/prosody\/DOMAIN.crt;/ssl_certificate \/var\/lib\/prosody\/$DOMAIN.crt;/g" /etc/nginx/sites-available/$DOMAIN.conf
-    sed -i "s/ssl_certificate_key \/var\/lib\/prosody\/DOMAIN.key;/ssl_certificate_key \/var\/lib\/prosody\/$DOMAIN.key;/g" /etc/nginx/sites-available/$DOMAIN.conf
-
     sed -i "s/root \/srv\/jitsi.example.com;/root \/srv\/$DOMAIN;/g" /etc/nginx/sites-available/$DOMAIN.conf
 
     sudo ln -s /etc/nginx/sites-available/$DOMAIN.conf /etc/nginx/sites-enabled/$DOMAIN.conf
@@ -202,6 +198,46 @@ else
     fi
 fi
 
+echo "-------> Install VideoBridge <-------"
+sleep 2
+cd ~
+
+if [ ! -f ~/jitsi-videobridge-linux-x64-1132.zip ]
+then
+  wget https://download.jitsi.org/jitsi-videobridge/linux/jitsi-videobridge-linux-x64-1132.zip
+  unzip jitsi-videobridge-linux-x64-1132.zip
+
+  mkdir -p ~/.sip-communicator
+cat > ~/.sip-communicator/sip-communicator.properties << EOF
+org.jitsi.impl.neomedia.transform.srtp.SRTPCryptoContext.checkReplay=false
+# The videobridge uses 443 by default with 4443 as a fallback, but since we're already
+# running nginx on 443 in this example doc, we specify 4443 manually to avoid a race condition
+org.jitsi.videobridge.TCP_HARVESTER_PORT=4443
+EOF
+
+  sudo ./jitsi-videobridge-linux-x64-1132/jvb.sh --host=localhost --domain=$DOMAIN --port=5347 --secret=$PROSODYPASSWORD &
+
+  echo "/bin/bash ~/jitsi-videobridge-linux-x64-1132/jvb.sh --host=localhost --domain=$DOMAIN --port=5347 --secret=$PROSODYPASSWORD </dev/null >> /var/log/jvb.log 2>&1" | sudo tee -a "/etc/rc.local"
+fi
+
+
+echo "-------> Install jicofo <-------"
+sleep 2
+cd ~
+
+if [ ! -d ~/jicofo ]
+then
+  git clone https://github.com/jitsi/jicofo.git & wait
+  cd jicofo
+  mvn package -DskipTests -Dassembly.skipAssembly=false
+  unzip target/jicofo-1.1-SNAPSHOT-archive.zip
+  cd ./jicofo-1.1-SNAPSHOT-archive
+
+  sudo ./jicofo.sh --host=localhost --domain=$DOMAIN --secret=$PROSODYPASSWORD --user_domain=auth.$DOMAIN --user_name=focus --user_password=$PROSODYPASSWORD
+
+
+fi
+
 echo "-------> Update current jitsi from git <-------"
 cd $INSTALLPATH/$DOMAIN
 sleep 1
@@ -211,43 +247,6 @@ sudo npm install &
 wait
 sudo make &
 wait
-
-echo "-------> Fix firewall <-------"
-sleep 2
-cd ~
-
-#    sudo ufw allow 80
-#    sudo ufw allow 5222
-
-echo "-------> Install VideoBridge <-------"
-sleep 2
-cd ~
-
-if [ ! -f ~/jigasi_1.1-38-g8f3c241-1_amd64.deb ]
-then
-  wget https://download.jitsi.org/stable/jitsi-videobridge_1126-1_amd64.deb
-  sudo dpkg -i jitsi-videobridge_1126-1_amd64.deb
-fi
-
-echo "-------> Install jigasi <-------"
-sleep 2
-cd ~
-
-if [ ! -f ~/jigasi_1.1-38-g8f3c241-1_amd64.deb ]
-then
-  wget https://download.jitsi.org/stable/jigasi_1.1-38-g8f3c241-1_amd64.deb
-  sudo dpkg -i jigasi_1.1-38-g8f3c241-1_amd64.deb
-fi
-
-echo "-------> Install jicofo <-------"
-sleep 2
-cd ~
-
-if [ ! -f ~/jicofo_1.0-508-1_amd64.deb ]
-then
-  wget https://download.jitsi.org/stable/jicofo_1.0-508-1_amd64.deb
-  sudo dpkg -i jicofo_1.0-508-1_amd64.deb
-fi
 
 sudo service nginx restart
 
