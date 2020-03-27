@@ -5,8 +5,6 @@ server {
     # set the root
     root /srv/jitsi.example.com;
     index index.html;
-    ssl_certificate /var/lib/prosody/DOMAIN.crt;
-    ssl_certificate_key /var/lib/prosody/DOMAIN.key;
 
     location ~ ^/([a-zA-Z0-9=\?]+)$ {
         rewrite ^/(.*)$ / break;
