@@ -68,7 +68,7 @@ var config = {
     // signalling.
     // webrtcIceUdpDisable: false,
 
-	 // Disables ICE/TCP by filtering out local and remote TCP candidates in
+    // Disables ICE/TCP by filtering out local and remote TCP candidates in
     // signalling.
     // webrtcIceTcpDisable: false,
 
@@ -86,14 +86,14 @@ var config = {
     startAudioOnly: false,
 
     // Every participant after the Nth will start audio muted.
-    //startAudioMuted: false,
+    // startAudioMuted: false,
 
     // Start calls with audio muted. Unlike the option above, this one is only
     // applied locally. FIXME: having these 2 options is confusing.
     startWithAudioMuted: false,
 
-    //startAudioMuted: false,
-    //startVideoMuted: false,
+    // startAudioMuted: false,
+    // startVideoMuted: false,
 
     // Enabling it (with #params) will disable local audio output of remote
     // participants and to enable it back a reload is needed.
@@ -279,7 +279,7 @@ var config = {
     // Whether or not some features are checked based on token.
     // enableFeaturesBasedOnToken: false,
 
-	// Enable lock room for all moderators, even when userRolesBasedOnToken is enabled and participants are guests.
+    // Enable lock room for all moderators, even when userRolesBasedOnToken is enabled and participants are guests.
     // lockRoomGuestEnabled: false,
 
     // When enabled the password used for locking a room is restricted to up to the number of digits specified
@@ -415,7 +415,7 @@ var config = {
     //   pingInterval: 10000,
     //
     //   // The interval in milliseconds at which analytics events
-	//   // with the measured RTT will be sent. Defaults to 60000, set
+    //   // with the measured RTT will be sent. Defaults to 60000, set
     //   // to <= 0 to disable.
     //   analyticsInterval: 60000,
     //   }
@@ -436,13 +436,15 @@ var config = {
     // disableLocalVideoFlip: false
 
 
-    //dialOutCodesUrl: 'https://jitsi-api.jitsi.net/countrycodes',
-    //dialOutAuthUrl: 'https://jitsi-api.jitsi.net/authorizephone',
+    // dialOutCodesUrl: 'https://jitsi-api.jitsi.net/countrycodes',
+    // dialOutAuthUrl: 'https://jitsi-api.jitsi.net/authorizephone',
     peopleSearchUrl: '/peopleSearch',
     inviteServiceUrl: '/conferenceInvite',
     peopleSearchQueryTypes: ['user' /*, 'conferenceRooms'*/],
 
-    tokenAuthUrl: '/joinRoom?roomName={room}', //'https://' + tyHost + '/meeting/join-meeting?room_type={room}',
+    tokenAuthUrl: '/joinRoom?roomName={room}',
+
+    // 'https://' + tyHost + '/meeting/join-meeting?room_type={room}',
 
     // List of undocumented settings used in jitsi-meet
     /**

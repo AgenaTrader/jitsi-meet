@@ -2,7 +2,7 @@
 
 if [[ "$EUID" -ne 0 ]]; then
 	echo -e "Sorry, you need to run this as root"
-	exit 1
+	exit
 fi
 
 cat << EOF
@@ -10,7 +10,6 @@ Usage: $0 options
 This script install jitsi meet configured with the jitsi videobridge
 OPTIONS:
    -d      Domain (Required)
-   -l      Location (Defaut: /srv)
    -p      Password 1 (Default: choopchat)
 EOF
 
@@ -19,12 +18,9 @@ VIDEOBRIDGEVERSION="jitsi-videobridge-linux-x64-1132"
 INSTALLPATH="/srv"
 PROSODYPASSWORD="choopchat"
 
-while getopts “ld:p:” OPTION
+while getopts “d:p:” OPTION
 do
     case $OPTION in
-        l)
-            INSTALLPATH=$OPTARG
-            ;;
         d)
             DOMAIN=$OPTARG
             ;;
@@ -40,12 +36,13 @@ done
 if [ -z $DOMAIN ]
 then
     echo "Parameter -d DOMAIN - is required"
-    exit 1
+    exit
 fi
 
 echo "-------> Start installation required packages <-------"
 
-apt install -y unzip git curl make
+apt install -y unzip git curl make default-jdk maven dpkg
+# ufw
 
 sleep 2
 
@@ -58,6 +55,7 @@ then
     echo "Download and install jitsi from jitsi-meet"
     git clone https://github.com/AgenaTrader/jitsi-meet.git & wait
     cd ./jitsi-meet
+    git checkout develop & wait
 #   git remote add jitsi https://github.com/jitsi/jitsi-meet.git
 #   git pull jitsi master
     cp -rf ./choop.chat-config.js ./config.js
@@ -121,14 +119,16 @@ Component \"focus.$DOMAIN\"
     ln -s /etc/prosody/conf.avail/$DOMAIN.cfg.lua /etc/prosody/conf.d/$DOMAIN.cfg.lua
 
     echo "Prosody generate keys for domain $DOMAIN and restart"
-    # sudo prosodyctl cert generate $DOMAIN
-    # sudo prosodyctl cert generate "auth.$DOMAIN"
+#    sudo prosodyctl cert key $DOMAIN 2048
+#    sudo prosodyctl cert key "auth.$DOMAIN" 2048
 
-    sudo openssl genrsa -out /var/lib/prosody/$DOMAIN.key 2048
-    sudo openssl req -nodes -newkey rsa:2048 -keyout /var/lib/prosody/$DOMAIN.key -out /var/lib/prosody/$DOMAIN.crt -days 1095 -subj "/C=GB/ST=Germany/L=Germany/O=Global Security/OU=IT Department/CN=$DOMAIN"
+    sudo prosodyctl cert generate $DOMAIN
+    sudo prosodyctl cert generate "auth.$DOMAIN"
 
-    sudo openssl genrsa -out /var/lib/prosody/auth.$DOMAIN.key 2048
-    sudo openssl req -nodes -newkey rsa:2048 -keyout /var/lib/prosody/auth.$DOMAIN.key -out /var/lib/prosody/auth.$DOMAIN.crt -days 1095 -subj "/C=GB/ST=Germany/L=Germany/O=Global Security/OU=IT Department/CN=$DOMAIN"
+    ln -sf /var/lib/prosody/auth.$DOMAIN.crt /usr/local/share/ca-certificates/auth.$DOMAIN.crt
+    update-ca-certificates -f
+    prosodyctl register focus auth.$DOMAIN $PROSODYPASSWORD
+    prosodyctl restart
 fi
 
 echo "-------> Start installation nginx <-------"
@@ -173,7 +173,10 @@ then
     cp -rf "$INSTALLPATH/$DOMAIN/doc/example-config-files/jitsi.example.com.example" /etc/nginx/sites-available/$DOMAIN.conf
 
     sed -i "s/server_name jitsi.example.com;/server_name $DOMAIN;/gi" /etc/nginx/sites-available/$DOMAIN.conf
-    sed "/index index.html;/a ssl_certificate \/var\/lib\/prosody\/$DOMAIN.crt;\nssl_certificate_key \/var\/lib\/prosody\/$DOMAIN.key;" /etc/nginx/sites-available/$DOMAIN.conf
+
+    sed -i "s/ssl_certificate \/var\/lib\/prosody\/DOMAIN.crt;/ssl_certificate \/var\/lib\/prosody\/DOMAIN.crt;/g" /etc/nginx/sites-available/$DOMAIN.conf
+    sed -i "s/nssl_certificate_key \/var\/lib\/prosody\/DOMAIN.key;/ssl_certificate \/var\/lib\/prosody\/DOMAIN.key;/g" /etc/nginx/sites-available/$DOMAIN.conf
+
     sed -i "s/root \/srv\/jitsi.example.com;/root \/srv\/$DOMAIN;/g" /etc/nginx/sites-available/$DOMAIN.conf
 
     sudo ln -s /etc/nginx/sites-available/$DOMAIN.conf /etc/nginx/sites-enabled/$DOMAIN.conf
@@ -207,6 +210,43 @@ sudo npm install &
 wait
 sudo make &
 wait
+
+echo "-------> Fix firewall <-------"
+sleep 2
+cd ~
+
+#    sudo ufw allow 80
+#    sudo ufw allow 5222
+
+echo "-------> Install VideoBridge <-------"
+sleep 2
+cd ~
+
+if [ ! -f ~/jigasi_1.1-38-g8f3c241-1_amd64.deb ]
+then
+  wget https://download.jitsi.org/stable/jitsi-videobridge_1126-1_amd64.deb
+  sudo dpkg -i jitsi-videobridge_1126-1_amd64.deb
+fi
+
+echo "-------> Install jigasi <-------"
+sleep 2
+cd ~
+
+if [ ! -f ~/jigasi_1.1-38-g8f3c241-1_amd64.deb ]
+then
+  wget https://download.jitsi.org/stable/jigasi_1.1-38-g8f3c241-1_amd64.deb
+  sudo dpkg -i jigasi_1.1-38-g8f3c241-1_amd64.deb
+fi
+
+echo "-------> Install jicofo <-------"
+sleep 2
+cd ~
+
+if [ ! -f ~/jicofo_1.0-508-1_amd64.deb ]
+then
+  wget https://download.jitsi.org/stable/jicofo_1.0-508-1_amd64.deb
+  sudo dpkg -i jicofo_1.0-508-1_amd64.deb
+fi
 
 sudo service nginx restart
 
