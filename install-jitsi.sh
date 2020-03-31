@@ -38,13 +38,15 @@ then
     exit
 fi
 
-echo "-------> Start installation required packages <-------"
+NGINXCONFIGPATH=/etc/nginx/sites-available/$DOMAIN.conf
+PROSODYCONFIGPATH=/etc/prosody/conf.avail/$DOMAIN.cfg.lua
+
+echo "===================> Start installation required packages <==================="
 
 apt install -y unzip git curl make default-jdk maven dpkg wget
 # ufw
 
-echo "-------> Start installation of JitsiMeet on $DOMAIN <-------"
-
+echo "===================> Start installation of JitsiMeet on $DOMAIN <==================="
 
 if [ ! -d "$INSTALLPATH/$DOMAIN" ]
 then
@@ -65,13 +67,11 @@ then
     sudo mv jitsi-meet ./$DOMAIN
 fi
 
-echo "-------> Start installation prosody <-------"
-sleep 2
+echo "===================> Start installation prosody <==================="
 
 if command -v prosodyctl > /dev/null;
 then
         echo "Prosody already installed"
-        prosodyctl status
 else
     apt install -y prosody
 fi
@@ -79,33 +79,40 @@ fi
 echo "Prosody add new VirtualHost and Component"
 sudo cp "$INSTALLPATH/$DOMAIN/doc/example-config-files/prosody.cfg.lua.example" /etc/prosody/prosody.cfg.lua
 echo "Include \"conf.d/*.cfg.lua\"" >> /etc/prosody/prosody.cfg.lua
+service prosody restart
 
-if [ ! -f /etc/prosody/conf.avail/$DOMAIN.cfg.lua ]
+if [ ! -f $PROSODYCONFIGPATH ]
 then
-
     sudo cp "$INSTALLPATH/$DOMAIN/doc/debian/jitsi-meet-prosody/prosody.cfg.lua-jvb.example" /etc/prosody/conf.avail/$DOMAIN.cfg.lua
 
-    sudo sed -i "s/plugin_paths = { \"\/usr\/share\/jitsi-meet\/prosody-plugins\/\" }/plugin_paths = { \"\/srv\/$DOMAIN\/resources\/prosody-plugins\/\" }/g" /etc/prosody/conf.avail/$DOMAIN.cfg.lua
-    sudo sed -i "s/__turnSecret__/$PROSODYPASSWORD/g" /etc/prosody/conf.avail/$DOMAIN.cfg.lua
-    sudo sed -i "s/focusSecret/$PROSODYPASSWORD/g" /etc/prosody/conf.avail/$DOMAIN.cfg.lua
-    sudo sed -i "s/jitmeet.example.com/$DOMAIN/g" /etc/prosody/conf.avail/$DOMAIN.cfg.lua
+    sudo sed -i "s/plugin_paths = { \"\/usr\/share\/jitsi-meet\/prosody-plugins\/\" }/plugin_paths = { \"\/srv\/$DOMAIN\/resources\/prosody-plugins\/\" }/g" $PROSODYCONFIGPATH
+    sudo sed -i "s/__turnSecret__/$PROSODYPASSWORD/g" $PROSODYCONFIGPATH
+    sudo sed -i "s/focusSecret/$PROSODYPASSWORD/g" $PROSODYCONFIGPATH
+    sudo sed -i "s/focusUser/focus/g" $PROSODYCONFIGPATH
+    sudo sed -i "s/jitmeet.example.com/$DOMAIN/g" $PROSODYCONFIGPATH
 
-    sudo ln -s /etc/prosody/conf.avail/$DOMAIN.cfg.lua /etc/prosody/conf.d/$DOMAIN.cfg.lua
+    sudo ln -s $PROSODYCONFIGPATH /etc/prosody/conf.d/$DOMAIN.cfg.lua
 
-    echo "-------> Prosody generate keys for domain $DOMAIN and restart <-------"
-    sudo prosodyctl cert key $DOMAIN 2048
-    sudo prosodyctl cert key "auth.$DOMAIN" 2048
+    echo "===================> Prosody generate keys for domain $DOMAIN and restart <==================="
+#    sudo prosodyctl cert key $DOMAIN 2048
+#    sudo prosodyctl cert key "auth.$DOMAIN" 2048
 
-    ln -sf /var/lib/prosody/$DOMAIN.crt /etc/prosody/certs/$DOMAIN.crt
+    sudo prosodyctl cert generate $DOMAIN
+    sudo prosodyctl cert generate "auth.$DOMAIN"
+
+    ln -sf /var/lib/prosody/$DOMAIN.* /etc/prosody/cert/
+    ln -sf /var/lib/prosody/auth.$DOMAIN.* /etc/prosody/cert/
+
     ln -sf /var/lib/prosody/auth.$DOMAIN.crt /usr/local/share/ca-certificates/auth.$DOMAIN.crt
     update-ca-certificates -f
     prosodyctl register focus auth.$DOMAIN $PROSODYPASSWORD
+    prosodyctl register jvb auth.$DOMAIN $PROSODYPASSWORD
 
     service prosody restart
     prosodyctl start
 fi
 
-echo "-------> Start installation nginx <-------"
+echo "===================> Start installation nginx <==================="
 
 if command -v nginx > /dev/null;
 then
@@ -121,11 +128,11 @@ else
     sudo ufw status
 fi
 
-sed -i "s/# tcp_nopush on;/tcp_nopush on;/gi" /etc/nginx/nginx.conf
-sed -i "s/# types_hash_max_size 2048;/types_hash_max_size 2048;/gi" /etc/nginx/nginx.conf
-sed -i "s/# server_names_hash_bucket_size 64;/server_names_hash_bucket_size 128;/gi" /etc/nginx/nginx.conf
+#sed -i "s/# tcp_nopush on;/tcp_nopush on;/gi" /etc/nginx/nginx.conf
+#sed -i "s/# types_hash_max_size 2048;/types_hash_max_size 2048;/gi" /etc/nginx/nginx.conf
+#sed -i "s/# server_names_hash_bucket_size 64;/server_names_hash_bucket_size 64;/gi" /etc/nginx/nginx.conf
 
-echo "-------> Start installation node <-------"
+echo "===================> Start installation node <==================="
 
 if command -v node > /dev/null;
 then
@@ -137,7 +144,7 @@ else
     sudo apt install -y nodejs
 fi
 
-echo "-------> Start installation npm <-------"
+echo "===================> Start installation npm <==================="
 
 if command -v npm > /dev/null;
 then
@@ -149,20 +156,21 @@ fi
 
 if [ ! -f /etc/nginx/sites-available/$DOMAIN.conf ]
 then
-    cp -rf "$INSTALLPATH/$DOMAIN/doc/debian/jitsi-meet/jitsi-meet.example" /etc/nginx/sites-available/$DOMAIN.conf
+    cp -rf "$INSTALLPATH/$DOMAIN/doc/debian/jitsi-meet/jitsi-meet.example" $NGINXCONFIGPATH
 
-    sed -i "s/ssl_certificate \/etc\/jitsi\/meet\/jitsi-meet.example.com.crt;/ssl_certificate \/etc\/prosody\/certs\/$DOMAIN.crt;/g" /etc/nginx/sites-available/$DOMAIN.conf
-    sed -i "s/ssl_certificate_key \/etc\/jitsi\/meet\/jitsi-meet.example.com.key;/ssl_certificate_key \/etc\/prosody\/certs\/$DOMAIN.key;/g" /etc/nginx/sites-available/$DOMAIN.conf
-    sed -i "s/server_names_hash_bucket_size 64;/#server_names_hash_bucket_size 64;/g" /etc/nginx/sites-available/$DOMAIN.conf
-    sed -i "s/jitsi-meet.example.com/$DOMAIN/g" /etc/nginx/sites-available/$DOMAIN.conf
-    sed -i "s/\/usr\/share\/jitsi-meet/\/srv\/$DOMAIN/g" /etc/nginx/sites-available/$DOMAIN.conf
-    sed -i "s/\/etc\/jitsi\/meet/\/srv\/$DOMAIN/g" /etc/nginx/sites-available/$DOMAIN.conf
-    sed -i "s/libs\/external_api.min.js;/modules\/API\/external\/external_api.js;/g" /etc/nginx/sites-available/$DOMAIN.conf
+    sed -i "s/ssl_certificate \/etc\/jitsi\/meet\/jitsi-meet.example.com.crt;/ssl_certificate \/etc\/prosody\/certs\/$DOMAIN.crt;/g" $NGINXCONFIGPATH
+    sed -i "s/ssl_certificate_key \/etc\/jitsi\/meet\/jitsi-meet.example.com.key;/ssl_certificate_key \/etc\/prosody\/certs\/$DOMAIN.key;/g" $NGINXCONFIGPATH
+    sed -i "s/server_names_hash_bucket_size 64;/#server_names_hash_bucket_size 64;/g" $NGINXCONFIGPATH
+    sed -i "s/jitsi-meet.example.com/$DOMAIN/g" $NGINXCONFIGPATH
+    sed -i "s/\/usr\/share\/jitsi-meet/\/srv\/$DOMAIN/g" $NGINXCONFIGPATH
+    sed -i "s/\/etc\/jitsi\/meet/\/srv\/$DOMAIN/g" $NGINXCONFIGPATH
+    sed -i "s/libs\/external_api.min.js;/modules\/API\/external\/external_api.js;/g" $NGINXCONFIGPATH
+    sed -i "s/# server_names_hash_bucket_size 64;/server_names_hash_bucket_size 64;/gi" $NGINXCONFIGPATH
 
-    sudo ln -s /etc/nginx/sites-available/$DOMAIN.conf /etc/nginx/sites-enabled/$DOMAIN.conf
+    sudo ln -s $NGINXCONFIGPATH /etc/nginx/sites-enabled/$DOMAIN.conf
 fi
 
-echo "-------> Write domain to host file <-------"
+echo "===================> Write domain to host file <==================="
 
 if [ -n "$(grep $DOMAIN /etc/hosts)" ]
 then
@@ -180,23 +188,30 @@ else
     fi
 fi
 
-echo "-------> Install VideoBridge <-------"
+echo "===================> Install VideoBridge <==================="
 
 cd ~
 
-if [ ! -f ~/jitsi-videobridge_1126-1_amd64.deb ]
+if [ ! -f /etc/jitsi/videobridge ]
 then
-  wget https://download.jitsi.org/stable/jitsi-videobridge_1126-1_amd64.deb
-  sudo dpkg -i jitsi-videobridge_1126-1_amd64.deb
+  apt-get update -y && apt-get upgrade -y
+  apt-get install -y gnupg2 apt-transport-https lsof vim jq
+  echo 'deb https://download.jitsi.org stable/' >> /etc/apt/sources.list.d/jitsi-stable.list
+  wget -qO -  https://download.jitsi.org/jitsi-key.gpg.key | apt-key add -
+  apt-get update -y
+  echo "jitsi-videobridge2 jitsi-videobridge/jvb-hostname string $DOMAIN" | debconf-set-selections
+  apt-get install -y jitsi-videobridge2=2.1-157-g389b69ff-1
+fi
 
-  echo "-------> VIDEOBRIDGE change config file <-------"
-  sed -i "/JVB_HOSTNAME=/c\JVB_HOSTNAME=$DOMAIN" /etc/jitsi/videobridge/config
-  sed -i "/JVB_HOST=/c\JVB_HOST=" /etc/jitsi/videobridge/config
-  sed -i "/JVB_SECRET=/c\JVB_SECRET=$PROSODYPASSWORD" /etc/jitsi/videobridge/config
-  sed -i "/JVB_OPTS=/c\JVB_OPTS=\"--apis=,\"" /etc/jitsi/videobridge/config
+echo "===================> VIDEOBRIDGE change config file <==================="
+sed -i "/JVB_HOSTNAME=/c\JVB_HOSTNAME=$DOMAIN" /etc/jitsi/videobridge/config
+sed -i "/JVB_HOST=/c\JVB_HOST=" /etc/jitsi/videobridge/config
+sed -i "/JVB_SECRET=/c\JVB_SECRET=$PROSODYPASSWORD" /etc/jitsi/videobridge/config
+sed -i "/JVB_OPTS=/c\JVB_OPTS=\"--apis=,\"" /etc/jitsi/videobridge/config
 
-  echo "-------> VIDEOBRIDGE change sip-communicator.properties  <-------"
-  echo "
+echo "===================> VIDEOBRIDGE change sip-communicator.properties  <==================="
+echo "
+org.jitsi.videobridge.AUTHORIZED_SOURCE_REGEXP=focus@auth.$DOMAIN/.*
 org.ice4j.ice.harvest.DISABLE_AWS_HARVESTER=true
 org.ice4j.ice.harvest.STUN_MAPPING_HARVESTER_ADDRESSES=meet-jit-si-turnrelay.jitsi.net:443
 org.jitsi.videobridge.ENABLE_STATISTICS=true
@@ -206,11 +221,10 @@ org.jitsi.videobridge.xmpp.user.shard.DOMAIN=auth.$DOMAIN
 org.jitsi.videobridge.xmpp.user.shard.USERNAME=jvb
 org.jitsi.videobridge.xmpp.user.shard.PASSWORD=$PROSODYPASSWORD
 org.jitsi.videobridge.xmpp.user.shard.MUC_JIDS=JvbBrewery@internal.auth.$DOMAIN
-org.jitsi.videobridge.xmpp.user.shard.MUC_NICKNAME=ed04f680-0789-4476-aa44-c4fe580b4b54
-  " >> /etc/jitsi/videobridge/sip-communicator.properties
-fi
+org.jitsi.videobridge.xmpp.user.shard.MUC_NICKNAME=$DOMAIN
+" > /etc/jitsi/videobridge/sip-communicator.properties
 
-echo "-------> Install jicofo <-------"
+echo "===================> Install jicofo <==================="
 
 cd ~
 
@@ -218,30 +232,30 @@ if [ ! -f ~/jicofo_1.0-508-1_amd64.deb ]
 then
   wget https://download.jitsi.org/stable/jicofo_1.0-508-1_amd64.deb
   sudo dpkg -i jicofo_1.0-508-1_amd64.deb
-
-  echo "-------> JICOFO change config file <-------"
-  sed -i "/JICOFO_HOSTNAME=/c\JICOFO_HOSTNAME=$DOMAIN" /etc/jitsi/jicofo/config
-  sed -i "/JICOFO_AUTH_DOMAIN=/c\JICOFO_AUTH_DOMAIN=auth.$DOMAIN" /etc/jitsi/jicofo/config
-  sed -i "/JICOFO_SECRET=/c\JICOFO_SECRET=$PROSODYPASSWORD" /etc/jitsi/jicofo/config
-  sed -i "/JICOFO_AUTH_PASSWORD=/c\JICOFO_AUTH_PASSWORD=$PROSODYPASSWORD" /etc/jitsi/jicofo/config
-
-  echo "-------> JICOFO change sip-communicator.properties  <-------"
-  echo "org.jitsi.jicofo.BRIDGE_MUC=JvbBrewery@internal.auth.$DOMAIN" >> /etc/jitsi/jicofo/sip-communicator.properties
 fi
 
-echo "-------> Update current jitsi from git <-------"
+echo "===================> JICOFO change config file <==================="
+sed -i "/JICOFO_HOSTNAME=/c\JICOFO_HOSTNAME=$DOMAIN" /etc/jitsi/jicofo/config
+sed -i "/JICOFO_AUTH_DOMAIN=/c\JICOFO_AUTH_DOMAIN=auth.$DOMAIN" /etc/jitsi/jicofo/config
+sed -i "/JICOFO_SECRET=/c\JICOFO_SECRET=$PROSODYPASSWORD" /etc/jitsi/jicofo/config
+sed -i "/JICOFO_AUTH_PASSWORD=/c\JICOFO_AUTH_PASSWORD=$PROSODYPASSWORD" /etc/jitsi/jicofo/config
+
+echo "===================> JICOFO change sip-communicator.properties  <==================="
+echo "org.jitsi.jicofo.BRIDGE_MUC=JvbBrewery@internal.auth.$DOMAIN" > /etc/jitsi/jicofo/sip-communicator.properties
+
+echo "===================> Update current jitsi from git <==================="
 
 cd $INSTALLPATH/$DOMAIN
 git pull origin master & wait
 sudo npm install & wait
 sudo make & wait
 
-#sudo apt-get install certbot python-certbot-nginx
+#sudo apt-get install -y certbot python-certbot-nginx
 #sudo certbot certonly --nginx --dry-run -d $DOMAIN
 
-sudo service nginx restart
+sudo systemctl restart nginx
 sudo service prosody restart
 sudo service jicofo restart
 sudo service jitsi-videobridge restart
 
-echo "-------> Installation finished <-------"
+echo "===================> Installation finished <==================="
