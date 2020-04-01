@@ -42,15 +42,19 @@ NGINXCONFIGPATH=/etc/nginx/sites-available/$DOMAIN.conf
 PROSODYCONFIGPATH=/etc/prosody/conf.avail/$DOMAIN.cfg.lua
 
 echo "===================> Start installation required packages <==================="
+apt-get update -y
+apt install -y unzip git curl make default-jdk maven gnupg2 apt-transport-https lsof vim jq
+apt-get update -y
 
-apt install -y unzip git curl make default-jdk maven dpkg wget
-# ufw
+echo 'deb https://download.jitsi.org stable/' >> /etc/apt/sources.list.d/jitsi-stable.list
+wget -qO -  https://download.jitsi.org/jitsi-key.gpg.key | apt-key add -
+apt-get update -y
 
 echo "===================> Start installation JitsiMeet <==================="
 
 if [ ! -d "$INSTALLPATH/$DOMAIN" ]
 then
-    mkdir $INSTALLPATH
+    sudo mkdir $INSTALLPATH
     cd $INSTALLPATH
     echo "Download and install jitsi from jitsi-meet"
     git clone https://github.com/AgenaTrader/jitsi-meet.git & wait
@@ -64,7 +68,7 @@ then
     sed -i "s/bridge: 'jitsi-videobridge.choop.chat',/\/\/ bridge: 'jitsi-videobridge.$DOMAIN',/gi" "./$DOMAIN-config.js"
     sed -i "s/muc: 'conference.choop.chat'/muc: 'conference.$DOMAIN'/gi" "./$DOMAIN-config.js"
 
-    sudo mv $INSTALLPATH/jitsi-meet ./$DOMAIN
+    sudo mv $INSTALLPATH/jitsi-meet $INSTALLPATH/$DOMAIN
 fi
 
 echo "===================> Write domain to host file <==================="
@@ -123,26 +127,20 @@ fi
 
 echo "===================> Start installation prosody <==================="
 
-if command -v prosodyctl > /dev/null;
+if [ -f $PROSODYCONFIGPATH ]
 then
         echo "Prosody already installed"
 else
-    apt install -y jitsi-meet-prosody
-
-    echo "Prosody add new VirtualHost and Component"
-    #sudo cp "$INSTALLPATH/$DOMAIN/doc/example-config-files/prosody.cfg.lua.example" /etc/prosody/prosody.cfg.lua
-    echo "Include \"conf.d/*.cfg.lua\"" >> /etc/prosody/prosody.cfg.lua
-    service prosody restart
+    sudo apt install -y jitsi-meet-prosody
+    service prosody start
 fi
 
 echo "===================> Install VideoBridge <==================="
 cd ~
 
-if [ ! -f /etc/jitsi/videobridge ]
+if [ ! -d /etc/jitsi/videobridge ]
 then
   apt-get install -y jitsi-videobridge
-  apt-get update -y && apt-get upgrade -y && wait
-  apt-get install -y gnupg2 apt-transport-https lsof vim jq
 
   # To support larger number of participants we need to increase some numbers
 tee -a /etc/systemd/system.conf << EOF
@@ -151,9 +149,6 @@ DefaultLimitNPROC=65000
 DefaultTasksMax=65000
 EOF
 
-  echo 'deb https://download.jitsi.org stable/' >> /etc/apt/sources.list.d/jitsi-stable.list
-  wget -qO -  https://download.jitsi.org/jitsi-key.gpg.key | apt-key add -
-  apt-get update -y && wait
   echo "jitsi-videobridge2 jitsi-videobridge/jvb-hostname string $DOMAIN" | debconf-set-selections
   apt-get install -y jitsi-videobridge2=2.1-157-g389b69ff-1
 fi
@@ -181,7 +176,7 @@ org.jitsi.videobridge.xmpp.user.shard.MUC_NICKNAME=$DOMAIN
 echo "===================> Install jicofo <==================="
 cd ~
 
-if [ ! -f /etc/jitsi/jicofo ]
+if [ ! -d /etc/jitsi/jicofo ]
 then
   apt-get install -y jicofo
 fi
@@ -195,6 +190,7 @@ sed -i "/JICOFO_AUTH_PASSWORD=/c\JICOFO_AUTH_PASSWORD=$PROSODYPASSWORD" /etc/jit
 echo "===================> JICOFO change sip-communicator.properties  <==================="
 echo "org.jitsi.jicofo.BRIDGE_MUC=JvbBrewery@internal.auth.$DOMAIN" > /etc/jitsi/jicofo/sip-communicator.properties
 
+echo "===================> PROSODY $DOMAIN create configuration file <==================="
 if [ ! -f $PROSODYCONFIGPATH ]
 then
     sudo cp "$INSTALLPATH/$DOMAIN/doc/debian/jitsi-meet-prosody/prosody.cfg.lua-jvb.example" /etc/prosody/conf.avail/$DOMAIN.cfg.lua
@@ -221,7 +217,6 @@ then
     prosodyctl register jvb auth.$DOMAIN $PROSODYPASSWORD
 
     service prosody restart
-    prosodyctl start
 fi
 
 echo "===================> Configure nginx file with domain: $DOMAIN <==================="
