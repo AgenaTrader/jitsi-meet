@@ -132,6 +132,9 @@ then
         echo "Prosody already installed"
 else
     sudo apt install -y jitsi-meet-prosody
+    sudo mkdir /etc/prosody
+    cd /etc/prosody
+    mkdir certs conf.avail conf.d
     service prosody start
 fi
 
@@ -198,12 +201,15 @@ then
     sudo sed -i "s/plugin_paths = { \"\/usr\/share\/jitsi-meet\/prosody-plugins\/\" }/plugin_paths = { \"\/srv\/$DOMAIN\/resources\/prosody-plugins\/\" }/g" $PROSODYCONFIGPATH
     sudo sed -i "s/__turnSecret__/$PROSODYPASSWORD/g" $PROSODYCONFIGPATH
     sudo sed -i "s/focusSecret/$PROSODYPASSWORD/g" $PROSODYCONFIGPATH
+    sudo sed -i "s/jvbSecret/$PROSODYPASSWORD/g" $PROSODYCONFIGPATH
     sudo sed -i "s/focusUser/focus/g" $PROSODYCONFIGPATH
     sudo sed -i "s/jitmeet.example.com/$DOMAIN/g" $PROSODYCONFIGPATH
+    sudo sed -i "s/null/memory/g" $PROSODYCONFIGPATH
 
     sudo ln -s $PROSODYCONFIGPATH /etc/prosody/conf.d/$DOMAIN.cfg.lua
 
     echo "===================> Prosody generate keys for domain $DOMAIN and restart <==================="
+    service prosody restart
 
     sudo prosodyctl cert generate $DOMAIN
     sudo prosodyctl cert generate "auth.$DOMAIN"
@@ -212,11 +218,9 @@ then
     ln -sf /var/lib/prosody/auth.$DOMAIN.* /etc/prosody/certs/
 
     ln -sf /var/lib/prosody/auth.$DOMAIN.crt /usr/local/share/ca-certificates/auth.$DOMAIN.crt
-    update-ca-certificates -f
+    update-ca-certificates -f &
     prosodyctl register focus auth.$DOMAIN $PROSODYPASSWORD
     prosodyctl register jvb auth.$DOMAIN $PROSODYPASSWORD
-
-    service prosody restart
 fi
 
 echo "===================> Configure nginx file with domain: $DOMAIN <==================="
@@ -231,10 +235,8 @@ then
     sed -i "s/\/usr\/share\/jitsi-meet/\/srv\/$DOMAIN/g" $NGINXCONFIGPATH
     sed -i "s/\/etc\/jitsi\/meet/\/srv\/$DOMAIN/g" $NGINXCONFIGPATH
     sed -i "s/libs\/external_api.min.js;/modules\/API\/external\/external_api.js;/g" $NGINXCONFIGPATH
-#    sed -i "s/# server_names_hash_bucket_size 64;/server_names_hash_bucket_size 64;/gi" $NGINXCONFIGPATH
 
     sudo ln -s $NGINXCONFIGPATH /etc/nginx/sites-enabled/$DOMAIN.conf
-    sudo systemctl restart nginx
 fi
 
 echo "===================> Update current jitsi from git <==================="
@@ -247,7 +249,7 @@ sudo make & wait
 #sudo apt-get install -y certbot python-certbot-nginx
 #sudo certbot certonly --nginx --dry-run -d $DOMAIN
 
-sudo systemctl restart nginx
+sudo service nginx restart
 sudo service prosody restart
 sudo service jicofo restart
 sudo service jitsi-videobridge2 restart
