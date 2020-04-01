@@ -52,8 +52,8 @@ Component "internal.auth.jitmeet.example.com" "muc"
 
 VirtualHost "auth.jitmeet.example.com"
     ssl = {
-        key = "/etc/prosody/certs/jitmeet.example.com.key";
-        certificate = "/etc/prosody/certs/jitmeet.example.com.crt";
+        key = "/etc/prosody/certs/auth.jitmeet.example.com.key";
+        certificate = "/etc/prosody/certs/auth.jitmeet.example.com.crt";
     }
     authentication = "internal_plain"
 
