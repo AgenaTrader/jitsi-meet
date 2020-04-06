@@ -80,9 +80,13 @@ export default class RemoteVideo extends SmallVideo {
         this._audioStreamElement = null;
         this._supportsRemoteControl = false;
         this.statsPopoverLocation = interfaceConfig.VERTICAL_FILMSTRIP ? 'left bottom' : 'top center';
-        this.addRemoteVideoContainer();
-        this.updateIndicators();
-        this.updateDisplayName();
+
+        if (!interfaceConfig.HIDE_TILES_FOR_ROLES.includes(user.getRole())) {
+            this.addRemoteVideoContainer();
+            this.updateIndicators();
+            this.updateDisplayName();
+        }
+
         this.bindHoverHandler();
         this.flipX = false;
         this.isLocal = false;

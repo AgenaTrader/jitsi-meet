@@ -216,6 +216,18 @@ var interfaceConfig = {
     SHOW_CHROME_EXTENSION_BANNER: false,
 
     /**
+     * Users with configured roles will not be displayed at the rally in the tiles.
+     * Only other roles can be showed.
+     */
+    HIDE_TILES_FOR_ROLES: [ 'participant', 'none' ],
+
+    ROLE_PERMISSIONS: {
+        video: [ 'moderator' ],
+        audio: [ 'moderator' ],
+        sharing: [ 'moderator' ]
+    },
+
+    /**
      * When enabled, the kick participant button will not be presented for users without a JWT
      */
     // HIDE_KICK_BUTTON_FOR_GUESTS: false,

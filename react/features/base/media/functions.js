@@ -3,6 +3,11 @@
 import { toState } from '../redux';
 
 import { VIDEO_MUTISM_AUTHORITY } from './constants';
+import { getParticipantById } from '../../base/participants';
+import _ from 'lodash';
+
+declare var APP: Object;
+declare var interfaceConfig: Object;
 
 /**
  * Determines whether video is currently muted by the audio-only authority.
@@ -64,4 +69,26 @@ export function shouldRenderVideoTrack(
         videoTrack
             && !videoTrack.muted
             && (!waitForVideoStarted || videoTrack.videoStarted));
+}
+
+/**
+ * Verifying that the user has permissions for enabling video or audio.
+ *
+ * @param {string} type - permission type: video/audio.
+ * @returns {boolean}
+ */
+export function _verifyUserHasPermission(type: string): Boolean {
+    const permission = interfaceConfig.ROLE_PERMISSIONS;
+
+    if (!_.isUndefined(permission) && !_.isUndefined(permission[type])) {
+        const userId = APP.conference.getMyUserId();
+        const state = APP.store.getState();
+        const participant = getParticipantById(state, userId);
+
+        if (!_.isUndefined(participant)) {
+            return permission[type].includes(participant.role);
+        }
+    }
+
+    return true;
 }

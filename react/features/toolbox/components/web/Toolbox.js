@@ -85,6 +85,7 @@ import VideoSettingsButton from './VideoSettingsButton';
 import {
     ClosedCaptionButton
 } from '../../../subtitles';
+import { _verifyUserHasPermission } from '../../../base/media';
 
 /**
  * The type of the React {@code Component} props of {@link Toolbox}.
@@ -878,6 +879,12 @@ class Toolbox extends Component<Props, State> {
             _desktopSharingEnabled,
             _desktopSharingDisabledTooltipKey
         } = this.props;
+
+        const userHasPermission = _verifyUserHasPermission('sharing');
+
+        if (!userHasPermission) {
+            return false;
+        }
 
         return _desktopSharingEnabled || _desktopSharingDisabledTooltipKey;
     }
