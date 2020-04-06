@@ -5,13 +5,14 @@ import type { Component } from 'react';
 
 import { isRoomValid } from '../base/conference';
 import { toState } from '../base/redux';
-import { isSupportedBrowser } from '../base/environment';
+import { isSupportedBrowser, isComingSoonEnabled } from '../base/environment';
 import { Conference } from '../conference';
 import { getDeepLinkingPage } from '../deep-linking';
 import { UnsupportedDesktopBrowser } from '../unsupported-browser';
 import {
     BlankPage,
     WelcomePage,
+    ComingSoon,
     isWelcomePageAppEnabled,
     isWelcomePageUserEnabled
 } from '../welcome';
@@ -117,7 +118,9 @@ function _getWebWelcomePageRoute(state): Promise<Route> {
     const route = _getEmptyRoute();
 
     if (isWelcomePageUserEnabled(state)) {
-        if (isSupportedBrowser()) {
+        if (isComingSoonEnabled()) {
+            route.component = ComingSoon;
+        } else if (isSupportedBrowser()) {
             route.component = WelcomePage;
         } else {
             route.component = UnsupportedDesktopBrowser;

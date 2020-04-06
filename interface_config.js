@@ -6,6 +6,11 @@ var interfaceConfig = {
     DEFAULT_BACKGROUND: '#474747',
 
     /**
+     * Show coming soon page besides welcome page.
+     */
+    COMING_SOON_ENABLED: true,
+
+    /**
      * Whether or not the blurred video background for large video should be
      * displayed on browsers that can support it.
      */
