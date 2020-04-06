@@ -17,6 +17,8 @@ import {
     VIDEO_MUTISM_AUTHORITY
 } from './constants';
 
+import { _verifyUserHasPermission } from './functions';
+
 /**
  * Action to adjust the availability of the local audio.
  *
@@ -107,9 +109,13 @@ export function setVideoMuted(
         ensureTrack: boolean = false) {
     return (dispatch: Dispatch<any>, getState: Function) => {
         const oldValue = getState()['features/base/media'].video.muted;
-
+        const userHasPermission = _verifyUserHasPermission(MEDIA_TYPE.VIDEO);
         // eslint-disable-next-line no-bitwise
-        const newValue = muted ? oldValue | authority : oldValue & ~authority;
+        var newValue = muted ? oldValue | authority : oldValue & ~authority;
+
+        if (!userHasPermission) {
+            newValue = true;
+        }
 
         return dispatch({
             type: SET_VIDEO_MUTED,

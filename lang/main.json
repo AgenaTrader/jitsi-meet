@@ -651,6 +651,10 @@
         "noAudioSignalDialInLinkDesc": "Dial-in numbers",
         "noisyAudioInputTitle": "Your microphone appears to be noisy!",
         "noisyAudioInputDesc": "It sounds like your microphone is making noise, please consider muting or changing the device.",
+        "enableVideoDeniedTitle": "Permission to enable video denied",
+        "enableVideoDeniedDescription": "Sorry you don't have enough permissions to enable your video",
+        "enableMicrophoneDeniedTitle": "Permission to enable microphone denied",
+        "enableMicrophoneDeniedDescription": "Sorry you don't have enough permissions to enable your microphone",
         "openChat": "Open chat",
         "pip": "Enter Picture-in-Picture mode",
         "privateMessage": "Send private message",
@@ -774,5 +778,8 @@
     "lonelyMeetingExperience": {
         "button": "Invite others",
         "youAreAlone": "You are the only one in the meeting"
+    },
+    "comingsoon": {
+        "title": "coming soon"
     }
 }
