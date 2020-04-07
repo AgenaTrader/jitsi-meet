@@ -37,7 +37,7 @@ function init_session(event)
     end
 end
 
-module:hook("bosh-session", init_session);
+module:hook_global("bosh-session", init_session);
 module:hook("websocket-session", init_session);
 
 function provider.test_password(username, password)
