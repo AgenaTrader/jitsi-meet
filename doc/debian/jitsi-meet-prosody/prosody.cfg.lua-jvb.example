@@ -46,7 +46,7 @@ Component "conference.jitmeet.example.com" "muc"
         "token_verification";
         "token_moderation";
     }
-    admins = { "focusUser@auth.jitmeet.example.com" }
+    admins = { "focus@auth.jitmeet.example.com" }
 
 -- internal muc component
 Component "internal.auth.jitmeet.example.com" "muc"
