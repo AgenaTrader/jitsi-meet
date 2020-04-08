@@ -11,15 +11,19 @@ import { setAudioOnly } from '../../base/audio-only';
 import { translate } from '../../base/i18n';
 import {
     VIDEO_MUTISM_AUTHORITY,
-    setVideoMuted
+    MEDIA_TYPE,
+    setVideoMuted,
+    _verifyUserHasPermission
 } from '../../base/media';
 import { connect } from '../../base/redux';
 import { AbstractVideoMuteButton } from '../../base/toolbox';
 import type { AbstractButtonProps } from '../../base/toolbox';
 import { getLocalVideoType, isLocalVideoTrackMuted } from '../../base/tracks';
 import UIEvents from '../../../../service/UI/UIEvents';
+import { showNotification } from '../../notifications';
 
 declare var APP: Object;
+declare var interfaceConfig: Object;
 
 /**
  * The type of the React {@code Component} props of {@link VideoMuteButton}.
@@ -135,6 +139,17 @@ class VideoMuteButton extends AbstractVideoMuteButton<Props, *> {
      * @returns {void}
      */
     _setVideoMuted(videoMuted: boolean) {
+        const userHasPermission = _verifyUserHasPermission(MEDIA_TYPE.VIDEO);
+
+        if (!userHasPermission) {
+            this.props.dispatch(showNotification({
+                titleKey: 'toolbar.enableVideoDeniedTitle',
+                descriptionKey: 'toolbar.enableVideoDeniedDescription'
+            }, 3000));
+
+            return;
+        }
+
         sendAnalytics(createToolbarEvent(VIDEO_MUTE, { enable: videoMuted }));
         if (this.props._audioOnly) {
             this.props.dispatch(
@@ -170,8 +185,11 @@ class VideoMuteButton extends AbstractVideoMuteButton<Props, *> {
 function _mapStateToProps(state): Object {
     const { enabled: audioOnly } = state['features/base/audio-only'];
     const tracks = state['features/base/tracks'];
+    const userHasPermission = _verifyUserHasPermission(MEDIA_TYPE.VIDEO);
+    const toolbarButtons = interfaceConfig.TOOLBAR_BUTTONS;
 
     return {
+        visible: userHasPermission && toolbarButtons.includes('camera'),
         _audioOnly: Boolean(audioOnly),
         _videoMediaType: getLocalVideoType(tracks),
         _videoMuted: isLocalVideoTrackMuted(tracks)

@@ -86,6 +86,7 @@ import VideoSettingsButton from './VideoSettingsButton';
 import {
     ClosedCaptionButton
 } from '../../../subtitles';
+import { _verifyUserHasPermission } from '../../../base/media';
 
 /**
  * The type of the React {@code Component} props of {@link Toolbox}.
@@ -885,6 +886,12 @@ class Toolbox extends Component<Props, State> {
             _desktopSharingDisabledTooltipKey
         } = this.props;
 
+        const userHasPermission = _verifyUserHasPermission('sharing');
+
+        if (!userHasPermission) {
+            return false;
+        }
+
         return _desktopSharingEnabled || _desktopSharingDisabledTooltipKey;
     }
 
@@ -1135,8 +1142,7 @@ class Toolbox extends Component<Props, State> {
                     key = 'asb'
                     visible = { true } />
                 : <AudioMuteButton
-                    key = 'amb'
-                    visible = { true } />
+                    key = 'amb' />
             : null;
     }
 
@@ -1152,8 +1158,7 @@ class Toolbox extends Component<Props, State> {
                     key = 'vsb'
                     visible = { true } />
                 : <VideoMuteButton
-                    key = 'vmb'
-                    visible = { true } />
+                    key = 'vmb' />
             : null;
     }
 

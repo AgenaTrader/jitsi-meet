@@ -6,6 +6,11 @@ var interfaceConfig = {
     DEFAULT_BACKGROUND: '#474747',
 
     /**
+     * Show coming soon page besides welcome page.
+     */
+    COMING_SOON_ENABLED: true,
+
+    /**
      * Whether or not the blurred video background for large video should be
      * displayed on browsers that can support it.
      */
@@ -48,14 +53,14 @@ var interfaceConfig = {
     TOOLBAR_BUTTONS: [
         'microphone', 'camera', 'closedcaptions', 'desktop', 'fullscreen',
         'fodeviceselection', 'hangup', 'profile', 'info',
-//'chat',
-//'localrecording',
-//'recording',
-//'livestreaming',
-'etherpad', 'sharedvideo', 'settings', 'raisehand',
-        'videoquality', 'filmstrip',
-'invite',
-'feedback', 'stats', 'shortcuts',
+
+        // 'chat',
+        // 'localrecording',
+        // 'recording',
+        // 'livestreaming',
+        'etherpad', 'sharedvideo', 'settings', 'raisehand',
+        'videoquality', 'filmstrip', 'invite',
+        'feedback', 'stats', 'shortcuts',
         'tileview', 'videobackgroundblur', 'download', 'help', 'mute-everyone'
     ],
 
@@ -212,7 +217,19 @@ var interfaceConfig = {
     * If this is set to false, the banner will not be rendered at all. If set to true, the check for extension(s)
     * being already installed is done before rendering.
     */
-    SHOW_CHROME_EXTENSION_BANNER: false
+    SHOW_CHROME_EXTENSION_BANNER: false,
+
+    /**
+     * Users with configured roles will not be displayed at the rally in the tiles.
+     * Only other roles can be showed.
+     */
+    HIDE_TILES_FOR_ROLES: [ 'participant', 'none' ],
+
+    ROLE_PERMISSIONS: {
+        video: [ 'moderator' ],
+        audio: [ 'moderator' ],
+        sharing: [ 'moderator' ]
+    }
 
     /**
      * When enabled, the kick participant button will not be presented for users without a JWT
