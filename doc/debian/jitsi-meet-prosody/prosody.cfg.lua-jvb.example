@@ -16,6 +16,10 @@ consider_bosh_secure = true;
 
 VirtualHost "jitmeet.example.com"
         authentication = "anonymous"
+        app_id="appId"
+        app_secret="appSecret"
+        allow_empty_token=false
+
         ssl = {
                 key = "/etc/prosody/certs/jitmeet.example.com.key";
                 certificate = "/etc/prosody/certs/jitmeet.example.com.crt";
@@ -30,25 +34,27 @@ VirtualHost "jitmeet.example.com"
             "speakerstats";
             "turncredentials";
             "conference_duration";
+            "presence_identity";
         }
         c2s_require_encryption = false
 
 Component "conference.jitmeet.example.com" "muc"
-    storage = "null"
+    storage = "memory"
     modules_enabled = {
         "muc_meeting_id";
         "muc_domain_mapper";
-        -- "token_verification";
+        "token_verification";
+        "token_moderation";
     }
     admins = { "focusUser@auth.jitmeet.example.com" }
 
 -- internal muc component
 Component "internal.auth.jitmeet.example.com" "muc"
-    storage = "null"
+    storage = "memory"
     modules_enabled = {
       "ping";
     }
-    admins = { "focusUser@auth.jitmeet.example.com", "jvb@auth.jitmeet.example.com" }
+    admins = { "focus@auth.jitmeet.example.com", "jvb@auth.jitmeet.example.com" }
 
 VirtualHost "auth.jitmeet.example.com"
     ssl = {
