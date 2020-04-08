@@ -10,18 +10,26 @@ Usage: $0 options
 This script install jitsi meet configured with the jitsi videobridge
 OPTIONS:
    -d      Domain (Required)
+   -v      Vithout videobridge
    -p      Password 1 (Default: choopchat)
 EOF
 
 #constants / settings
 INSTALLPATH="/srv"
 PROSODYPASSWORD="choopchat"
+APPID=701489589
+APPSECRET="n-6P#f7Bw_ZmU26K"
 
-while getopts “d:p:” OPTION
+WITHVIDEOBRIDGE=true
+
+while getopts “dv:p:” OPTION
 do
     case $OPTION in
         d)
             DOMAIN=$OPTARG
+            ;;
+        v)
+            WITHVIDEOBRIDGE=false
             ;;
         p)
             PROSODYPASSWORD=$OPTARG
@@ -135,9 +143,14 @@ else
     sudo mkdir /etc/prosody
     cd /etc/prosody
     mkdir certs conf.avail conf.d
+
+    sed -i "/plugin_paths/c\#plugin_paths = { \"\/usr\/local\/lib\/prosody\/modules\" }" /etc/prosody/prosody.cfg.lua
+
     service prosody start
 fi
 
+if [ $WITHVIDEOBRIDGE ]
+then
 echo "===================> Install VideoBridge <==================="
 cd ~
 
@@ -175,6 +188,7 @@ org.jitsi.videobridge.xmpp.user.shard.PASSWORD=$PROSODYPASSWORD
 org.jitsi.videobridge.xmpp.user.shard.MUC_JIDS=JvbBrewery@internal.auth.$DOMAIN
 org.jitsi.videobridge.xmpp.user.shard.MUC_NICKNAME=$DOMAIN
 " > /etc/jitsi/videobridge/sip-communicator.properties
+fi
 
 echo "===================> Install jicofo <==================="
 cd ~
@@ -202,9 +216,11 @@ then
     sudo sed -i "s/__turnSecret__/$PROSODYPASSWORD/g" $PROSODYCONFIGPATH
     sudo sed -i "s/focusSecret/$PROSODYPASSWORD/g" $PROSODYCONFIGPATH
     sudo sed -i "s/jvbSecret/$PROSODYPASSWORD/g" $PROSODYCONFIGPATH
-    sudo sed -i "s/focusUser/focus/g" $PROSODYCONFIGPATH
     sudo sed -i "s/jitmeet.example.com/$DOMAIN/g" $PROSODYCONFIGPATH
-    sudo sed -i "s/null/memory/g" $PROSODYCONFIGPATH
+
+    sed -i "/authentication/c\authentication = \"token\"" $PROSODYCONFIGPATH
+    sudo sed -i "s/appId/$APPID/g" $PROSODYCONFIGPATH
+    sudo sed -i "s/appSecret/$APPSECRET/g" $PROSODYCONFIGPATH
 
     sudo ln -s $PROSODYCONFIGPATH /etc/prosody/conf.d/$DOMAIN.cfg.lua
 
@@ -221,6 +237,32 @@ then
     update-ca-certificates -f &
     prosodyctl register focus auth.$DOMAIN $PROSODYPASSWORD
     prosodyctl register jvb auth.$DOMAIN $PROSODYPASSWORD
+fi
+
+cd ~/
+echo "===================> PROSODY configure jitsi-meet-tokens  <==================="
+if [ ! -f luarocks-2.4.1.tar.gz ]
+then
+echo "
+deb http://ftp.us.debian.org/debian/ stretch main contrib non-free
+deb http://ftp.us.debian.org/debian/ stretch-updates main contrib non-free
+deb http://security.debian.org/debian-security/ stretch/updates main contrib non-free
+" >> /etc/apt/sources.list
+
+    apt-get update -y
+
+    apt-get install liblua5.2-dev
+    wget https://keplerproject.github.io/luarocks/releases/luarocks-2.4.1.tar.gz
+    tar -xzf luarocks-2.4.1.tar.gz
+    cd ./luarocks-2.4.1
+    ./configure --lua-version=5.2 --versioned-rocks-dir
+    make build
+    sudo make install
+    luarocks-5.2 install net-url
+    luarocks-5.2 install basexx
+    apt-get install libssl1.0-dev
+    luarocks-5.2 install luajwtjitsi
+    luarocks-5.2 install lua-cjson 2.1.0-1
 fi
 
 echo "===================> Configure nginx file with domain: $DOMAIN <==================="
