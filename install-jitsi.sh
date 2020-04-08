@@ -144,39 +144,39 @@ else
     cd /etc/prosody
     mkdir certs conf.avail conf.d
 
-    sed -i "/plugin_paths/c\#plugin_paths = { \"\/usr\/local\/lib\/prosody\/modules\" }" /etc/prosody/prosody.cfg.lua
+    sed -i "/plugin_paths/c\-- plugin_paths = { \"\/usr\/local\/lib\/prosody\/modules\" }" /etc/prosody/prosody.cfg.lua
 
     service prosody start
 fi
 
-if [ ! $WITHOUTVIDEOBRIDGE ]
+if [ $WITHOUTVIDEOBRIDGE ]
 then
-echo "===================> Install VideoBridge <==================="
-cd ~
+    echo "===================> Install VideoBridge <==================="
+    cd ~
 
-if [ ! -d /etc/jitsi/videobridge ]
-then
-  apt-get install -y jitsi-videobridge
+    if [ ! -d /etc/jitsi/videobridge ]
+    then
+        apt-get install -y jitsi-videobridge
 
-  # To support larger number of participants we need to increase some numbers
-tee -a /etc/systemd/system.conf << EOF
+        # To support larger number of participants we need to increase some numbers
+        tee -a /etc/systemd/system.conf << EOF
 DefaultLimitNOFILE=65000
 DefaultLimitNPROC=65000
 DefaultTasksMax=65000
 EOF
 
-  echo "jitsi-videobridge2 jitsi-videobridge/jvb-hostname string $DOMAIN" | debconf-set-selections
-  apt-get install -y jitsi-videobridge2=2.1-157-g389b69ff-1
-fi
+        echo "jitsi-videobridge2 jitsi-videobridge/jvb-hostname string $DOMAIN" | debconf-set-selections
+        apt-get install -y jitsi-videobridge2=2.1-157-g389b69ff-1
+    fi
 
-echo "===================> VIDEOBRIDGE change config file <==================="
-sed -i "/JVB_HOSTNAME=/c\JVB_HOSTNAME=$DOMAIN" /etc/jitsi/videobridge/config
-sed -i "/JVB_HOST=/c\JVB_HOST=" /etc/jitsi/videobridge/config
-sed -i "/JVB_SECRET=/c\JVB_SECRET=$PROSODYPASSWORD" /etc/jitsi/videobridge/config
-sed -i "/JVB_OPTS=/c\JVB_OPTS=\"--apis=,\"" /etc/jitsi/videobridge/config
+    echo "===================> VIDEOBRIDGE change config file <==================="
+    sed -i "/JVB_HOSTNAME=/c\JVB_HOSTNAME=$DOMAIN" /etc/jitsi/videobridge/config
+    sed -i "/JVB_HOST=/c\JVB_HOST=" /etc/jitsi/videobridge/config
+    sed -i "/JVB_SECRET=/c\JVB_SECRET=$PROSODYPASSWORD" /etc/jitsi/videobridge/config
+    sed -i "/JVB_OPTS=/c\JVB_OPTS=\"--apis=,\"" /etc/jitsi/videobridge/config
 
-echo "===================> VIDEOBRIDGE change sip-communicator.properties  <==================="
-echo "
+    echo "===================> VIDEOBRIDGE change sip-communicator.properties  <==================="
+    echo "
 org.ice4j.ice.harvest.DISABLE_AWS_HARVESTER=true
 org.ice4j.ice.harvest.STUN_MAPPING_HARVESTER_ADDRESSES=meet-jit-si-turnrelay.jitsi.net:443
 org.jitsi.videobridge.ENABLE_STATISTICS=true
@@ -234,7 +234,7 @@ then
     ln -sf /var/lib/prosody/auth.$DOMAIN.* /etc/prosody/certs/
 
     ln -sf /var/lib/prosody/auth.$DOMAIN.crt /usr/local/share/ca-certificates/auth.$DOMAIN.crt
-    update-ca-certificates -f &
+    update-ca-certificates -f
     prosodyctl register focus auth.$DOMAIN $PROSODYPASSWORD
     prosodyctl register jvb auth.$DOMAIN $PROSODYPASSWORD
 fi
@@ -290,7 +290,7 @@ then
   systemctl enable choopchat.tokenissuer.service
   systemctl start choopchat.tokenissuer.service
 
-  ./deploy_tokenissuer
+  sudo sh deploy_tokenissuer.sh & wait
 fi
 
 echo "===================> Update current jitsi from git <==================="
