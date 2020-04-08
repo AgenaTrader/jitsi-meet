@@ -1,0 +1,16 @@
+[Unit]
+Description=Choop Chat Token Issuer
+
+[Service]
+WorkingDirectory=/var/www/ChoopChat.TokenIssuer
+ExecStart=/usr/bin/dotnet /var/www/ChoopChat.TokenIssuer/ChoopChat.TokenIssuer.dll
+Restart=always
+RestartSec=10
+KillSignal=SIGINT
+SyslogIdentifier=ChoopChat.TokenIssuer
+User=www-data
+Environment=ASPNETCORE_ENVIRONMENT=Production
+Environment=DOTNET_PRINT_TELEMETRY_MESSAGE=false
+
+[Install]
+WantedBy=multi-user.target

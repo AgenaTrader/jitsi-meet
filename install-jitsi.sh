@@ -20,16 +20,16 @@ PROSODYPASSWORD="choopchat"
 APPID=701489589
 APPSECRET="n-6P#f7Bw_ZmU26K"
 
-WITHVIDEOBRIDGE=true
+WITHOUTVIDEOBRIDGE=false
 
-while getopts “dv:p:” OPTION
+while getopts “vd:p:” OPTION
 do
     case $OPTION in
         d)
             DOMAIN=$OPTARG
             ;;
         v)
-            WITHVIDEOBRIDGE=false
+            WITHOUTVIDEOBRIDGE=true
             ;;
         p)
             PROSODYPASSWORD=$OPTARG
@@ -149,7 +149,7 @@ else
     service prosody start
 fi
 
-if [ $WITHVIDEOBRIDGE ]
+if [ ! $WITHOUTVIDEOBRIDGE ]
 then
 echo "===================> Install VideoBridge <==================="
 cd ~
@@ -276,9 +276,21 @@ then
     sed -i "s/jitsi-meet.example.com/$DOMAIN/g" $NGINXCONFIGPATH
     sed -i "s/\/usr\/share\/jitsi-meet/\/srv\/$DOMAIN/g" $NGINXCONFIGPATH
     sed -i "s/\/etc\/jitsi\/meet/\/srv\/$DOMAIN/g" $NGINXCONFIGPATH
-    sed -i "s/libs\/external_api.min.js;/modules\/API\/external\/external_api.js;/g" $NGINXCONFIGPATH
 
     sudo ln -s $NGINXCONFIGPATH /etc/nginx/sites-enabled/$DOMAIN.conf
+fi
+
+echo "===================> Install choopchat.tokenissuer.service <==================="
+
+if [ ! -d /var/www/ChoopChat.TokenIssuer ]
+then
+  cd $INSTALLPATH/$DOMAIN/resources
+  cp ./choopchat.tokenissuer.service /etc/systemd/system/
+  systemctl daemon-reload
+  systemctl enable choopchat.tokenissuer.service
+  systemctl start choopchat.tokenissuer.service
+
+  ./deploy_tokenissuer
 fi
 
 echo "===================> Update current jitsi from git <==================="
