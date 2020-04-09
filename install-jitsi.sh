@@ -68,16 +68,15 @@ then
     git clone https://github.com/AgenaTrader/jitsi-meet.git & wait
     cd ./jitsi-meet
     git checkout develop & wait
-#   git remote add jitsi https://github.com/jitsi/jitsi-meet.git
-#   git pull jitsi master
-    cp -rf ./choop.chat-config.js "./$DOMAIN-config.js"
-
-    sed -i "s/domain: 'choop.chat',/domain: '$DOMAIN',/gi" "./$DOMAIN-config.js"
-    sed -i "s/bridge: 'jitsi-videobridge.choop.chat',/\/\/ bridge: 'jitsi-videobridge.$DOMAIN',/gi" "./$DOMAIN-config.js"
-    sed -i "s/muc: 'conference.choop.chat'/muc: 'conference.$DOMAIN'/gi" "./$DOMAIN-config.js"
 
     sudo mv $INSTALLPATH/jitsi-meet $INSTALLPATH/$DOMAIN
 fi
+
+cd $INSTALLPATH/$DOMAIN
+cp -rf ./choop.chat-config.js "./$DOMAIN-config.js"
+sed -i "s/domain: 'choop.chat',/domain: '$DOMAIN',/gi" "./$DOMAIN-config.js"
+sed -i "s/bridge: 'jitsi-videobridge.choop.chat',/\/\/ bridge: 'jitsi-videobridge.$DOMAIN',/gi" "./$DOMAIN-config.js"
+sed -i "s/muc: 'conference.choop.chat'/muc: 'conference.$DOMAIN'/gi" "./$DOMAIN-config.js"
 
 echo "===================> Write domain to host file <==================="
 
@@ -208,36 +207,43 @@ echo "===================> JICOFO change sip-communicator.properties  <=========
 echo "org.jitsi.jicofo.BRIDGE_MUC=JvbBrewery@internal.auth.$DOMAIN" > /etc/jitsi/jicofo/sip-communicator.properties
 
 echo "===================> PROSODY $DOMAIN create configuration file <==================="
-if [ ! -f $PROSODYCONFIGPATH ]
+if [ -f $PROSODYCONFIGPATH ]
 then
-    sudo cp "$INSTALLPATH/$DOMAIN/doc/debian/jitsi-meet-prosody/prosody.cfg.lua-jvb.example" /etc/prosody/conf.avail/$DOMAIN.cfg.lua
-
-    sudo sed -i "s/plugin_paths = { \"\/usr\/share\/jitsi-meet\/prosody-plugins\/\" }/plugin_paths = { \"\/srv\/$DOMAIN\/resources\/prosody-plugins\/\" }/g" $PROSODYCONFIGPATH
-    sudo sed -i "s/__turnSecret__/$PROSODYPASSWORD/g" $PROSODYCONFIGPATH
-    sudo sed -i "s/focusSecret/$PROSODYPASSWORD/g" $PROSODYCONFIGPATH
-    sudo sed -i "s/jvbSecret/$PROSODYPASSWORD/g" $PROSODYCONFIGPATH
-    sudo sed -i "s/jitmeet.example.com/$DOMAIN/g" $PROSODYCONFIGPATH
-
-    sed -i "/authentication/c\authentication = \"token\"" $PROSODYCONFIGPATH
-    sudo sed -i "s/appId/$APPID/g" $PROSODYCONFIGPATH
-    sudo sed -i "s/appSecret/$APPSECRET/g" $PROSODYCONFIGPATH
-
-    sudo ln -s $PROSODYCONFIGPATH /etc/prosody/conf.d/$DOMAIN.cfg.lua
-
-    echo "===================> Prosody generate keys for domain $DOMAIN and restart <==================="
-    service prosody restart
-
-    sudo prosodyctl cert generate $DOMAIN
-    sudo prosodyctl cert generate "auth.$DOMAIN"
-
-    ln -sf /var/lib/prosody/$DOMAIN.* /etc/prosody/certs/
-    ln -sf /var/lib/prosody/auth.$DOMAIN.* /etc/prosody/certs/
-
-    ln -sf /var/lib/prosody/auth.$DOMAIN.crt /usr/local/share/ca-certificates/auth.$DOMAIN.crt
-    update-ca-certificates -f
-    prosodyctl register focus auth.$DOMAIN $PROSODYPASSWORD
-    prosodyctl register jvb auth.$DOMAIN $PROSODYPASSWORD
+    rm $PROSODYCONFIGPATH
+    rm /var/lib/prosody/$DOMAIN.*
+    rm /var/lib/prosody/auth.$DOMAIN.*
+    rm /etc/prosody/certs/$DOMAIN.*
+    rm /etc/prosody/certs/auth.$DOMAIN.*
+    rm /usr/local/share/ca-certificates/auth.$DOMAIN.crt
 fi
+
+sudo cp "$INSTALLPATH/$DOMAIN/doc/debian/jitsi-meet-prosody/prosody.cfg.lua-jvb.example" $PROSODYCONFIGPATH
+
+sudo sed -i "s/plugin_paths = { \"\/usr\/share\/jitsi-meet\/prosody-plugins\/\" }/plugin_paths = { \"\/srv\/$DOMAIN\/resources\/prosody-plugins\/\" }/g" $PROSODYCONFIGPATH
+sudo sed -i "s/__turnSecret__/$PROSODYPASSWORD/g" $PROSODYCONFIGPATH
+sudo sed -i "s/focusSecret/$PROSODYPASSWORD/g" $PROSODYCONFIGPATH
+sudo sed -i "s/jvbSecret/$PROSODYPASSWORD/g" $PROSODYCONFIGPATH
+sudo sed -i "s/jitmeet.example.com/$DOMAIN/g" $PROSODYCONFIGPATH
+
+sed -i "/authentication/c\authentication = \"token\"" $PROSODYCONFIGPATH
+sudo sed -i "s/appId/$APPID/g" $PROSODYCONFIGPATH
+sudo sed -i "s/appSecret/$APPSECRET/g" $PROSODYCONFIGPATH
+
+sudo ln -s $PROSODYCONFIGPATH /etc/prosody/conf.d/$DOMAIN.cfg.lua
+
+echo "===================> Prosody generate keys for domain $DOMAIN and restart <==================="
+service prosody restart
+
+sudo prosodyctl cert generate $DOMAIN
+sudo prosodyctl cert generate "auth.$DOMAIN"
+
+ln -sf /var/lib/prosody/$DOMAIN.* /etc/prosody/certs/
+ln -sf /var/lib/prosody/auth.$DOMAIN.* /etc/prosody/certs/
+
+ln -sf /var/lib/prosody/auth.$DOMAIN.crt /usr/local/share/ca-certificates/auth.$DOMAIN.crt
+update-ca-certificates -f
+prosodyctl register focus auth.$DOMAIN $PROSODYPASSWORD
+prosodyctl register jvb auth.$DOMAIN $PROSODYPASSWORD
 
 cd ~/
 echo "===================> PROSODY configure jitsi-meet-tokens  <==================="
@@ -266,19 +272,22 @@ deb http://security.debian.org/debian-security/ stretch/updates main contrib non
 fi
 
 echo "===================> Configure nginx file with domain: $DOMAIN <==================="
-if [ ! -f /etc/nginx/sites-available/$DOMAIN.conf ]
+if [ -f $NGINXCONFIGPATH ]
 then
-    cp -rf "$INSTALLPATH/$DOMAIN/doc/debian/jitsi-meet/jitsi-meet.example" $NGINXCONFIGPATH
-
-    sed -i "s/ssl_certificate \/etc\/jitsi\/meet\/jitsi-meet.example.com.crt;/ssl_certificate \/etc\/prosody\/certs\/$DOMAIN.crt;/g" $NGINXCONFIGPATH
-    sed -i "s/ssl_certificate_key \/etc\/jitsi\/meet\/jitsi-meet.example.com.key;/ssl_certificate_key \/etc\/prosody\/certs\/$DOMAIN.key;/g" $NGINXCONFIGPATH
-    sed -i "s/server_names_hash_bucket_size 64;/#server_names_hash_bucket_size 64;/g" $NGINXCONFIGPATH
-    sed -i "s/jitsi-meet.example.com/$DOMAIN/g" $NGINXCONFIGPATH
-    sed -i "s/\/usr\/share\/jitsi-meet/\/srv\/$DOMAIN/g" $NGINXCONFIGPATH
-    sed -i "s/\/etc\/jitsi\/meet/\/srv\/$DOMAIN/g" $NGINXCONFIGPATH
-
-    sudo ln -s $NGINXCONFIGPATH /etc/nginx/sites-enabled/$DOMAIN.conf
+    rm $NGINXCONFIGPATH
+    rm /etc/nginx/sites-enabled/$DOMAIN.conf
 fi
+
+cp -rf "$INSTALLPATH/$DOMAIN/doc/debian/jitsi-meet/jitsi-meet.example" $NGINXCONFIGPATH
+
+sed -i "s/ssl_certificate \/etc\/jitsi\/meet\/jitsi-meet.example.com.crt;/ssl_certificate \/etc\/prosody\/certs\/$DOMAIN.crt;/g" $NGINXCONFIGPATH
+sed -i "s/ssl_certificate_key \/etc\/jitsi\/meet\/jitsi-meet.example.com.key;/ssl_certificate_key \/etc\/prosody\/certs\/$DOMAIN.key;/g" $NGINXCONFIGPATH
+sed -i "s/server_names_hash_bucket_size 64;/#server_names_hash_bucket_size 64;/g" $NGINXCONFIGPATH
+sed -i "s/jitsi-meet.example.com/$DOMAIN/g" $NGINXCONFIGPATH
+sed -i "s/\/usr\/share\/jitsi-meet/\/srv\/$DOMAIN/g" $NGINXCONFIGPATH
+sed -i "s/\/etc\/jitsi\/meet/\/srv\/$DOMAIN/g" $NGINXCONFIGPATH
+
+sudo ln -s $NGINXCONFIGPATH /etc/nginx/sites-enabled/$DOMAIN.conf
 
 echo "===================> Install choopchat.tokenissuer.service <==================="
 
@@ -290,7 +299,7 @@ then
   systemctl enable choopchat.tokenissuer.service
   systemctl start choopchat.tokenissuer.service
 
-  sudo sh deploy_tokenissuer.sh & wait
+  sudo deploy_tokenissuer.sh & wait
 fi
 
 echo "===================> Update current jitsi from git <==================="
@@ -299,9 +308,6 @@ cd $INSTALLPATH/$DOMAIN
 git pull origin master & wait
 sudo npm install & wait
 sudo make & wait
-
-#sudo apt-get install -y certbot python-certbot-nginx
-#sudo certbot certonly --nginx --dry-run -d $DOMAIN
 
 sudo service nginx restart
 sudo service prosody restart
