@@ -111,7 +111,7 @@ export function setVideoMuted(
         const oldValue = getState()['features/base/media'].video.muted;
         const userHasPermission = _verifyUserHasPermission(MEDIA_TYPE.VIDEO);
         // eslint-disable-next-line no-bitwise
-        var newValue = muted ? oldValue | authority : oldValue & ~authority;
+        let newValue = muted ? oldValue | authority : oldValue & ~authority;
 
         if (!userHasPermission) {
             newValue = true;
