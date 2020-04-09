@@ -1,5 +1,9 @@
 #!/bin/bash
 
+INSTALL_VIDEOBRIDGE=$1
+DOMAIN=$2
+PROSODYPASSWORD=$3
+
 if [ $INSTALL_VIDEOBRIDGE ]
 then
     echo "===================> Install VideoBridge <==================="

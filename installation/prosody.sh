@@ -1,13 +1,14 @@
 #!/bin/bash
 echo ""
 echo "Start installation prosody"
+DOMAIN=$1
 
 if [ -f /etc/prosody/conf.avail/$DOMAIN.cfg.lua ]
 then
     echo "Prosody already installed"
 else
-    sudo apt install -y jitsi-meet-prosody
     sudo mkdir /etc/prosody
+    sudo apt install -y jitsi-meet-prosody
     cd /etc/prosody
     sudo mkdir certs conf.avail conf.d
 

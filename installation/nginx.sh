@@ -1,6 +1,8 @@
 #!/bin/bash
 echo ""
 echo "Start installation nginx"
+INSTALLPATH=$1
+DOMAIN=$2
 NGINXCONFIGPATH=/etc/nginx/sites-available/$DOMAIN.conf
 
 
