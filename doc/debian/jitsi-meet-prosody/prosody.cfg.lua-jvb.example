@@ -15,7 +15,7 @@ cross_domain_bosh = false;
 consider_bosh_secure = true;
 
 VirtualHost "jitmeet.example.com"
-        authentication = "anonymous"
+        authentication = "token"
         app_id="appId"
         app_secret="appSecret"
         allow_empty_token=false

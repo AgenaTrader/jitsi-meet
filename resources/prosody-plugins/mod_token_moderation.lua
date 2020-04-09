@@ -1,5 +1,5 @@
 -- Token moderation
--- this module looks for a field on incoming JWT tokens called "moderator". 
+-- this module looks for a field on incoming JWT tokens called "moderator".
 -- If it is true the user is added to the room as a moderator, otherwise they are set to a normal user.
 -- Note this may well break other affiliation based features like banning or login-based admins
 local log = module._log;
@@ -51,16 +51,14 @@ function setupAffiliation(room, origin, stanza)
                                 local bodyB64 = origin.auth_token:sub(dotFirst + 1, dotFirst + dotSecond - 1);
                                 local body = json.decode(basexx.from_url64(bodyB64));
                                 -- If user is a moderator, set their affiliation to be an owner
-                                
-				if body["role"] == "listener" then
-					room:set_affiliation("token_plugin", jid_bare(stanza.attr.from), "none");
-				elseif body["role"] == "owner" or body["role"] == "executive" then
-                                        room:set_affiliation("token_plugin", jid_bare(stanza.attr.from), "owner");
+
+                                if body["role"] == "owner" or body["role"] == "executive" or body["role"] == "presenter" then
+                                    room:set_affiliation("token_plugin", jid_bare(stanza.attr.from), "owner");
                                 else
-                                        room:set_affiliation("token_plugin", jid_bare(stanza.attr.from), "member");
+                                    room:set_affiliation("token_plugin", jid_bare(stanza.attr.from), "member");
                                 end;
-			end;
-		end;
-	end;
+                        end;
+                end;
+        end;
 end;
-                        
+

@@ -10,19 +10,23 @@ Usage: $0 options
 This script install jitsi meet configured with the jitsi videobridge
 OPTIONS:
    -d      Domain (Required)
+   -i      APP ID (Required)
+   -s      APP SECRET (Required)
    -v      Vithout videobridge
-   -p      Password 1 (Default: choopchat)
+   -p      Password (Default: password)
 EOF
+
+sleep 3
 
 #constants / settings
 INSTALLPATH="/srv"
-PROSODYPASSWORD="choopchat"
-APPID=701489589
-APPSECRET="n-6P#f7Bw_ZmU26K"
+PROSODYPASSWORD="password"
+APPID=111111111
+APPSECRET="secret"
 
 WITHOUTVIDEOBRIDGE=false
 
-while getopts “vd:p:” OPTION
+while getopts “vd:p:i:s:” OPTION
 do
     case $OPTION in
         d)
@@ -33,6 +37,12 @@ do
             ;;
         p)
             PROSODYPASSWORD=$OPTARG
+            ;;
+        i)
+            APPID=$OPTARG
+            ;;
+        s)
+            APPSECRET=$OPTARG
             ;;
         ?)
             exit
@@ -225,7 +235,6 @@ sudo sed -i "s/focusSecret/$PROSODYPASSWORD/g" $PROSODYCONFIGPATH
 sudo sed -i "s/jvbSecret/$PROSODYPASSWORD/g" $PROSODYCONFIGPATH
 sudo sed -i "s/jitmeet.example.com/$DOMAIN/g" $PROSODYCONFIGPATH
 
-sed -i "/authentication/c\authentication = \"token\"" $PROSODYCONFIGPATH
 sudo sed -i "s/appId/$APPID/g" $PROSODYCONFIGPATH
 sudo sed -i "s/appSecret/$APPSECRET/g" $PROSODYCONFIGPATH
 
@@ -261,12 +270,12 @@ deb http://security.debian.org/debian-security/ stretch/updates main contrib non
     wget https://keplerproject.github.io/luarocks/releases/luarocks-2.4.1.tar.gz
     tar -xzf luarocks-2.4.1.tar.gz
     cd ./luarocks-2.4.1
-    ./configure --lua-version=5.2 --versioned-rocks-dir
-    make build
-    sudo make install
+    ./configure --lua-version=5.2 --versioned-rocks-dir & wait
+    make build & wait
+    make install & wait
     luarocks-5.2 install net-url
     luarocks-5.2 install basexx
-    apt-get install libssl1.0-dev
+    apt-get install -y libssl1.0-dev
     luarocks-5.2 install luajwtjitsi
     luarocks-5.2 install lua-cjson 2.1.0-1
 fi
@@ -293,13 +302,21 @@ echo "===================> Install choopchat.tokenissuer.service <==============
 
 if [ ! -d /var/www/ChoopChat.TokenIssuer ]
 then
-  cd $INSTALLPATH/$DOMAIN/resources
-  cp ./choopchat.tokenissuer.service /etc/systemd/system/
-  systemctl daemon-reload
-  systemctl enable choopchat.tokenissuer.service
-  systemctl start choopchat.tokenissuer.service
+    wget -O- https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor > microsoft.asc.gpg
+    sudo mv microsoft.asc.gpg /etc/apt/trusted.gpg.d/
+    wget https://packages.microsoft.com/config/debian/10/prod.list
+    sudo mv prod.list /etc/apt/sources.list.d/microsoft-prod.list
 
-  sudo deploy_tokenissuer.sh & wait
+    apt-get update -y & wait
+    apt-get install -y dotnet-sdk-3.1 aspnetcore-runtime-3.1 dotnet-runtime-3.1
+
+    cd $INSTALLPATH/$DOMAIN/resources
+    cp ./choopchat.tokenissuer.service /etc/systemd/system/
+    systemctl daemon-reload
+    systemctl enable choopchat.tokenissuer.service
+    systemctl start choopchat.tokenissuer.service
+
+    sudo deploy_tokenissuer.sh & wait
 fi
 
 echo "===================> Update current jitsi from git <==================="
