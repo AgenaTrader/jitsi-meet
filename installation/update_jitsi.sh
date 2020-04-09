@@ -1,9 +1,13 @@
 #!/bin/bash
 
+INSTALLPATH=$1
+DOMAIN=$2
+
 if [ -d "$INSTALLPATH/$DOMAIN" ]
 then
     echo "Update current jitsi installation"
     cd "$INSTALLPATH/$DOMAIN"
-    git reset --soft HEAD~
-    git pull origin master & wait
+    git fetch
+    git reset --hard HEAD
+    git pull origin develop & wait
 fi

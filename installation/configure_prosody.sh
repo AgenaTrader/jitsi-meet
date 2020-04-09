@@ -1,4 +1,11 @@
 #!/bin/bash
+
+DOMAIN=$1
+PROSODYPASSWORD=$2
+INSTALLPATH=$3
+APPID=$4
+APPSECRET=$5
+
 echo ""
 echo "PROSODY $DOMAIN create configuration file"
 

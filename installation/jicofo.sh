@@ -1,5 +1,8 @@
 #!/bin/bash
 echo "Install jicofo"
+DOMAIN=$1
+PROSODYPASSWORD=$2
+
 cd ~
 
 if [ ! -d /etc/jitsi/jicofo ]

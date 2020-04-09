@@ -1,5 +1,8 @@
 #!/bin/bash
 
+INSTALLPATH=$1
+DOMAIN=$2
+
 echo "Start jitsi configuration"
 cd $INSTALLPATH/$DOMAIN
 cp -rf ./choop.chat-config.js "./$DOMAIN-config.js"

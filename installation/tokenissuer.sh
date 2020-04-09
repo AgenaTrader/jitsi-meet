@@ -1,5 +1,7 @@
 #!/bin/bash
 echo "Install choopchat.tokenissuer.service"
+INSTALLPATH=$1
+DOMAIN=$2
 
 if [ ! -d /var/www/ChoopChat.TokenIssuer ]
 then

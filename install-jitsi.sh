@@ -16,8 +16,7 @@ echo "Installation jitsi script."
 echo ""
 echo "What do you want to do?"
 echo "   1) Install or update Jitsi"
-echo "   2) Update jitsi"
-echo "   3) Exit"
+echo "   2) Exit"
 echo ""
 while [[ $OPTION != 1 && $OPTION != 2 && $OPTION != 3 && $OPTION != 4 ]]; do
   read -p "Select an option [1-4]: " OPTION
@@ -94,8 +93,7 @@ case $OPTION in
     wget -qO -  https://download.jitsi.org/jitsi-key.gpg.key | apt-key add -
     sudo apt-get update -y
 
-    #update jitsi
-    sudo /bin/bash "$INSTALLPATH/$DOMAIN/installation/update_jitsi.sh"
+    sudo /bin/bash "$INSTALLPATH/$DOMAIN/installation/update_jitsi.sh" $INSTALLPATH $DOMAIN
 
     if [ ! -d "$INSTALLPATH/$DOMAIN" ]
     then
@@ -108,31 +106,25 @@ case $OPTION in
         sudo mv $INSTALLPATH/jitsi-meet $INSTALLPATH/$DOMAIN
     fi
 
-    sudo /bin/bash "$INSTALLPATH/$DOMAIN/installation/configure_jitsi.sh" #configuration jitsi
-    sudo /bin/bash "$INSTALLPATH/$DOMAIN/installation/domain.sh" #domain
-    sudo /bin/bash "$INSTALLPATH/$DOMAIN/installation/nginx.sh" #nginx
-    sudo /bin/bash "$INSTALLPATH/$DOMAIN/installation/node.sh" #node
-    sudo /bin/bash "$INSTALLPATH/$DOMAIN/installation/npm.sh" #npm
-    sudo /bin/bash "$INSTALLPATH/$DOMAIN/installation/prosody.sh" #prosody
-    sudo /bin/bash "$INSTALLPATH/$DOMAIN/installation/videobridge.sh" #videobridge
-    sudo /bin/bash "$INSTALLPATH/$DOMAIN/installation/jicofo.sh" #jicofo
-    sudo /bin/bash "$INSTALLPATH/$DOMAIN/installation/configure_jitsi.sh" #configure jitsi
-    sudo /bin/bash "$INSTALLPATH/$DOMAIN/installation/tokenissuer.sh" #install tokenissuer
-    sudo /bin/bash "$INSTALLPATH/$DOMAIN/installation/compile_and_update_services.sh" #update services and compile sources
+    sudo /bin/bash "$INSTALLPATH/$DOMAIN/installation/configure_jitsi.sh" $INSTALLPATH $DOMAIN
+    sudo /bin/bash "$INSTALLPATH/$DOMAIN/installation/domain.sh" $DOMAIN
+    sudo /bin/bash "$INSTALLPATH/$DOMAIN/installation/nginx.sh" $INSTALLPATH $DOMAIN
+    sudo /bin/bash "$INSTALLPATH/$DOMAIN/installation/node.sh"
+    sudo /bin/bash "$INSTALLPATH/$DOMAIN/installation/npm.sh"
+    sudo /bin/bash "$INSTALLPATH/$DOMAIN/installation/prosody.sh" $DOMAIN
+    sudo /bin/bash "$INSTALLPATH/$DOMAIN/installation/videobridge.sh" $INSTALL_VIDEOBRIDGE $DOMAIN $PROSODYPASSWORD
+    sudo /bin/bash "$INSTALLPATH/$DOMAIN/installation/jicofo.sh" $DOMAIN $PROSODYPASSWORD
+    sudo /bin/bash "$INSTALLPATH/$DOMAIN/installation/configure_prosody.sh" $DOMAIN $PROSODYPASSWORD $INSTALLPATH $APPID $APPSECRET
+    sudo /bin/bash "$INSTALLPATH/$DOMAIN/installation/tokenissuer.sh" $INSTALLPATH $DOMAIN
+    sudo /bin/bash "$INSTALLPATH/$DOMAIN/installation/compile_and_update_services.sh" $INSTALLPATH $DOMAIN
 
     echo "Installation finished"
 
     echo ""
-    read -n1 -r -p "Press any key to continue..."
+    read -n1 -r -p "Press any key to exit..."
     echo ""
 
     exit;
-  ;;
-  2)
-    sudo /bin/bash "$INSTALLPATH/$DOMAIN/installation/update_jitsi.sh" #update jitsi
-    sudo /bin/bash "$INSTALLPATH/$DOMAIN/installation/compile_and_update_services.sh" #update services and compile sources
-
-    exit
   ;;
   *)
     exit
