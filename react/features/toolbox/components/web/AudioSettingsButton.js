@@ -10,6 +10,9 @@ import { ToolboxButtonWithIcon } from '../../../base/toolbox';
 import { connect } from '../../../base/redux';
 import { getMediaPermissionPromptVisibility } from '../../../overlay';
 import { AudioSettingsPopup, toggleAudioSettings } from '../../../settings';
+import { _verifyUserHasPermission, MEDIA_TYPE } from '../../../base/media';
+
+declare var interfaceConfig: Object;
 
 type Props = {
 
@@ -127,7 +130,11 @@ class AudioSettingsButton extends Component<Props, State> {
  * @returns {Object}
  */
 function mapStateToProps(state) {
+    const userHasPermission = _verifyUserHasPermission(MEDIA_TYPE.AUDIO);
+    const toolbarButtons = interfaceConfig.TOOLBAR_BUTTONS;
+
     return {
+        visible: userHasPermission && toolbarButtons.includes('microphone'),
         hasDevices:
             hasAvailableDevices(state, 'audioInput')
             || hasAvailableDevices(state, 'audioOutput'),

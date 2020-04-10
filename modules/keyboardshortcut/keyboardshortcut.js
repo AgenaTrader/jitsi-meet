@@ -10,6 +10,10 @@ import {
 import { KeyboardShortcutsDialog }
     from '../../react/features/keyboard-shortcuts';
 import { SpeakerStats } from '../../react/features/speaker-stats';
+import {
+    _verifyUserHasPermission,
+    MEDIA_TYPE
+} from '../../react/features/base/media';
 
 const logger = require('jitsi-meet-logger').getLogger(__filename);
 
@@ -66,12 +70,16 @@ const KeyboardShortcut = {
                 || $(':focus').is('input[type=password]')
                 || $(':focus').is('textarea'))) {
                 if (this._getKeyboardKey(e).toUpperCase() === ' ') {
-                    if (APP.conference.isLocalAudioMuted()) {
-                        sendAnalytics(createShortcutEvent(
-                            'push.to.talk',
-                            PRESSED));
-                        logger.log('Talk shortcut pressed');
-                        APP.conference.muteAudio(false);
+                    const userHasPermission = _verifyUserHasPermission(MEDIA_TYPE.VIDEO);
+
+                    if (userHasPermission) {
+                        if (APP.conference.isLocalAudioMuted()) {
+                            sendAnalytics(createShortcutEvent(
+                                'push.to.talk',
+                                PRESSED));
+                            logger.log('Talk shortcut pressed');
+                            APP.conference.muteAudio(false);
+                        }
                     }
                 }
             }

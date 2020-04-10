@@ -78,16 +78,40 @@ export function shouldRenderVideoTrack(
  * @returns {boolean}
  */
 export function _verifyUserHasPermission(type: string): Boolean {
+    const userId = APP.conference.getMyUserId();
+    const state = APP.store.getState();
+    const participant = getParticipantById(state, userId);
+
+    return _checkParticipantPermissions(participant, type);
+}
+
+/**
+ * Check participant access for
+ *
+ * @param {Object|undefined} participant - information about user
+ * @param {string} type - permission type: video/audio.
+ * @returns {boolean}
+ */
+export function _checkParticipantPermissions(participant, type: string): Boolean {
+    if (!_.isUndefined(participant)) {
+        return _checkPermissionByRole(participant.role, type);
+    }
+
+    return true;
+}
+
+/**
+ * Check participant access by role
+ *
+ * @param {string} role - user role
+ * @param {string} type - permission type: video/audio.
+ * @returns {boolean}
+ */
+export function _checkPermissionByRole(role: string, type: string): Boolean {
     const permission = interfaceConfig.ROLE_PERMISSIONS;
 
     if (!_.isUndefined(permission) && !_.isUndefined(permission[type])) {
-        const userId = APP.conference.getMyUserId();
-        const state = APP.store.getState();
-        const participant = getParticipantById(state, userId);
-
-        if (!_.isUndefined(participant)) {
-            return permission[type].includes(participant.role);
-        }
+        return permission[type].includes(role);
     }
 
     return true;
