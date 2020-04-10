@@ -1,25 +1,30 @@
 plugin_paths = { "/usr/share/jitsi-meet/prosody-plugins/" }
 
 -- domain mapper options, must at least have domain base set to use the mapper
-muc_mapper_domain_base = "jitmeet.example.com"
+muc_mapper_domain_base = "jitmeet.example.com";
 
 turncredentials_secret = "__turnSecret__";
 
 turncredentials = {
-  { type = "stun", host = "jitmeet.example.com", port = "443" },
-  { type = "turn", host = "jitmeet.example.com", port = "443", transport = "udp" },
+  { type = "stun", host = "jitmeet.example.com", port = "4446" },
+  { type = "turn", host = "jitmeet.example.com", port = "4446", transport = "udp" },
   { type = "turns", host = "jitmeet.example.com", port = "443", transport = "tcp" }
-}
+};
 
 cross_domain_bosh = false;
 consider_bosh_secure = true;
 
 VirtualHost "jitmeet.example.com"
-        authentication = "token"
-        app_id="appId"
-        app_secret="appSecret"
-        allow_empty_token=false
-
+        -- enabled = false -- Remove this line to enable this host
+        authentication = "anonymous"
+        -- Properties below are modified by jitsi-meet-tokens package config
+        -- and authentication above is switched to "token"
+        --app_id="example_app_id"
+        --app_secret="example_app_secret"
+        -- Assign this host a certificate for TLS, otherwise it would use the one
+        -- set in the global section (if any).
+        -- Note that old-style SSL on port 5223 only supports one certificate, and will always
+        -- use the global one.
         ssl = {
                 key = "/etc/prosody/certs/jitmeet.example.com.key";
                 certificate = "/etc/prosody/certs/jitmeet.example.com.crt";
@@ -47,6 +52,8 @@ Component "conference.jitmeet.example.com" "muc"
         "token_moderation";
     }
     admins = { "focus@auth.jitmeet.example.com" }
+    muc_room_locking = false
+    muc_room_default_public_jids = true
 
 -- internal muc component
 Component "internal.auth.jitmeet.example.com" "muc"
@@ -55,6 +62,8 @@ Component "internal.auth.jitmeet.example.com" "muc"
       "ping";
     }
     admins = { "focus@auth.jitmeet.example.com", "jvb@auth.jitmeet.example.com" }
+    muc_room_locking = false
+    muc_room_default_public_jids = true
 
 VirtualHost "auth.jitmeet.example.com"
     ssl = {

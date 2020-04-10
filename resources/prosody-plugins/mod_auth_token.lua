@@ -38,7 +38,7 @@ function init_session(event)
 end
 
 module:hook_global("bosh-session", init_session);
-module:hook("websocket-session", init_session);
+module:hook_global("websocket-session", init_session);
 
 function provider.test_password(username, password)
 	return nil, "Password based auth not supported";
