@@ -19,5 +19,5 @@ then
     systemctl enable choopchat.tokenissuer.service
     systemctl start choopchat.tokenissuer.service
 
-    sudo deploy_tokenissuer.sh & wait
+    sudo /bin/bash deploy_tokenissuer.sh & wait
 fi
