@@ -60,7 +60,7 @@ deb http://security.debian.org/debian-security/ stretch/updates main contrib non
 
     sudo apt-get update -y
 
-    sudo apt-get install liblua5.2-dev
+    sudo apt-get install -y liblua5.2-dev
     wget https://keplerproject.github.io/luarocks/releases/luarocks-2.4.1.tar.gz
     tar -xzf luarocks-2.4.1.tar.gz
     cd ./luarocks-2.4.1
