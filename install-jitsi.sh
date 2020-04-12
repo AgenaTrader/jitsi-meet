@@ -138,7 +138,11 @@ case $OPTION in
     exit
   ;;
   3)
-    sudo /bin/bash "$INSTALLPATH/$DOMAIN/installation/update_services.sh"
+    echo "Restart services"
+    sudo service nginx restart
+    sudo service prosody restart
+    sudo service jicofo restart
+    sudo service jitsi-videobridge2 restart
     exit
   ;;
   *)
