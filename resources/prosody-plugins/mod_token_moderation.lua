@@ -51,7 +51,7 @@ function setupAffiliation(room, origin, stanza)
                                 local bodyB64 = origin.auth_token:sub(dotFirst + 1, dotFirst + dotSecond - 1);
                                 local body = json.decode(basexx.from_url64(bodyB64));
                                 -- If user is a moderator, set their affiliation to be an owner
-
+                                log('info', "connected user with role: %s", tostring(body["role"]));
                                 if body["role"] == "owner" or body["role"] == "executive" or body["role"] == "presenter" then
                                     room:set_affiliation("token_plugin", jid_bare(stanza.attr.from), "owner");
                                 else
