@@ -15,16 +15,16 @@ echo ""
 echo "Installation jitsi script."
 echo ""
 echo "What do you want to do?"
-echo "   1) Install or update Jitsi"
-echo "   2) Exit"
+echo "   1) Install Jitsi or update configs"
+echo "   2) Update source code and recompile"
+echo "   3) Restart serices"
+echo "   4) Exit"
 echo ""
 while [[ $OPTION != 1 && $OPTION != 2 && $OPTION != 3 && $OPTION != 4 ]]; do
   read -p "Select an option [1-4]: " OPTION
 done
 
-echo "$OPTION"
-case $OPTION in
-  1)
+if [[ $OPTION == 1 || $OPTION == 2 ]]; then
     echo -n "Please enter your domain (default: $DEFAULT_DOMAIN): "
     read DOMAIN
 
@@ -41,7 +41,11 @@ case $OPTION in
       echo "Used default installation directory: $INSTALLPATH"
     fi
     sudo mkdir $INSTALLPATH
+fi
 
+
+case $OPTION in
+  1)
     echo -n "Please enter your prosody password (default: $DEFAULT_PROSODYPASSWORD): "
     read ppassword
 
@@ -116,7 +120,8 @@ case $OPTION in
     sudo /bin/bash "$INSTALLPATH/$DOMAIN/installation/jicofo.sh" $DOMAIN $PROSODYPASSWORD
     sudo /bin/bash "$INSTALLPATH/$DOMAIN/installation/configure_prosody.sh" $DOMAIN $PROSODYPASSWORD $INSTALLPATH $APPID $APPSECRET
     sudo /bin/bash "$INSTALLPATH/$DOMAIN/installation/tokenissuer.sh" $INSTALLPATH $DOMAIN
-    sudo /bin/bash "$INSTALLPATH/$DOMAIN/installation/compile_and_update_services.sh" $INSTALLPATH $DOMAIN
+    sudo /bin/bash "$INSTALLPATH/$DOMAIN/installation/compile.sh" $INSTALLPATH $DOMAIN
+    sudo /bin/bash "$INSTALLPATH/$DOMAIN/installation/update_services.sh"
 
     echo "Installation finished"
 
@@ -125,6 +130,16 @@ case $OPTION in
     echo ""
 
     exit;
+  ;;
+  2)
+    sudo /bin/bash "$INSTALLPATH/$DOMAIN/installation/update_jitsi.sh" $INSTALLPATH $DOMAIN
+    sudo /bin/bash "$INSTALLPATH/$DOMAIN/installation/configure_jitsi.sh" $INSTALLPATH $DOMAIN
+    sudo /bin/bash "$INSTALLPATH/$DOMAIN/installation/compile.sh" $INSTALLPATH $DOMAIN
+    exit
+  ;;
+  3)
+    sudo /bin/bash "$INSTALLPATH/$DOMAIN/installation/update_services.sh"
+    exit
   ;;
   *)
     exit
