@@ -660,13 +660,17 @@ class Toolbox extends Component<Props, State> {
      * @returns {void}
      */
     _onShortcutToggleScreenshare() {
-        sendAnalytics(createToolbarEvent(
-            'screen.sharing',
-            {
-                enable: !this.props._screensharing
-            }));
+        const accessToFunctionality = _verifyUserHasPermission('desktop');
 
-        this._doToggleScreenshare();
+        if (accessToFunctionality) {
+            sendAnalytics(createToolbarEvent(
+                'screen.sharing',
+                {
+                    enable: !this.props._screensharing
+                }));
+
+            this._doToggleScreenshare();
+        }
     }
 
     _onToolbarOpenFeedback: () => void;
@@ -1242,7 +1246,8 @@ class Toolbox extends Component<Props, State> {
                             icon = { IconRaisedHand }
                             onClick = { this._onToolbarToggleRaiseHand }
                             toggled = { _raisedHand }
-                            tooltip = { t('toolbar.raiseHand') } /> }
+                            tooltip = { t('toolbar.raiseHand') }
+                            visible = { this._shouldShowButton('raisehand') } /> }
                     { buttonsLeft.indexOf('chat') !== -1
                         && <div className = 'toolbar-button-with-badge'>
                             <ToolbarButton
@@ -1279,7 +1284,8 @@ class Toolbox extends Component<Props, State> {
                                 { t('toolbar.accessibilityLabel.invite') }
                             icon = { IconInvite }
                             onClick = { this._onToolbarOpenInvite }
-                            tooltip = { t('toolbar.invite') } /> }
+                            tooltip = { t('toolbar.invite') }
+                            visible = { this._shouldShowButton('invite') } /> }
                     {
                         buttonsRight.indexOf('info') !== -1
                             && <InfoDialogButton />
@@ -1309,6 +1315,12 @@ class Toolbox extends Component<Props, State> {
      * @returns {boolean} True if the button should be displayed.
      */
     _shouldShowButton(buttonName) {
+        const accessToFunctionality = _verifyUserHasPermission(buttonName);
+
+        if (!accessToFunctionality) {
+            return false;
+        }
+
         return this.props._visibleButtons.has(buttonName);
     }
 }
