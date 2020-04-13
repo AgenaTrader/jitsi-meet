@@ -216,15 +216,21 @@ var interfaceConfig = {
     SHOW_CHROME_EXTENSION_BANNER: false,
 
     /**
-     * Users with configured roles will not be displayed at the rally in the tiles.
-     * Only other roles can be showed.
+     * Functionality permissions for each roles.
      */
-    HIDE_TILES_FOR_ROLES: [ 'none' ],
 
     ROLE_PERMISSIONS: {
+        tiles: [ 'moderator', 'participant' ],
         video: [ 'moderator', 'participant' ],
         audio: [ 'moderator', 'participant' ],
-        sharing: [ 'moderator', 'participant' ]
+        sharing: [ 'moderator', 'participant' ],
+
+        // settings button
+        sharedvideo: [ 'moderator', 'participant' ],
+        videobackgroundblur: [ 'moderator', 'participant' ],
+        raisehand: [ 'moderator', 'participant' ],
+        invite: [ 'moderator', 'participant' ],
+        desktop: [ 'moderator', 'participant' ]
     },
 
     /**
