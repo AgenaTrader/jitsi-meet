@@ -97,9 +97,16 @@ export function _verifyUserHasPermission(type: string): Boolean {
  * @returns {boolean}
  */
 export function _verifyUserHasPermissionById(type: string, userId: string): Boolean {
-    const participant = APP.conference._room.room.members[userId];
+    if (!_.isUndefined(APP.conference._room)
+        && !_.isUndefined(APP.conference._room.room)
+        && !_.isUndefined(APP.conference._room.room.members[userId])
+    ) {
+        const participant = APP.conference._room.room.members[userId];
 
-    return _checkParticipantPermissions(participant, type);
+        return _checkParticipantPermissions(participant, type);
+    }
+
+    return true;
 }
 
 /**
