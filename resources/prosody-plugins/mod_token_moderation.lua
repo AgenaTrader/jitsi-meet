@@ -29,6 +29,7 @@ module:hook("muc-room-created", function(event)
         -- Wrap set affilaition to block anything but token setting owner (stop pesky auto-ownering)
         local _set_affiliation = room.set_affiliation;
         room.set_affiliation = function(room, actor, jid, affiliation, reason)
+		log('info', "room: %s, actor: %s, jid: %s", tostring(room), tostring(actor), tostring(jid));
                 -- let this plugin do whatever it wants
                 if actor == "token_plugin" then
                         return _set_affiliation(room, true, jid, affiliation, reason)
@@ -45,22 +46,32 @@ function setupAffiliation(room, origin, stanza)
         if origin.auth_token then
                 -- Extract token body and decode it
                 local dotFirst = origin.auth_token:find("%.");
+                log('info', "dotFirst: %s", tostring(dotFirst));
                 if dotFirst then
                         local dotSecond = origin.auth_token:sub(dotFirst + 1):find("%.");
                         if dotSecond then
                                 local bodyB64 = origin.auth_token:sub(dotFirst + 1, dotFirst + dotSecond - 1);
+                            log('info', "connected user: %s", tostring(basexx.from_url64(bodyB64)));
                                 local body = json.decode(basexx.from_url64(bodyB64));
-                                -- If user is a moderator, set their affiliation to be an owner
-                                log('info', "connected user with role: %s", tostring(body["role"]));
-                                if body["role"] == "owner" or body["role"] == "executive" then
-                                    room:set_affiliation("token_plugin", jid_bare(stanza.attr.from), "owner");
-                                elseif body["role"] == "presenter" then
-                                    room:set_affiliation("token_plugin", jid_bare(stanza.attr.from), "member");
-                                else
-                                    room:set_affiliation("token_plugin", jid_bare(stanza.attr.from), "none");
-                                end;
+                                if (body["context"] and body["context"].user) then
+					local context = body["context"];
+					-- If user is a moderator, set their affiliation to be an owner
+        	                        log('info', "connected user with role: %s", tostring(context.user.role));
+log('info', "connected user with context: %s", tostring(context));
+                	                if context.user.role == "owner" or context.user.role == "executive" then
+                        	            room:set_affiliation("token_plugin", jid_bare(stanza.attr.from), "owner");
+                                	    log('info', "connected owner");
+	                                elseif context.user.role == "presenter" then
+        	                            room:set_affiliation("token_plugin", jid_bare(stanza.attr.from), "member");
+                	                    log('info', "connected member");
+                        	        else
+                                	    room:set_affiliation("token_plugin", jid_bare(stanza.attr.from), "none");
+	                                    log('info', "connected none");
+        	                        end;
+				end;
                         end;
                 end;
         end;
 end;
+
 
