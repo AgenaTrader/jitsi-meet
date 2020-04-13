@@ -72,15 +72,32 @@ export function shouldRenderVideoTrack(
 }
 
 /**
- * Verifying that the user has permissions for enabling video or audio.
+ * Verifying that the current local user has permissions for different functionality.
  *
  * @param {string} type - permission type: video/audio.
  * @returns {boolean}
  */
 export function _verifyUserHasPermission(type: string): Boolean {
-    const userId = APP.conference.getMyUserId();
-    const state = APP.store.getState();
-    const participant = getParticipantById(state, userId);
+    // const userId = APP.conference.getMyUserId();
+    const userId = APP.conference._room.room.myroomjid;
+
+    const participant = _verifyUserHasPermissionById(type, userId);
+
+    // const state = APP.store.getState();
+    // const participant = getParticipantById(state, userId);
+
+    return _checkParticipantPermissions(participant, type);
+}
+
+/**
+ * Verifying that the user has permissions for different functionality.
+ *
+ * @param {string} type - permission type: video/audio.
+ * @param {string} userId - user id
+ * @returns {boolean}
+ */
+export function _verifyUserHasPermissionById(type: string, userId: string): Boolean {
+    const participant = APP.conference._room.room.members[userId];
 
     return _checkParticipantPermissions(participant, type);
 }
@@ -94,7 +111,7 @@ export function _verifyUserHasPermission(type: string): Boolean {
  */
 export function _checkParticipantPermissions(participant, type: string): Boolean {
     if (!_.isUndefined(participant)) {
-        return _checkPermissionByRole(participant.role, type);
+        return _checkPermissionByRole(participant.affiliation, type);
     }
 
     return true;

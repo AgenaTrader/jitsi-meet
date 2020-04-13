@@ -28,7 +28,7 @@ const logger = require('jitsi-meet-logger').getLogger(__filename);
 
 import SmallVideo from './SmallVideo';
 import UIUtils from '../util/UIUtil';
-import { _checkPermissionByRole } from '../../../react/features/base/media';
+import { _verifyUserHasPermissionById } from '../../../react/features/base/media';
 
 /**
  *
@@ -82,9 +82,7 @@ export default class RemoteVideo extends SmallVideo {
         this._supportsRemoteControl = false;
         this.statsPopoverLocation = interfaceConfig.VERTICAL_FILMSTRIP ? 'left bottom' : 'top center';
 
-        console.log('===== user', user);
-        console.log('===== user role', user.getRole());
-        const permissionForShowingTyles = _checkPermissionByRole(user.getRole(), 'tiles');
+        const permissionForShowingTyles = _verifyUserHasPermissionById(user.getJid(), 'tiles');
 
         if (permissionForShowingTyles) {
             this.addRemoteVideoContainer();
