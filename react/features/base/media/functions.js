@@ -3,7 +3,11 @@
 import { toState } from '../redux';
 
 import { VIDEO_MUTISM_AUTHORITY } from './constants';
-import { getParticipantById } from '../../base/participants';
+import {
+    getParticipantById,
+    getRolesForParticipants,
+    setLocalRole
+} from '../../base/participants';
 import _ from 'lodash';
 
 declare var APP: Object;
@@ -92,26 +96,35 @@ export function _verifyUserHasPermission(type: string): Boolean {
 /**
  * Verifying that the user has permissions for different functionality.
  *
- * @param {string} jidUserId - jid user id
+ * @param {string} userId - user id
  * @param {string} type - permission type: video/audio.
  * @returns {boolean}
  */
-export function _verifyUserHasPermissionByJidId(jidUserId: string, type: string): Boolean {
-    if (!_.isUndefined(APP.conference._room)
-        && !_.isUndefined(APP.conference._room.room)
-        && !_.isUndefined(APP.conference._room.room.members[jidUserId])
-    ) {
-        const participant = APP.conference._room.room.members[jidUserId];
+export async function _verifyUserHasPermissionById(userId: string, type: string): Boolean {
+    const state = APP.store.getState();
+    const participant = getParticipantById(state, userId);
 
-        console.log('====', participant);
+    if (!_.isUndefined(participant)) {
+        if (participant && !participant.localRole) {
+            const conferenceParticipant = APP.conference.getParticipantById(userId);
+            const { jwt } = state['features/base/jwt'];
 
-        if (!_.isUndefined(participant)) {
-            if (participant.role === 'moderator') {
-                return true;
+            const roles = await getRolesForParticipants(jwt);
+
+            const participantRole = roles.find(
+                part => Number(part.id) === Number(conferenceParticipant._identity.user.id)
+            );
+
+            if (participantRole) {
+                console.log('======= roles', roles, conferenceParticipant._identity.user.id);
+                console.log('======= setLocalRole', userId, participantRole.role);
+                APP.store.dispatch(setLocalRole(userId, participantRole.role));
+
+                return _checkPermissionByRole(participantRole.role, type);
             }
-
-            return _checkPermissionByRole(participant.affiliation, type);
         }
+
+        return _checkPermissionByRole(participant.localRole, type);
     }
 
     return true;

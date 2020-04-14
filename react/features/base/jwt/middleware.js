@@ -74,7 +74,6 @@ function _overwriteLocalParticipant(
             newProperties.name = name;
         }
         if (role) {
-            newProperties.role = role;
             newProperties.localRole = role;
         }
         if (features) {

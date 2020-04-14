@@ -2,7 +2,7 @@
 const logger = require('jitsi-meet-logger').getLogger(__filename);
 
 import {
-    _verifyUserHasPermissionByJidId,
+    _verifyUserHasPermissionById,
     VIDEO_TYPE
 } from '../../../react/features/base/media';
 import {
@@ -276,7 +276,7 @@ const VideoLayout = {
      * participant.
      * @returns {void}
      */
-    addRemoteParticipantContainer(participant) {
+    async addRemoteParticipantContainer(participant) {
         if (!participant || participant.local) {
             return;
         } else if (participant.isFakeParticipant) {
@@ -293,19 +293,18 @@ const VideoLayout = {
         const id = participant.id;
         const jitsiParticipant = APP.conference.getParticipantById(id);
 
-        setTimeout(() => {
-            const permissionForShowingTyles = _verifyUserHasPermissionByJidId(jitsiParticipant.getJid(), 'tiles');
+        const permissionForShowingTyles = await _verifyUserHasPermissionById(jitsiParticipant.getId(), 'tiles');
 
-            if (permissionForShowingTyles) {
-                const remoteVideo = new RemoteVideo(jitsiParticipant, VideoLayout);
+        if (permissionForShowingTyles) {
+            const remoteVideo = new RemoteVideo(jitsiParticipant, VideoLayout);
 
-                this._setRemoteControlProperties(jitsiParticipant, remoteVideo);
-                this.addRemoteVideoContainer(id, remoteVideo);
+            this._setRemoteControlProperties(jitsiParticipant, remoteVideo);
+            this.addRemoteVideoContainer(id, remoteVideo);
 
-                this.updateMutedForNoTracks(id, 'audio');
-                this.updateMutedForNoTracks(id, 'video');
-            }
-        }, 1000);
+            this.updateMutedForNoTracks(id, 'audio');
+            this.updateMutedForNoTracks(id, 'video');
+        }
+
     },
 
     /**

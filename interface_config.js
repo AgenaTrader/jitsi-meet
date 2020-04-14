@@ -227,7 +227,7 @@ var interfaceConfig = {
         tiles: [ 'owner', 'member', 'presenter', 'executive' ],
         video: [ 'owner', 'member', 'presenter', 'executive' ],
         audio: [ 'owner', 'member', 'presenter', 'executive' ],
-        sharing: [ 'owner', 'member', 'presenter' ],
+        sharing: [ 'owner', 'member', 'presenter', 'executive' ],
 
         // settings button
         sharedvideo: [ 'owner', 'member', 'presenter', 'executive' ],

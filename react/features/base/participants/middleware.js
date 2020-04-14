@@ -21,7 +21,8 @@ import {
     localParticipantLeft,
     participantLeft,
     participantUpdated,
-    setLoadableAvatarUrl
+    setLoadableAvatarUrl,
+    setLocalRole
 } from './actions';
 import {
     DOMINANT_SPEAKER_CHANGED,
@@ -41,6 +42,7 @@ import {
     getFirstLoadableAvatarUrl,
     getLocalParticipant,
     getParticipantById,
+    getRolesForParticipants,
     getParticipantCount,
     getParticipantDisplayName
 } from './functions';
@@ -358,6 +360,24 @@ function _participantJoinedOrUpdated({ dispatch, getState }, next, action) {
     // Notify external listeners of potential avatarURL changes.
     if (typeof APP === 'object') {
         const currentKnownId = local ? APP.conference.getMyUserId() : id;
+
+        const participant = APP.conference.getParticipantById(currentKnownId);
+
+        if (participant && !participant.localRole) {
+            const { jwt } = getState()['features/base/jwt'];
+            dispatch(setLocalRole(currentKnownId, 'none'));
+
+            getRolesForParticipants(jwt).then(roles => {
+                const participantRole = roles.find(
+                    part => Number(part.id) === Number(participant._identity.user.id)
+                );
+
+                if (participantRole) {
+                    console.log(`======= setLocalRole ${action.type}`, currentKnownId, participantRole.role);
+                    dispatch(setLocalRole(currentKnownId, participantRole.role));
+                }
+            });
+        }
 
         // Force update of local video getting a new id.
         APP.UI.refreshAvatarDisplay(currentKnownId);

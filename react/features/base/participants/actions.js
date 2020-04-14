@@ -13,7 +13,8 @@ import {
     PARTICIPANT_LEFT,
     PARTICIPANT_UPDATED,
     PIN_PARTICIPANT,
-    SET_LOADABLE_AVATAR_URL
+    SET_LOADABLE_AVATAR_URL,
+    SET_LOCAL_ROLE
 } from './actionTypes';
 import {
     getLocalParticipant,
@@ -475,6 +476,29 @@ export function setLoadableAvatarUrl(participantId, url) {
         participant: {
             id: participantId,
             loadableAvatarUrl: url
+        }
+    };
+}
+
+/**
+ * Change local role for participant.
+ *
+ * @param {string} participantId - The ID of the participant.
+ * @param {string} role - participant local role.
+ * @returns {{
+ *     type: SET_LOCAL_ROLE,
+ *     participant: {
+ *         id: string,
+ *         localRole: string
+ *     }
+ * }}
+*/
+export function setLocalRole(participantId, role) {
+    return {
+        type: SET_LOCAL_ROLE,
+        participant: {
+            id: participantId,
+            localRole: role
         }
     };
 }
