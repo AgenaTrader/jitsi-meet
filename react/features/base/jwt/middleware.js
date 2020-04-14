@@ -54,10 +54,10 @@ MiddlewareRegistry.register(store => next => action => {
  */
 function _overwriteLocalParticipant(
         { dispatch, getState },
-        { avatarURL, email, name, features }) {
+        { avatarURL, email, name, features, role }) {
     let localParticipant;
 
-    if ((avatarURL || email || name)
+    if ((avatarURL || email || name || role)
             && (localParticipant = getLocalParticipant(getState))) {
         const newProperties: Object = {
             id: localParticipant.id,
@@ -72,6 +72,10 @@ function _overwriteLocalParticipant(
         }
         if (name) {
             newProperties.name = name;
+        }
+        if (role) {
+            newProperties.role = role;
+            newProperties.localRole = role;
         }
         if (features) {
             newProperties.features = features;
@@ -221,7 +225,7 @@ function _undoOverwriteLocalParticipant(
  *     name: ?string
  * }}
  */
-function _user2participant({ avatar, avatarUrl, email, id, name }) {
+function _user2participant({ avatar, avatarUrl, email, id, name, role }) {
     const participant = {};
 
     if (typeof avatarUrl === 'string') {
@@ -237,6 +241,9 @@ function _user2participant({ avatar, avatarUrl, email, id, name }) {
     }
     if (typeof name === 'string') {
         participant.name = name.trim();
+    }
+    if (typeof role === 'string') {
+        participant.role = role.trim();
     }
 
     return Object.keys(participant).length ? participant : undefined;
