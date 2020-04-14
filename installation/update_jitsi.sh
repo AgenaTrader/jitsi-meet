@@ -7,7 +7,7 @@ if [ -d "$INSTALLPATH/$DOMAIN" ]
 then
     echo "Update current jitsi installation"
     cd "$INSTALLPATH/$DOMAIN"
-    git fetch
-    git reset --hard HEAD
+    git fetch --all
+    git reset --hard origin/develop
     git pull origin develop & wait
 fi
