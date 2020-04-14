@@ -72,7 +72,7 @@ import {
     JitsiTrackEvents
 } from './react/features/base/lib-jitsi-meet';
 import {
-    _checkPermissionByRole,
+    _verifyUserHasPermission,
     isVideoMutedByUser,
     MEDIA_TYPE,
     setAudioAvailable,
@@ -2005,27 +2005,17 @@ export default {
             if (this.isLocalId(id)) {
                 logger.info(`My role changed, new role: ${role}`);
 
-                setTimeout(() => {
-                    const participant = getLocalParticipant(APP.store.getState());
-
-                    if (participant && participant.role === role) {
-                        if (!this.isLocalAudioMuted()) {
-                            if (_checkPermissionByRole(role, MEDIA_TYPE.AUDIO)) {
-                                this.muteAudio(config.startWithAudioMuted);
-                            } else {
-                                this.muteAudio(true);
-                            }
-                        }
-
-                        if (!this.isLocalVideoMuted()) {
-                            if (_checkPermissionByRole(role, MEDIA_TYPE.VIDEO)) {
-                                this.muteVideo(config.startWithVideoMuted);
-                            } else {
-                                this.muteVideo(true);
-                            }
-                        }
+                if (!this.isLocalAudioMuted()) {
+                    if (!_verifyUserHasPermission(role, MEDIA_TYPE.AUDIO)) {
+                        this.muteAudio(true);
                     }
-                }, 100);
+                }
+
+                if (!this.isLocalVideoMuted()) {
+                    if (!_verifyUserHasPermission(role, MEDIA_TYPE.VIDEO)) {
+                        this.muteVideo(true);
+                    }
+                }
 
                 APP.store.dispatch(localParticipantRoleChanged(role));
             } else {
