@@ -305,7 +305,7 @@ const VideoLayout = {
                 this.updateMutedForNoTracks(id, 'audio');
                 this.updateMutedForNoTracks(id, 'video');
             }
-        }, 300);
+        }, 1000);
     },
 
     /**
