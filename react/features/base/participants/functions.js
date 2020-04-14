@@ -249,9 +249,20 @@ function _getAllParticipants(stateful) {
  * @returns {Promise<Object>}
  */
 export function getRolesForParticipants(jwt: string): Promise<Object> {
-    const getParticipantsUrl = `/getParticipants?jwt=${jwt}`;
+    return new Promise((resolve, reject) => {
+        doGetJSON(`/getParticipants?jwt=${jwt}`, true)
+            .then(response => {
+                const { data } = response;
 
-    return doGetJSON(getParticipantsUrl, true);
+                resolve(data.map(i => {
+                    return {
+                        id: i.Item1,
+                        role: i.Item2
+                    };
+                }) || []);
+            })
+            .catch(() => reject([]));
+    });
 }
 
 /**
