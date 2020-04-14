@@ -2006,13 +2006,13 @@ export default {
                 logger.info(`My role changed, new role: ${role}`);
 
                 if (!this.isLocalAudioMuted()) {
-                    if (!_verifyUserHasPermission(role, MEDIA_TYPE.AUDIO)) {
+                    if (!_verifyUserHasPermission(MEDIA_TYPE.AUDIO)) {
                         this.muteAudio(true);
                     }
                 }
 
                 if (!this.isLocalVideoMuted()) {
-                    if (!_verifyUserHasPermission(role, MEDIA_TYPE.VIDEO)) {
+                    if (!_verifyUserHasPermission(MEDIA_TYPE.VIDEO)) {
                         this.muteVideo(true);
                     }
                 }
