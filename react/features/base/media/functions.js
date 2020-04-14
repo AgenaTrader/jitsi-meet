@@ -78,47 +78,40 @@ export function shouldRenderVideoTrack(
  * @returns {boolean}
  */
 export function _verifyUserHasPermission(type: string): Boolean {
-    // const userId = APP.conference.getMyUserId();
-    const userId = APP.conference._room.room.myroomjid;
+    const userId = APP.conference.getMyUserId();
+    const state = APP.store.getState();
+    const participant = getParticipantById(state, userId);
 
-    const participant = _verifyUserHasPermissionById(type, userId);
-
-    // const state = APP.store.getState();
-    // const participant = getParticipantById(state, userId);
-
-    return _checkParticipantPermissions(participant, type);
-}
-
-/**
- * Verifying that the user has permissions for different functionality.
- *
- * @param {string} type - permission type: video/audio.
- * @param {string} userId - user id
- * @returns {boolean}
- */
-export function _verifyUserHasPermissionById(type: string, userId: string): Boolean {
-    if (!_.isUndefined(APP.conference._room)
-        && !_.isUndefined(APP.conference._room.room)
-        && !_.isUndefined(APP.conference._room.room.members[userId])
-    ) {
-        const participant = APP.conference._room.room.members[userId];
-
-        return _checkParticipantPermissions(participant, type);
+    if (!_.isUndefined(participant)) {
+        return _checkPermissionByRole(participant.localRole, type);
     }
 
     return true;
 }
 
 /**
- * Check participant access for
+ * Verifying that the user has permissions for different functionality.
  *
- * @param {Object|undefined} participant - information about user
+ * @param {string} jidUserId - jid user id
  * @param {string} type - permission type: video/audio.
  * @returns {boolean}
  */
-export function _checkParticipantPermissions(participant, type: string): Boolean {
-    if (!_.isUndefined(participant)) {
-        return _checkPermissionByRole(participant.affiliation, type);
+export function _verifyUserHasPermissionByJidId(jidUserId: string, type: string): Boolean {
+    if (!_.isUndefined(APP.conference._room)
+        && !_.isUndefined(APP.conference._room.room)
+        && !_.isUndefined(APP.conference._room.room.members[jidUserId])
+    ) {
+        const participant = APP.conference._room.room.members[jidUserId];
+
+        console.log('====', participant);
+
+        if (!_.isUndefined(participant)) {
+            if (participant.role === 'moderator') {
+                return true;
+            }
+
+            return _checkPermissionByRole(participant.affiliation, type);
+        }
     }
 
     return true;

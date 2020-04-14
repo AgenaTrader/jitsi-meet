@@ -1,7 +1,10 @@
 /* global APP, $, interfaceConfig  */
 const logger = require('jitsi-meet-logger').getLogger(__filename);
 
-import { VIDEO_TYPE } from '../../../react/features/base/media';
+import {
+    _verifyUserHasPermissionByJidId,
+    VIDEO_TYPE
+} from '../../../react/features/base/media';
 import {
     getLocalParticipant as getLocalParticipantFromStore,
     getPinnedParticipant,
@@ -289,13 +292,20 @@ const VideoLayout = {
 
         const id = participant.id;
         const jitsiParticipant = APP.conference.getParticipantById(id);
-        const remoteVideo = new RemoteVideo(jitsiParticipant, VideoLayout);
 
-        this._setRemoteControlProperties(jitsiParticipant, remoteVideo);
-        this.addRemoteVideoContainer(id, remoteVideo);
+        setTimeout(() => {
+            const permissionForShowingTyles = _verifyUserHasPermissionByJidId(jitsiParticipant.getJid(), 'tiles');
 
-        this.updateMutedForNoTracks(id, 'audio');
-        this.updateMutedForNoTracks(id, 'video');
+            if (permissionForShowingTyles) {
+                const remoteVideo = new RemoteVideo(jitsiParticipant, VideoLayout);
+
+                this._setRemoteControlProperties(jitsiParticipant, remoteVideo);
+                this.addRemoteVideoContainer(id, remoteVideo);
+
+                this.updateMutedForNoTracks(id, 'audio');
+                this.updateMutedForNoTracks(id, 'video');
+            }
+        }, 300);
     },
 
     /**
