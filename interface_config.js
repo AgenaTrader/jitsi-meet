@@ -220,17 +220,17 @@ var interfaceConfig = {
      */
 
     ROLE_PERMISSIONS: {
-        tiles: [ 'owner', 'member', 'presenter', 'executive' ],
-        video: [ 'owner', 'member', 'presenter', 'executive' ],
-        audio: [ 'owner', 'member', 'presenter', 'executive' ],
-        sharing: [ 'owner', 'member', 'presenter', 'executive' ],
+        tiles: [ 'owner', 'presenter', 'executive' ],
+        video: [ 'owner', 'presenter', 'executive' ],
+        audio: [ 'owner', 'presenter', 'executive' ],
+        sharing: [ 'owner', 'presenter', 'executive' ],
 
         // settings button
-        sharedvideo: [ 'owner', 'member', 'presenter', 'executive' ],
-        videobackgroundblur: [ 'owner', 'member', 'presenter', 'executive' ],
-        raisehand: [ 'owner', 'member', 'presenter', 'executive' ],
-        invite: [ 'owner', 'member', 'presenter', 'executive' ],
-        desktop: [ 'owner', 'member', 'presenter', 'executive' ]
+        sharedvideo: [ 'owner', 'presenter', 'executive' ],
+        videobackgroundblur: [ 'owner', 'presenter', 'executive' ],
+        raisehand: [ 'owner', 'presenter', 'executive' ],
+        invite: [ 'owner', 'presenter', 'executive' ],
+        desktop: [ 'owner', 'presenter', 'executive' ]
     },
 
     /**

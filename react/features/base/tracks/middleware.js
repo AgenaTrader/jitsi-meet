@@ -146,6 +146,8 @@ MiddlewareRegistry.register(store => next => action => {
                     APP.conference.setVideoMuteStatus(muted);
                 } else {
                     APP.UI.setVideoMuted(participantID, muted);
+
+                    APP.conference.muteVideo(false);
                 }
                 APP.UI.onPeerVideoTypeChanged(participantID, jitsiTrack.videoType);
             } else if (jitsiTrack.isLocal()) {
