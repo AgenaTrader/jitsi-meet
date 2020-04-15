@@ -50,8 +50,14 @@ export function getTileViewGridDimensions(state: Object, maxColumns: number = ge
     // tile is not visible.
     const { iAmRecorder } = state['features/base/config'];
     const numberOfParticipants = state['features/base/participants'].length - (iAmRecorder ? 1 : 0);
+    const { clientWidth } = state['features/base/responsive-ui'];
 
-    const columnsToMaintainASquare = Math.ceil(Math.sqrt(numberOfParticipants));
+    let columnsToMaintainASquare = Math.round(Math.sqrt(numberOfParticipants));
+
+    if (clientWidth > 1350) {
+        columnsToMaintainASquare = Math.ceil(Math.sqrt(numberOfParticipants));
+    }
+
     const columns = Math.min(columnsToMaintainASquare, maxColumns);
     const rows = Math.ceil(numberOfParticipants / columns);
     const visibleRows = Math.min(maxColumns, rows);
