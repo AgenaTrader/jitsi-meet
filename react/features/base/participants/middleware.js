@@ -42,11 +42,16 @@ import {
     getFirstLoadableAvatarUrl,
     getLocalParticipant,
     getParticipantById,
-    getRolesForParticipants,
     getParticipantCount,
     getParticipantDisplayName
 } from './functions';
+
+import {
+    getParticipantLocalRoleById,
+    getRolesForParticipants
+} from '../participants-roles/functions';
 import { PARTICIPANT_JOINED_FILE, PARTICIPANT_LEFT_FILE } from './sounds';
+import { _checkPermissionByRole } from '../media';
 
 declare var APP: Object;
 
@@ -364,19 +369,13 @@ function _participantJoinedOrUpdated({ dispatch, getState }, next, action) {
         const participant = APP.conference.getParticipantById(currentKnownId);
 
         if (participant && !participant.localRole) {
-            const { jwt } = getState()['features/base/jwt'];
+            const userRole = getParticipantLocalRoleById(currentKnownId);
+
             dispatch(setLocalRole(currentKnownId, 'none'));
 
-            getRolesForParticipants(jwt).then(roles => {
-                const participantRole = roles.find(
-                    part => Number(part.id) === Number(participant._identity.user.id)
-                );
-
-                if (participantRole) {
-                    console.log(`======= setLocalRole ${action.type}`, currentKnownId, participantRole.role);
-                    dispatch(setLocalRole(currentKnownId, participantRole.role));
-                }
-            });
+            if (userRole) {
+                dispatch(setLocalRole(currentKnownId, userRole));
+            }
         }
 
         // Force update of local video getting a new id.

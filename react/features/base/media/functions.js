@@ -5,10 +5,14 @@ import { toState } from '../redux';
 import { VIDEO_MUTISM_AUTHORITY } from './constants';
 import {
     getParticipantById,
-    getRolesForParticipants,
     setLocalRole
 } from '../../base/participants';
+
+import {
+    getRolesForParticipants
+} from '../../base/participants-roles';
 import _ from 'lodash';
+import { getParticipantLocalRoleById } from '../participants-roles';
 
 declare var APP: Object;
 declare var interfaceConfig: Object;
@@ -106,9 +110,15 @@ export async function _verifyUserHasPermissionById(userId: string, type: string)
 
     if (!_.isUndefined(participant)) {
         if (participant && !participant.localRole) {
-            const conferenceParticipant = APP.conference.getParticipantById(userId);
-            const { jwt } = state['features/base/jwt'];
+            const userRole = getParticipantLocalRoleById(userId);
 
+            if (userRole) {
+                return _checkPermissionByRole(userRole, type);
+            }
+
+            const conferenceParticipant = APP.conference.getParticipantById(userId);
+
+            const { jwt } = state['features/base/jwt'];
             const roles = await getRolesForParticipants(jwt);
 
             const participantRole = roles.find(
@@ -116,8 +126,6 @@ export async function _verifyUserHasPermissionById(userId: string, type: string)
             );
 
             if (participantRole) {
-                console.log('======= roles', roles, conferenceParticipant._identity.user.id);
-                console.log('======= setLocalRole', userId, participantRole.role);
                 APP.store.dispatch(setLocalRole(userId, participantRole.role));
 
                 return _checkPermissionByRole(participantRole.role, type);
