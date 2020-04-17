@@ -6,7 +6,7 @@ import { toState } from '../redux';
 import { JitsiParticipantConnectionStatus } from '../lib-jitsi-meet';
 import { MEDIA_TYPE, shouldRenderVideoTrack } from '../media';
 import { getTrackByMediaTypeAndParticipant } from '../tracks';
-import { createDeferred, doGetJSON } from '../util';
+import { createDeferred } from '../util';
 
 import {
     JIGASI_PARTICIPANT_ICON,
@@ -240,29 +240,6 @@ function _getAllParticipants(stateful) {
         Array.isArray(stateful)
             ? stateful
             : toState(stateful)['features/base/participants'] || []);
-}
-
-/**
- * Get roles for participants.
- *
- * @param {string} jwt - auth token
- * @returns {Promise<Object>}
- */
-export function getRolesForParticipants(jwt: string): Promise<Object> {
-    return new Promise((resolve, reject) => {
-        doGetJSON(`/getParticipants?jwt=${jwt}`, true)
-            .then(response => {
-                const { data } = response;
-
-                resolve(data.map(i => {
-                    return {
-                        id: i.Item1,
-                        role: i.Item2
-                    };
-                }) || []);
-            })
-            .catch(() => reject([]));
-    });
 }
 
 /**

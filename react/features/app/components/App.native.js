@@ -4,6 +4,7 @@ import React from 'react';
 
 import '../../analytics';
 import '../../authentication';
+import '../../base/participants-roles';
 import { setColorScheme } from '../../base/color-scheme';
 import { DialogContainer } from '../../base/dialog';
 import { CALL_INTEGRATION_ENABLED, updateFlags } from '../../base/flags';
