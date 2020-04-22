@@ -32,6 +32,10 @@
     filter: blur(40px);
 }
 
+.hide-video-container {
+    display: none !important;
+}
+
 .videocontainer {
     position: relative;
     text-align: center;
