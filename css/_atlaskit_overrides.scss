@@ -14,22 +14,22 @@
     opacity: 0 !important;
 }
 
-.mIBKA {
+.Wrapper-sc-19lmueh-0:not(:first-child) {
     opacity: 0 !important;
 }
 
 .fxBTfB {
     width:400px !important;
-    transition: opacity 1s !important;;
 }
 
 .fxBTfB-hide {
-    display: none !important;
-    opacity: 0 !important;
-    transition: opacity 1s !important;
+    transition: opacity 0.5s linear;
+    display: none;
+    opacity: 0;
 }
 
 .gpUwQx {
+    bottom: auto !important;
     transition: width 1s !important;
     &:hover {
         width:400px !important;

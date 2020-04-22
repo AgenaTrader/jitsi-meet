@@ -45,7 +45,7 @@ $AOTToolbarButtonToggleColor: rgba(14, 20, 35, 1);
 $newToolbarFontSize: 24px;
 $newToolbarHangupFontSize: 32px;
 $newToolbarSize: 40px;
-$newToolbarSizeWithPadding: calc(#{$newToolbarSize} + 44px);
+$newToolbarSizeWithPadding: calc(#{$newToolbarSize} - 20px);
 $toolbarTitleFontSize: 19px;
 $overflowMenuBG: initial;
 $overflowMenuItemHoverBG: #313D52;

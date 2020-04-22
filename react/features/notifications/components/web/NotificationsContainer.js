@@ -67,7 +67,7 @@ class NotificationsContainer extends AbstractNotificationsContainer<Props> {
             }
         }, 5000);
 
-        return _notifications.map(notification => {
+        return _notifications.reverse().map(notification => {
             const { props, uid } = notification;
 
             // The id attribute is necessary as {@code FlagGroup} looks for
