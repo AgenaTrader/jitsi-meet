@@ -282,7 +282,7 @@ const VideoLayout = {
      * participant.
      * @returns {void}
      */
-    async addRemoteParticipantContainer(participant) {
+    addRemoteParticipantContainer(participant) {
         if (!participant || participant.local) {
             return;
         } else if (participant.isFakeParticipant) {
@@ -299,18 +299,12 @@ const VideoLayout = {
         const id = participant.id;
         const jitsiParticipant = APP.conference.getParticipantById(id);
 
-        const permissionForShowingTyles = await _verifyUserHasPermissionById(jitsiParticipant.getId(), 'tiles');
+        const remoteVideo = new RemoteVideo(jitsiParticipant, VideoLayout);
+        this._setRemoteControlProperties(jitsiParticipant, remoteVideo);
+        this.addRemoteVideoContainer(id, remoteVideo);
 
-        if (permissionForShowingTyles) {
-            const remoteVideo = new RemoteVideo(jitsiParticipant, VideoLayout);
-
-            this._setRemoteControlProperties(jitsiParticipant, remoteVideo);
-            this.addRemoteVideoContainer(id, remoteVideo);
-
-            this.updateMutedForNoTracks(id, 'audio');
-            this.updateMutedForNoTracks(id, 'video');
-        }
-
+        this.updateMutedForNoTracks(id, 'audio');
+        this.updateMutedForNoTracks(id, 'video');
     },
 
     /**
