@@ -198,7 +198,8 @@ function _mapStateToProps(state) {
                     currentLanguage: tabState.currentLanguage,
                     followMeEnabled: tabState.followMeEnabled,
                     startAudioMuted: tabState.startAudioMuted,
-                    startVideoMuted: tabState.startVideoMuted
+                    startVideoMuted: tabState.startVideoMuted,
+                    disableNotifications: tabState.disableNotifications
                 };
             },
             styles: 'settings-pane more-pane',

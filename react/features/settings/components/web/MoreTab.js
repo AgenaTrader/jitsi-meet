@@ -61,6 +61,11 @@ export type Props = {
     startVideoMuted: boolean,
 
     /**
+     * Whether or not to disable notifications for me.
+     */
+    disableNotifications: boolean,
+
+    /**
      * Invoked to obtain translated strings.
      */
     t: Function
@@ -198,6 +203,7 @@ class MoreTab extends AbstractDialogTab<Props, State> {
             followMeEnabled,
             startAudioMuted,
             startVideoMuted,
+            disableNotifications,
             t
         } = this.props;
 
@@ -235,6 +241,15 @@ class MoreTab extends AbstractDialogTab<Props, State> {
                     onChange = {
                         ({ target: { checked } }) =>
                             super._onChange({ followMeEnabled: checked })
+                    } />
+                <Checkbox
+                    isChecked = { disableNotifications }
+                    label = { t('settings.disableNotifications') }
+                    name = 'disable-notifications'
+                    // eslint-disable-next-line react/jsx-no-bind
+                    onChange = {
+                        ({ target: { checked } }) =>
+                            super._onChange({ disableNotifications: checked })
                     } />
             </div>
         );

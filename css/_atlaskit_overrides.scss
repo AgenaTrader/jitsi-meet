@@ -3,7 +3,47 @@
  * toolbar with the first notification.
  */
 .cjMOOK{
-    bottom: calc(#{$newToolbarSizeWithPadding}) !important;
+    top: calc(#{$newToolbarSizeWithPadding}) !important;
+    bottom: auto !important;
+    left: 20px !important;
+}
+
+.kGQNDu {
+    transition: visibility 0s, opacity 0.5s linear !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+}
+
+.mIBKA {
+    opacity: 0 !important;
+}
+
+.fxBTfB {
+    width:400px !important;
+    transition: opacity 1s !important;;
+}
+
+.fxBTfB-hide {
+    display: none !important;
+    opacity: 0 !important;
+    transition: opacity 1s !important;
+}
+
+.gpUwQx {
+    transition: width 1s !important;
+    &:hover {
+        width:400px !important;
+
+        .fxBTfB-hide {
+            opacity:1 !important;
+            display: flex !important;
+        }
+
+        .kGQNDu {
+            visibility: visible !important;
+            opacity: 1 !important;
+        }
+    }
 }
 
 /**
