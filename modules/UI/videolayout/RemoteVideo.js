@@ -589,7 +589,7 @@ export default class RemoteVideo extends SmallVideo {
     addVisibilityContainer() {
         _verifyUserHasPermissionById(this.id, 'tiles')
             .then(permission => {
-                if (permission) {
+                if (!permission) {
                     this.container.addClass('videocontainer__hidden');
                 }
             });
