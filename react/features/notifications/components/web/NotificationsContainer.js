@@ -59,6 +59,14 @@ class NotificationsContainer extends AbstractNotificationsContainer<Props> {
     _renderFlags() {
         const { _notifications } = this.props;
 
+        setTimeout(() => {
+            if (document.getElementsByClassName("gpUwQx").length) {
+                document.getElementsByClassName("gpUwQx")[0].style.width = "55px";
+
+                document.getElementsByClassName("fxBTfB")[0].classList.add('fxBTfB-hide');
+            }
+        }, 5000);
+
         return _notifications.map(notification => {
             const { props, uid } = notification;
 

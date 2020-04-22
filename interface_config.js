@@ -100,6 +100,11 @@ var interfaceConfig = {
     DISABLE_TRANSCRIPTION_SUBTITLES: false,
 
     /**
+     * Disable notification about rights granted.
+     */
+    DISABLE_RIGHTS_GRANTED_NOTIFICATIONS: true,
+
+    /**
      * Whether the ringing sound in the call/ring overlay is disabled. If
      * {@code undefined}, defaults to {@code false}.
      *

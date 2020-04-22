@@ -15,7 +15,8 @@
  *         serverURL: string,
  *         startAudioOnly: boolean,
  *         startWithAudioMuted: boolean,
- *         startWithVideoMuted: boolean
+ *         startWithVideoMuted: boolean,
+ *         disableNotifications: boolean
  *     }
  * }
  */

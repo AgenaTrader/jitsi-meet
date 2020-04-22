@@ -11,6 +11,7 @@ import { assignIfDefined } from '../util';
 
 import { SETTINGS_UPDATED } from './actionTypes';
 import logger from './logger';
+import { setNotificationsEnabled } from '../../notifications';
 
 /**
  * The default/initial redux state of the feature {@code base/settings}.
@@ -32,6 +33,7 @@ const DEFAULT_STATE = {
     startAudioOnly: false,
     startWithAudioMuted: false,
     startWithVideoMuted: false,
+    disableNotifications: false,
     userSelectedAudioOutputDeviceId: undefined,
     userSelectedCameraDeviceId: undefined,
     userSelectedMicDeviceId: undefined,
@@ -125,6 +127,7 @@ function _initSettings(featureState) {
     // jibri, and remove the old settings.js values.
     const savedDisplayName = window.localStorage.getItem('displayname');
     const savedEmail = window.localStorage.getItem('email');
+    const savedDisableNotifications = window.localStorage.getItem('disablenotifications');
     let avatarID = _.escape(window.localStorage.getItem('avatarId'));
 
     // The helper _.escape will convert null to an empty strings. The empty
@@ -135,6 +138,9 @@ function _initSettings(featureState) {
     const displayName
         = savedDisplayName === null ? undefined : _.escape(savedDisplayName);
     const email = savedEmail === null ? undefined : _.escape(savedEmail);
+    const disableNotifications = savedDisableNotifications === null
+        ? false
+        : _.escape(savedDisableNotifications);
 
     if (!avatarID) {
         // if there is no avatar id, we generate a unique one and use it forever
@@ -144,7 +150,8 @@ function _initSettings(featureState) {
     settings = assignIfDefined({
         avatarID,
         displayName,
-        email
+        email,
+        disableNotifications
     }, settings);
 
     if (!browser.isReactNative()) {

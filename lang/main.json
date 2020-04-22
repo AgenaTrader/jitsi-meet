@@ -550,6 +550,7 @@
         "speakers": "Speakers",
         "startAudioMuted": "Everyone starts muted",
         "startVideoMuted": "Everyone starts hidden",
+        "disableNotifications": "Disable notifications",
         "title": "Settings"
     },
     "settingsView": {
