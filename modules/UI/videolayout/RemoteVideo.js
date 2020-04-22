@@ -85,6 +85,7 @@ export default class RemoteVideo extends SmallVideo {
         this.addRemoteVideoContainer();
         this.updateIndicators();
         this.updateDisplayName();
+        this.changeContainerVisibility();
 
         this.bindHoverHandler();
         this.flipX = false;
@@ -136,7 +137,6 @@ export default class RemoteVideo extends SmallVideo {
         this.updateStatusBar();
         this.addAudioLevelIndicator();
         this.addPresenceLabel();
-        this.addVisibilityContainer();
 
         return this.container;
     }
@@ -586,13 +586,12 @@ export default class RemoteVideo extends SmallVideo {
     /**
      * Add visibility for container by permissions.
      */
-    addVisibilityContainer() {
-        _verifyUserHasPermissionById(this.id, 'tiles')
-            .then(permission => {
-                if (!permission) {
-                    this.container.addClass('videocontainer__hidden');
-                }
-            });
+    async changeContainerVisibility() {
+        const permission = await _verifyUserHasPermissionById(this.id, 'tiles')
+
+        if (permission === false) {
+            this.container.style.display = 'none';
+        }
     }
 
     /**
