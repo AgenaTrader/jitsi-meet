@@ -638,6 +638,22 @@ export default {
     },
 
     /**
+     * Check if device need to mute.
+     * @param track
+     */
+    parseTrackDeviceIfNeedMute(track) {
+        if ((track.isAudioTrack() && this.isLocalAudioMuted())
+            || (track.isVideoTrack() && this.isLocalVideoMuted())) {
+            const mediaType = track.getType();
+
+            sendAnalytics(
+                createTrackMutedEvent(mediaType, 'initial mute'));
+            logger.log(`${mediaType} mute: initially muted.`);
+            track.mute();
+        }
+    },
+
+    /**
      * Open new connection and join to the conference.
      * @param {object} options
      * @param {string} roomName - The name of the conference.
@@ -670,14 +686,12 @@ export default {
                 }))
             .then(([ tracks, con ]) => {
                 tracks.forEach(track => {
-                    if ((track.isAudioTrack() && this.isLocalAudioMuted())
-                        || (track.isVideoTrack() && this.isLocalVideoMuted())) {
-                        const mediaType = track.getType();
-
-                        sendAnalytics(
-                            createTrackMutedEvent(mediaType, 'initial mute'));
-                        logger.log(`${mediaType} mute: initially muted.`);
-                        track.mute();
+                    if (Array.isArray(track)) {
+                        track.forEach(trackDevice => {
+                            this.parseTrackDeviceIfNeedMute(trackDevice);
+                        });
+                    } else {
+                        this.parseTrackDeviceIfNeedMute(track);
                     }
                 });
                 logger.log(`initialized with ${tracks.length} local tracks`);
@@ -704,13 +718,25 @@ export default {
                 // them at all, we mark corresponding toolbar buttons as muted,
                 // so that the user can try unmute later on and add audio/video
                 // to the conference
-                if (!tracks.find(t => t.isAudioTrack())) {
-                    this.setAudioMuteStatus(true);
-                }
+                tracks.forEach(track => {
+                    if (Array.isArray(track)) {
+                        if (!track.find(t => t.isAudioTrack())) {
+                            this.setAudioMuteStatus(true);
+                        }
 
-                if (!tracks.find(t => t.isVideoTrack())) {
-                    this.setVideoMuteStatus(true);
-                }
+                        if (!track.find(t => t.isVideoTrack())) {
+                            this.setVideoMuteStatus(true);
+                        }
+                    } else {
+                        if (track.isAudioTrack()) {
+                            this.setAudioMuteStatus(true);
+                        }
+
+                        if (track.isVideoTrack()) {
+                            this.setVideoMuteStatus(true);
+                        }
+                    }
+                });
 
                 // Initialize device list a second time to ensure device labels
                 // get populated in case of an initial gUM acceptance; otherwise
@@ -1286,17 +1312,30 @@ export default {
      * @private
      */
     _setLocalAudioVideoStreams(tracks = []) {
-        return tracks.map(track => {
-            if (track.isAudioTrack()) {
-                return this.useAudioStream(track);
-            } else if (track.isVideoTrack()) {
-                return this.useVideoStream(track);
-            }
-            logger.error(
+        return tracks.forEach(track => {
+            if (Array.isArray(track)) {
+                track.forEach(trackDevice => {
+                    if (trackDevice.isAudioTrack()) {
+                        return this.useAudioStream(trackDevice);
+                    } else if (trackDevice.isVideoTrack()) {
+                        return this.useVideoStream(trackDevice);
+                    }
+                    logger.error(
+                        'Ignored not an audio nor a video track: ', track);
+
+                    return Promise.resolve();
+                });
+            } else {
+                if (track.isAudioTrack()) {
+                    return this.useAudioStream(track);
+                } else if (track.isVideoTrack()) {
+                    return this.useVideoStream(track);
+                }
+                logger.error(
                     'Ignored not an audio nor a video track: ', track);
 
-            return Promise.resolve();
-
+                return Promise.resolve();
+            }
         });
     },
 
