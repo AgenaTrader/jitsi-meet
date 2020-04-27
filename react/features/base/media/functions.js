@@ -121,15 +121,21 @@ export async function _verifyUserHasPermissionById(userId: string, type: string)
             const { jwt } = state['features/base/jwt'];
             const roles = await getRolesForParticipants(jwt);
 
-            const participantRole = roles.find(
+            let participantRole = roles.find(
                 part => Number(part.id) === Number(conferenceParticipant._identity.user.id)
             );
 
-            if (participantRole) {
-                APP.store.dispatch(setLocalRole(userId, participantRole.role));
+            if (!participantRole) {
+                const { room } = state['features/base/conference'];
 
-                return _checkPermissionByRole(participantRole.role, type);
+                participantRole = {
+                    role: room.indexOf('friend-chat') === false ? 'listener' : 'presenter'
+                };
             }
+
+            APP.store.dispatch(setLocalRole(userId, participantRole.role));
+
+            return _checkPermissionByRole(participantRole.role, type);
         }
 
         return _checkPermissionByRole(participant.localRole, type);
