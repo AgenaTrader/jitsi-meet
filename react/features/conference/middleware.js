@@ -27,15 +27,16 @@ MiddlewareRegistry.register(store => next => action => {
         const { dispatch, getState } = store;
         const state = getState();
         const { reducedUI } = state['features/base/responsive-ui'];
+        const { room } = state['features/base/conference'];
 
         dispatch(setToolboxEnabled(!reducedUI));
         dispatch(setFilmstripEnabled(!reducedUI));
 
-        dispatch(
-            setPreferredVideoQuality(
-                reducedUI
-                    ? VIDEO_QUALITY_LEVELS.LOW
-                    : VIDEO_QUALITY_LEVELS.HIGH));
+        const quality = reducedUI || room.indexOf('group') !== false
+            ? VIDEO_QUALITY_LEVELS.LOW
+            : VIDEO_QUALITY_LEVELS.HIGH;
+
+        dispatch(setPreferredVideoQuality(quality));
 
         break;
     }
