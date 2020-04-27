@@ -36,6 +36,7 @@ export function getParticipantLocalRoleById(userId: string) {
     const state = APP.store.getState();
     let currentUserId = userId;
     const roles = state[PARTICIPANT_ROLES_STORE_NAME].roles;
+
     const conferenceParticipant = APP.conference.getParticipantById(userId);
 
     if (conferenceParticipant) {
@@ -44,7 +45,7 @@ export function getParticipantLocalRoleById(userId: string) {
 
     const userRole = roles.find(role => Number(role.id) === currentUserId);
 
-    if (userRole !== false) {
+    if (userRole) {
         return userRole.role;
     }
 
