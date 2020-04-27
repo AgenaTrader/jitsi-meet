@@ -32,7 +32,11 @@ MiddlewareRegistry.register(store => next => action => {
         dispatch(setToolboxEnabled(!reducedUI));
         dispatch(setFilmstripEnabled(!reducedUI));
 
-        const quality = reducedUI || room.indexOf('group') !== false
+        console.log('====', room);
+        console.log('====', reducedUI || room.indexOf('group') !== false);
+        console.log('====', room.indexOf('group'));
+
+        const quality = reducedUI || room.indexOf('group') !== -1
             ? VIDEO_QUALITY_LEVELS.LOW
             : VIDEO_QUALITY_LEVELS.HIGH;
 

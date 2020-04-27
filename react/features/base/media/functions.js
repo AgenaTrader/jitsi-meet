@@ -108,9 +108,15 @@ export async function _verifyUserHasPermissionById(userId: string, type: string)
     const state = APP.store.getState();
     const participant = getParticipantById(state, userId);
 
+    console.log('===== participant', participant);
+
     if (!_.isUndefined(participant)) {
-        if (participant && !participant.localRole) {
+        console.log('===== participant.localRole', participant.localRole);
+
+        if (participant && _.isUndefined(participant.localRole)) {
+            console.log('===== ---+++ userRole');
             const userRole = getParticipantLocalRoleById(userId);
+            console.log('===== userRole', userRole);
 
             if (userRole) {
                 return _checkPermissionByRole(userRole, type);
@@ -125,12 +131,17 @@ export async function _verifyUserHasPermissionById(userId: string, type: string)
                 part => Number(part.id) === Number(conferenceParticipant._identity.user.id)
             );
 
+            console.log('==== participantRole', participantRole);
+
             if (!participantRole) {
                 const { room } = state['features/base/conference'];
+                console.log('==== room', room);
 
                 participantRole = {
-                    role: room.indexOf('friend-chat') === false ? 'listener' : 'presenter'
+                    role: room.indexOf('friend-chat') === -1 ? 'listener' : 'presenter'
                 };
+
+                console.log('==== participantRole', participantRole);
             }
 
             APP.store.dispatch(setLocalRole(userId, participantRole.role));
