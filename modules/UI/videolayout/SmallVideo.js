@@ -700,7 +700,7 @@ export default class SmallVideo {
         let statsPopoverPosition, tooltipPosition;
 
         if (currentLayout === LAYOUTS.TILE_VIEW) {
-            statsPopoverPosition = 'right top';
+            statsPopoverPosition = 'left top';
             tooltipPosition = 'right';
         } else if (currentLayout === LAYOUTS.VERTICAL_FILMSTRIP_VIEW) {
             statsPopoverPosition = this.statsPopoverLocation;

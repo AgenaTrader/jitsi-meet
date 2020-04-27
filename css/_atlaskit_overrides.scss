@@ -24,7 +24,7 @@
 
 .fxBTfB-hide {
     transition: opacity 0.5s linear;
-    display: none;
+    display: none !important;
     opacity: 0;
 }
 
@@ -44,6 +44,10 @@
             opacity: 1 !important;
         }
     }
+}
+
+.kuyJLl {
+    background-color: $darkPopupsColor !important;
 }
 
 /**
@@ -87,4 +91,12 @@
  */
 .toolbox-button-wth-dialog .eYJELv {
     max-height: initial;
+}
+
+.eYJELv {
+    background-color: $darkPopupsColor !important;
+}
+
+.eYJELv li:hover {
+    background-color: $darkPopupsHoverColor !important;
 }
