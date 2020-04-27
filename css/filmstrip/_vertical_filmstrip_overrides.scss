@@ -19,9 +19,17 @@
  * Overrides for small videos in vertical filmstrip mode.
  */
 .vertical-filmstrip .filmstrip__videos .videocontainer {
+    box-shadow: 0 1px 2px 1px #232323;
+
     /**
      * Move status icons to the bottom right of the thumbnail.
      */
+    .videocontainer__background {
+        background-color: #192025;
+    }
+    .videocontainer__hoverOverlay {
+        background-color: rgba(87, 87, 90, 0.65)
+    }
     .videocontainer__toolbar {
         /**
          * FIXME: disable pointer to allow any elements moved below to still
@@ -30,6 +38,7 @@
          */
         pointer-events: none;
         text-align: right;
+        padding: 0 0 0 5px;
 
         > div {
             pointer-events: none;
@@ -43,6 +52,28 @@
         .toolbar-icon {
             pointer-events: all;
         }
+    }
+
+    .videocontainer__toptoolbar {
+        left:0;
+
+        .indicator {
+            .connection {
+                position: relative;
+            }
+        }
+    }
+
+    .videocontainer__toolbar .jitsi-icon svg,
+    .remotevideomenu .jitsi-icon svg {
+        fill: white;
+        height: 13px;
+        width:13px;
+    }
+
+    .videocontainer__toptoolbar .jitsi-icon svg {
+        height: 13px;
+        width:13px;
     }
 
     /**
@@ -60,25 +91,8 @@
         display: inline-block;
     }
 
-    .indicator-container {
-        float: none;
-    }
-
-    /**
-     * Move the remote video menu trigger to the bottom left of the video
-     * thumbnail.
-     */
-    .remotevideomenu,
     .remote-video-menu-trigger {
-        bottom: 0;
-        left: 0;
-        top: auto;
-        right: auto;
-    }
-
-    .remote-video-menu-trigger {
-        margin-bottom: 7px;
-        margin-left: $remoteVideoMenuIconMargin;
+        margin-bottom: 5px;
     }
 }
 

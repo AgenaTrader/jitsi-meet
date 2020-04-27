@@ -3,7 +3,7 @@
 var interfaceConfig = {
     // TO FIX: this needs to be handled from SASS variables. There are some
     // methods allowing to use variables both in css and js.
-    DEFAULT_BACKGROUND: '#474747',
+    DEFAULT_BACKGROUND: '#d1d1d1',
 
     /**
      * Show coming soon page besides welcome page.
@@ -115,7 +115,7 @@ var interfaceConfig = {
     AUDIO_LEVEL_SECONDARY_COLOR: 'rgba(255,255,255,0.2)',
     POLICY_LOGO: null,
     LOCAL_THUMBNAIL_RATIO: 16 / 9, // 16:9
-    REMOTE_THUMBNAIL_RATIO: 1, // 1:1
+    REMOTE_THUMBNAIL_RATIO: 16 / 12, // 1:1
     // Documentation reference for the live streaming feature.
     LIVE_STREAMING_HELP_LINK: 'https://jitsi.org/live',
 

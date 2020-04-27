@@ -9,6 +9,7 @@ import { getCurrentLayout, LAYOUTS } from '../../../video-layout';
 import AudioMutedIndicator from './AudioMutedIndicator';
 import ModeratorIndicator from './ModeratorIndicator';
 import VideoMutedIndicator from './VideoMutedIndicator';
+import { ConnectionIndicator } from '../../../connection-indicator/components/web';
 
 declare var interfaceConfig: Object;
 
@@ -77,8 +78,10 @@ class StatusIndicators extends Component<Props> {
 
         return (
             <div>
-                { showAudioMutedIndicator ? <AudioMutedIndicator tooltipPosition = { tooltipPosition } /> : null }
-                { showVideoMutedIndicator ? <VideoMutedIndicator tooltipPosition = { tooltipPosition } /> : null }
+                <div className = { 'device-status-container' }>
+                    { showAudioMutedIndicator ? <AudioMutedIndicator tooltipPosition = { tooltipPosition } /> : null }
+                    { showVideoMutedIndicator ? <VideoMutedIndicator tooltipPosition = { tooltipPosition } /> : null }
+                </div>
                 { _showModeratorIndicator ? <ModeratorIndicator tooltipPosition = { tooltipPosition } /> : null }
             </div>
         );

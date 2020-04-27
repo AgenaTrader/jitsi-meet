@@ -43,7 +43,7 @@
     }
 
     .toolbox-background {
-        background-image: linear-gradient(to top, rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0));
+        background-image: linear-gradient(to top, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0));
         transition: bottom .3s ease-in;
         height: 160px;
         width: 100%;
@@ -59,7 +59,7 @@
         justify-content: space-between;
         margin-left: auto;
         margin-right: auto;
-        padding: 20px 16px;
+        padding: 0 16px 20px 16px;
         position: relative;
         width: 100%;
         z-index: $toolbarZ;

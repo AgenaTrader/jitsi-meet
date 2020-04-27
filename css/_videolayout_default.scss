@@ -1,5 +1,6 @@
 #videoconference_page {
     min-height: 100%;
+    background-color: $defaultBackground;
 }
 
 #videospace {
@@ -35,10 +36,11 @@
 .videocontainer {
     position: relative;
     text-align: center;
+    box-shadow: -3px 1px 6px 1px #8a8a8a;
 
     &__background {
         @include topLeft();
-        background-color: black;
+        background-color: $defaultBackground;
         border-radius: $borderRadius;
         width: 100%;
         height: 100%;
@@ -50,10 +52,11 @@
     &__toolbar,
     &__toptoolbar {
         position: absolute;
-        left: 0;
+        top:0;
+        right: 0;
         pointer-events: none;
         z-index: $zindex10;
-        width: 100%;
+        height: 100%;
         box-sizing: border-box; // Includes the padding in the 100% width.
 
         /**
@@ -78,9 +81,20 @@
     }
 
     &__toolbar {
-        bottom: 0;
-        height: $thumbnailToolbarHeight;
-        padding: 0 5px 0 5px;
+        width: $thumbnailToolbarHeight;
+        padding: 0;
+    }
+
+    &__toolbar .jitsi-icon svg,
+    .remotevideomenu .jitsi-icon svg {
+        fill: #474747;
+        height: 15px;
+        width:15px;
+    }
+
+    &__toptoolbar .jitsi-icon svg {
+        height: 15px;
+        width:15px;
     }
 
     &__toptoolbar {
@@ -91,19 +105,6 @@
          * Override text-align center as icons need to be left justified.
          */
         text-align: left;
-
-        /**
-         * Intentionally use margin on the icon itself as AtlasKit InlineDialog
-         * positioning depends on the trigger (indicator icon).
-         */
-        .indicator {
-            margin-left: 5px;
-            margin-top: $toolbarIconMargin;
-        }
-
-        .indicator-container:nth-child(1) .indicator {
-            margin-left: $toolbarIconMargin;
-        }
 
         .indicator-container {
             display: inline-block;
@@ -117,23 +118,24 @@
         .connection-indicator,
         .indicator {
             position: relative;
-            font-size: 8px;
+            //font-size: 8px;
             text-align: center;
             line-height: $thumbnailIndicatorSize;
             padding: 0;
             @include circle($thumbnailIndicatorSize);
+            border-radius: 0;
             box-sizing: border-box;
             z-index: $zindex3;
-            background: $dominantSpeakerBg;
+            //background: $dominantSpeakerBg;
             color: $thumbnailPictogramColor;
-            border: $thumbnailIndicatorBorder solid $thumbnailPictogramColor;
+            //border: $thumbnailIndicatorBorder solid $thumbnailPictogramColor;
 
             .indicatoricon {
                 @include absoluteAligning();
             }
 
             .connection {
-                position: relative;
+                position: absolute;
                 display: inline-block;
                 margin: 0 auto;
                 left: 0;
@@ -159,6 +161,7 @@
                 }
             }
 
+            .connection,
             .icon-gsm-bars {
                 cursor: pointer;
                 font-size: 1em;
@@ -171,7 +174,7 @@
     }
 
     &__hoverOverlay {
-        background: rgba(0,0,0,.6);
+        background: rgba(127, 126, 135, 0.65);
         border-radius: $borderRadius;
         position: absolute;
         top: 0px;
@@ -351,43 +354,39 @@
  * Toolbar icons positioned on the right.
  */
 .moderator-icon {
-    display: inline-block;
-
-    &.right {
-        float: right;
-        margin: 0px 0px 0px 5px;
-    }
+    position: absolute;
+    bottom:0;
 
     .toolbar-icon {
         margin: 0;
     }
 }
 
-.raisehandindicator {
-  background: $raiseHandBg;
+.raisehandindicator svg {
+    fill: $raiseHandBg;
 }
 
 .connection-indicator {
-    background: $connectionIndicatorBg;
+    //background: $connectionIndicatorBg;
 
-    &.status-high {
-        background: green;
+    &.status-high svg {
+        fill: green;
     }
 
-    &.status-med {
-        background: #FFD740;
+    &.status-med svg {
+        fill: #FFD740;
     }
 
-    &.status-lost {
-        background: gray;
+    &.status-lost svg {
+        fill: gray;
     }
 
-    &.status-low {
-        background: #BF2117;
+    &.status-low svg {
+        fill: #BF2117;
     }
 
-    &.status-other {
-        background: $connectionIndicatorBg;
+    &.status-other svg {
+        fill: $connectionIndicatorBg;
     }
 }
 
@@ -396,12 +395,15 @@
 {
     display: inline-block;
     position: absolute;
-    top: 0px;
-    right: 0;
+    bottom: 0;
+    left: 0;
+    top: auto;
+    right: auto;
     z-index: $zindex2;
     width: 18px;
-    height: 13px;
+    height: 12px;
     color: #FFF;
+    padding-right: 5px;
     font-size: 10pt;
     margin-right: $remoteVideoMenuIconMargin;
 
@@ -410,7 +412,8 @@
     }
 }
 .remote-video-menu-trigger {
-    margin-top: 7px;
+    margin-bottom: 7px;
+    margin-left: $remoteVideoMenuIconMargin;
 }
 
 /**
@@ -618,6 +621,10 @@
 .display-name-on-black {
     .avatar-container {
         visibility: hidden;
+    }
+
+    .videocontainer__background {
+        background-color: black;
     }
 
     .displayNameContainer {
