@@ -551,7 +551,8 @@
         "startAudioMuted": "Everyone starts muted",
         "startVideoMuted": "Everyone starts hidden",
         "disableNotifications": "Disable notifications",
-        "title": "Settings"
+        "title": "Settings",
+        "mySetting": "My Settings"
     },
     "settingsView": {
         "advanced": "Advanced",

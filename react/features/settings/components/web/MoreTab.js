@@ -120,6 +120,8 @@ class MoreTab extends AbstractDialogTab<Props, State> {
             content.push(this._renderModeratorSettings());
         }
 
+        content.push(this._renderGeneralSettings());
+
         if (showLanguageSettings) {
             content.push(this._renderLangaugeSelect());
         }
@@ -242,6 +244,29 @@ class MoreTab extends AbstractDialogTab<Props, State> {
                         ({ target: { checked } }) =>
                             super._onChange({ followMeEnabled: checked })
                     } />
+            </div>
+        );
+    }
+
+    /**
+     * Returns the React Element for modifying conference-wide settings.
+     *
+     * @private
+     * @returns {ReactElement}
+     */
+    _renderGeneralSettings() {
+        const {
+            disableNotifications,
+            t
+        } = this.props;
+
+        return (
+            <div
+                className = 'settings-sub-pane'
+                key = 'me'>
+                <div className = 'mock-atlaskit-label'>
+                    { t('settings.mySetting') }
+                </div>
                 <Checkbox
                     isChecked = { disableNotifications }
                     label = { t('settings.disableNotifications') }

@@ -54,4 +54,11 @@
     .videocontainer__toptoolbar {
         z-index: auto;
     }
+
+    .videocontainer {
+        .tOoji {
+            display: flex;
+            flex-direction: row-reverse;
+        }
+    }
 }
