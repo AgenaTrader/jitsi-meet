@@ -908,6 +908,8 @@ export default class SmallVideo {
                 const { height, width } = size;
                 const avatarSize = height / 2;
 
+                console.log('======', height, width);
+
                 this.$container.css({
                     height: `${height}px`,
                     'min-height': `${height}px`,
@@ -929,6 +931,7 @@ export default class SmallVideo {
                 const { height, width } = thumbnailSize;
                 const avatarSize = height / 2;
 
+                console.log('======', height, width);
                 this.$container.css({
                     height: `${height}px`,
                     'min-height': `${height}px`,
