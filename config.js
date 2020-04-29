@@ -478,7 +478,7 @@ inviteServiceUrl: '/conferenceInvite',
 peopleSearchQueryTypes: ['user' /*, 'conferenceRooms'*/],
 
     tokenAuthUrl: '/joinRoom?roomName={room}', //'https://' + tyHost + '/meeting/join-meeting?room_type={room}',
-    makeCall: '/makeCall?jwt={jwt}&=userId={userId}', //'https://' + tyHost + '/makeCall?jwt={jwt}&=userId={userId}',
+    makeCall: '/makeCall?jwt={jwt}&userId={userId}', //'https://' + tyHost + '/makeCall?jwt={jwt}&=userId={userId}',
 
     // List of undocumented settings used in jitsi-meet
     /**
