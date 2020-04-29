@@ -3,53 +3,8 @@
  * toolbar with the first notification.
  */
 .cjMOOK{
-    top: calc(#{$newToolbarSizeWithPadding}) !important;
-    bottom: auto !important;
-    left: 20px !important;
+    bottom: calc(#{$newToolbarSizeWithPadding}) !important;
 }
-
-.kGQNDu {
-    transition: visibility 0s, opacity 0.5s linear !important;
-    visibility: hidden !important;
-    opacity: 0 !important;
-}
-
-.Wrapper-sc-19lmueh-0:not(:first-child) {
-    opacity: 0 !important;
-}
-
-.fxBTfB {
-    width:400px !important;
-}
-
-.fxBTfB-hide {
-    transition: opacity 0.5s linear;
-    display: none !important;
-    opacity: 0;
-}
-
-.gpUwQx {
-    bottom: auto !important;
-    transition: width 1s !important;
-    &:hover {
-        width:400px !important;
-
-        .fxBTfB-hide {
-            opacity:1 !important;
-            display: flex !important;
-        }
-
-        .kGQNDu {
-            visibility: visible !important;
-            opacity: 1 !important;
-        }
-    }
-}
-
-.kuyJLl {
-    background-color: $darkPopupsColor !important;
-}
-
 /**
  * Disable the slide-in animation for @atlaskit/flag due to the animation
  * repeating for each queued flag once it becomes the top flag.
@@ -91,12 +46,4 @@
  */
 .toolbox-button-wth-dialog .eYJELv {
     max-height: initial;
-}
-
-.eYJELv {
-    background-color: $darkPopupsColor !important;
-}
-
-.eYJELv li:hover {
-    background-color: $darkPopupsHoverColor !important;
 }

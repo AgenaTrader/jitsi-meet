@@ -90,7 +90,7 @@
                     }
 
                     &.toggled {
-                        background: $darkPopupsColor;
+                        background: $darkPopupsHoverColor;
                         border: 1px solid #5e6d7a;
 
                         svg {
@@ -164,6 +164,10 @@
                 &:hover {
                     background-color: $overflowMenuItemHoverBG;
                     color: $overflowMenuItemHoverColor;
+
+                    svg {
+                        fill: $overflowMenuItemHoverColor !important;
+                    }
                 }
 
                 &.unclickable {
@@ -206,7 +210,7 @@
                 }
 
                 svg {
-                    fill: #B8C7E0 !important;
+                    fill: $darkPopupsHoverColor !important;
                 }
             }
 

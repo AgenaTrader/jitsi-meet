@@ -1,0 +1,116 @@
+
+.cjMOOK{
+    top: calc(#{$newToolbarSizeWithPadding}) !important;
+    bottom: auto !important;
+    left: 20px !important;
+}
+
+.Wrapper-sc-19lmueh-0:not(:first-child) {
+    opacity: 0 !important;
+}
+
+.fxBTfB {
+    width:400px !important;
+}
+
+.fxBTfB-hide {
+    transition: opacity 0.5s linear;
+    display: none !important;
+    opacity: 0;
+}
+
+.gpUwQx {
+    bottom: auto !important;
+    transition: width 1s !important;
+
+    .kGQNDu {
+        transition: visibility 0s, opacity 0.5s linear !important;
+        visibility: hidden !important;
+        opacity: 0 !important;
+    }
+
+    .kuyJLl,
+    .kGQNDu,
+    .dRfhRk,
+    .beynCI {
+        color: $darkPopupsHoverColor !important;
+    }
+
+    &:hover {
+        width:400px !important;
+
+        .fxBTfB-hide {
+            opacity:1 !important;
+            display: flex !important;
+        }
+
+        .kGQNDu {
+            visibility: visible !important;
+            opacity: 1 !important;
+        }
+    }
+}
+
+.kuyJLl {
+    background-color: $darkPopupsColor !important;
+}
+
+
+.eoRGoR,
+.eYJELv {
+    background-color: $darkPopupsColor !important;
+    color: $darkPopupsHoverColor !important;
+
+    .connection-info__container {
+        color: $popupMenuColor;
+    }
+
+    li:hover svg {
+        fill: $popupMenuHoverIconColor !important;
+    }
+
+    svg {
+        fill: $darkPopupsHoverColor !important;
+    }
+}
+
+.oQiLZ,
+.iVWXDg {
+    color: inherit !important;
+}
+
+.jacfej,
+.cRiLYT,
+.fWoEvM {
+    color: inherit !important;
+
+    svg {
+        fill:white !important;
+    }
+}
+
+.gUwyVH {
+    color: inherit !important;
+}
+
+.dBbYpJ,
+.ihpcrA {
+    background: #489afe !important;
+}
+
+.OZnnZ,
+.OZnnZ:hover,
+.hiHxeB {
+    background-color: white !important;
+}
+
+
+.eoRGoR {
+    .device-selector-trigger {
+        background-color: inherit !important;
+    }
+}
+
+.eYJELv li:hover {
+    background-color: $darkPopupsHoverColor !important;
+}
