@@ -229,11 +229,12 @@ var interfaceConfig = {
         video: [ 'owner', 'presenter', 'executive' ],
         audio: [ 'owner', 'presenter', 'executive' ],
         sharing: [ 'owner', 'presenter', 'executive' ],
+        makecall: [ 'owner', 'presenter', 'executive' ],
 
         // settings button
         sharedvideo: [ 'owner', 'presenter', 'executive' ],
         videobackgroundblur: [ 'owner', 'presenter', 'executive' ],
-        raisehand: [ 'owner', 'presenter', 'executive' ],
+        raisehand: [],
         invite: [ 'owner', 'presenter', 'executive' ],
         desktop: [ 'owner', 'presenter', 'executive' ]
     },
