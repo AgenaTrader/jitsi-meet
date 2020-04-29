@@ -624,6 +624,7 @@
             "raiseHand": "Toggle raise hand",
             "recording": "Toggle recording",
             "remoteMute": "Mute participant",
+            "makeCall": "Make private Call",
             "Settings": "Toggle settings",
             "sharedvideo": "Toggle Youtube video sharing",
             "shareRoom": "Invite someone",
