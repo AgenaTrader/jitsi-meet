@@ -12,6 +12,14 @@ $sliderTrackBackground: #474747;
 $sliderThumbBackground: #3572b0;
 
 /**
+* Misc
+ */
+$borderRadius: 12px;
+
+$comingSoonPageBackground: radial-gradient(circle, rgba(63,168,251,1) 0%, rgba(106,66,194,1) 100%);
+$comingSoonPageHeaderTextTitleFontSize: 6rem;
+
+/**
 * Buttons
 */
 $buttonBackground: #44A5FF;
@@ -83,16 +91,22 @@ $feedbackCancelFontColor: #333;
 // Popover colors
 $popoverBg: initial;
 $popoverFontColor: #ffffff !important;
-$popupMenuColor: #ffffff !important;
+$popupMenuColor: #464646 !important;
 $popupMenuHoverColor: #ffffff !important;
+$popupMenuHoverIconColor: #ffffff !important;
 $popupMenuHoverBackground: rgba(255, 255, 255, 0.1);
 $popupSliderColor: #0376da;
 
+$darkPopupsColor: #e6e6e6;
+$darkPopupsHoverColor: #575b61;
+
 // Toolbar
 $secondaryToolbarBg: rgba(0, 0, 0, 0.5);
-$overflowMenuItemColor: #B8C7E0;
 $newToolbarSize: 40px;
-$newToolbarSizeWithPadding: calc(#{$newToolbarSize} + 44px);
+$newToolbarSizeWithPadding: calc(#{$newToolbarSize} - 20px);
+$overflowMenuItemHoverColor: #f2f3fb;
+$overflowMenuItemColor: #636465;
+
 // TOFIX: Once moved to react rename to match the side panel class name.
 $sideToolbarContainerBg: rgba(0, 0, 0, 0.75);
 $toolbarBackground: rgba(0, 0, 0, 0.5);
@@ -117,4 +131,3 @@ $selectActiveItemBg: darken($controlBackground, 20%);
  * TODO: Replace by themed component.
  */
 $videoQualityActive: #4C9AFF;
-$borderRadius: 4px;
