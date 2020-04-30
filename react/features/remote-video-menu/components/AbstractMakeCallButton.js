@@ -43,14 +43,14 @@ export default class AbstractMakeCallButton extends AbstractButton<Props, *> {
      * @returns {void}
      */
     _handleClick() {
-        const { _jwt, _participantUserId } = this.props;
+        const { _jwt, _ownerUserId, _participantUserId } = this.props;
 
         let makeCallRequest = config.makeCall;
 
         makeCallRequest = makeCallRequest.replace('{jwt}', _jwt);
         makeCallRequest = makeCallRequest.replace('{userId}', _participantUserId);
 
-        window.open(makeCallRequest, "_blank");
+        window.open(makeCallRequest, `Window-${_ownerUserId}-${_participantUserId}`, "width=800,height=600");
     }
 }
 
