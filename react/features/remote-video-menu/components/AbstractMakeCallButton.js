@@ -39,10 +39,14 @@ export default class AbstractMakeCallButton extends AbstractButton<Props, *> {
     /**
      * Handles clicking / pressing the button, and mutes the participant.
      *
+     * @param {MouseEvent} event - The click event to intercept.
      * @private
      * @returns {void}
      */
-    _handleClick() {
+    _handleClick(event) {
+        event.preventDefault();
+        event.stopPropagation();
+
         const { _jwt, _ownerUserId, _participantUserId } = this.props;
 
         let makeCallRequest = config.makeCall;

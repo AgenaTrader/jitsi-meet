@@ -3,8 +3,9 @@
 import React from 'react';
 
 import { translate } from '../../../base/i18n';
-import { IconPhone } from '../../../base/icons';
+import { Icon, IconPhone } from '../../../base/icons';
 import { connect } from '../../../base/redux';
+import _ from 'lodash';
 
 import AbstractMakeCallButton, {
     _mapStateToProps,
@@ -42,11 +43,24 @@ class MakeCallButton extends AbstractMakeCallButton {
      * @returns {ReactElement}
      */
     render() {
-        const { participantID, t } = this.props;
+        const { participantID, callButton, t } = this.props;
         const muteConfig = {
             translationKey: 'toolbar.accessibilityLabel.makeCall',
             muteClassName: 'makecall'
         };
+
+        if (!_.isUndefined(callButton) && callButton) {
+            return (
+                <a
+                    className = 'makecall_button'
+                    id = { `makecall_button_${participantID}` }
+                    onClick = { this._handleClick }>
+                    <span className = 'popupmenu__icon'>
+                        <Icon src = { IconPhone } />
+                    </span>
+                </a>
+            );
+        }
 
         return (
             <RemoteVideoMenuButton

@@ -716,3 +716,19 @@
     white-space: nowrap;
     width: 100%;
 }
+
+.makecall_button {
+    position: relative;
+    bottom: 8px;
+    padding: 1px;
+    left: 15px;
+    z-index: 10;
+
+    .popupmenu__icon {
+        min-width: 10px;
+    }
+
+    &:hover {
+        background: #a3a3a3;
+    }
+}

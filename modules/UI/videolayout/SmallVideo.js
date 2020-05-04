@@ -810,8 +810,8 @@ export default class SmallVideo {
         const triggerPin = this._shouldTriggerPin(event);
 
         if (event.stopPropagation && triggerPin) {
-            event.stopPropagation();
-            event.preventDefault();
+            // event.stopPropagation();
+            // event.preventDefault();
         }
         if (triggerPin) {
             this.togglePin();

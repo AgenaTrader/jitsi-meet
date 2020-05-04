@@ -17,6 +17,7 @@ import {
 } from '../../../react/features/base/participants';
 import { PresenceLabel } from '../../../react/features/presence-status';
 import {
+    MakeCallButton,
     REMOTE_CONTROL_MENU_STATES,
     RemoteVideoMenuTriggerButton
 } from '../../../react/features/remote-video-menu';
@@ -29,6 +30,7 @@ const logger = require('jitsi-meet-logger').getLogger(__filename);
 import SmallVideo from './SmallVideo';
 import UIUtils from '../util/UIUtil';
 import { _verifyUserHasPermissionById } from '../../../react/features/base/media';
+import _ from "lodash";
 
 /**
  *
@@ -83,9 +85,9 @@ export default class RemoteVideo extends SmallVideo {
         this.statsPopoverLocation = interfaceConfig.VERTICAL_FILMSTRIP ? 'left bottom' : 'top center';
 
         this.addRemoteVideoContainer();
+        this.changeContainerVisibility();
         this.updateIndicators();
         this.updateDisplayName();
-        this.changeContainerVisibility();
 
         this.bindHoverHandler();
         this.flipX = false;
@@ -221,6 +223,13 @@ export default class RemoteVideo extends SmallVideo {
                             remoteControlState = { remoteControlState } />
                     </AtlasKitThemeProvider>
                 </I18nextProvider>
+                { participantID === APP.conference.getMyUserId()
+                    ? null
+                    : <MakeCallButton
+                        callButton = { true }
+                        key = 'make-call'
+                        participantID = { participantID } />
+                }
             </Provider>,
             remoteVideoMenuContainer);
     }
