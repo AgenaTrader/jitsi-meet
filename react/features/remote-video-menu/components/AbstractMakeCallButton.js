@@ -72,9 +72,13 @@ export function _mapStateToProps(state: Object, ownProps: Props) {
     const { jwt, user } = state['features/base/jwt'];
 
     const ownerUserId = user.id;
+    let secondUserId = undefined;
 
     const participant = APP.conference.getParticipantById(ownProps.participantID);
-    const secondUserId = participant._identity.user.id;
+
+    if (participant) {
+        secondUserId = participant._identity.user.id;
+    }
 
     return {
         _jwt: jwt,
