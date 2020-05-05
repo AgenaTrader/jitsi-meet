@@ -2,6 +2,7 @@
 
 import { LAYOUTS } from './constants';
 import { getPinnedParticipant } from '../base/participants';
+import collapse from '@atlaskit/icon/glyph/editor/collapse';
 
 declare var interfaceConfig: Object;
 
@@ -58,22 +59,34 @@ export function getTileViewGridDimensions(state: Object, maxColumns: number = ge
         columnsToMaintainASquare = Math.ceil(Math.sqrt(numberOfParticipants));
     }
 
+    let columns = Math.min(columnsToMaintainASquare, maxColumns);
+    let rows = Math.ceil(numberOfParticipants / columns);
+
+    if (clientWidth > clientHeight) {
+        if (rows > columns) {
+            const tempRows = rows;
+            rows = columns;
+            columns = tempRows;
+        }
+    } else {
+        if (rows < columns) {
+            const tempColumns = columns;
+            columns = rows;
+            rows = tempColumns;
+        }
+    }
+
+    const halfOfColumns = Math.ceil(columns / 2) > 1 ? Math.ceil(columns / 2) : 2;
+
     if (clientWidth > (clientHeight * 2)) {
-        columnsToMaintainASquare = columnsToMaintainASquare * Math.floor(clientWidth / clientHeight);
+        rows = rows - 1;
+        columns = columns + halfOfColumns;
     }
 
     if (clientHeight > (clientWidth * 2)) {
-        columnsToMaintainASquare = columnsToMaintainASquare / Math.floor(clientHeight / clientWidth);
+        rows = rows + 1;
+        columns = columns - halfOfColumns;
     }
-
-    let columns = Math.min(columnsToMaintainASquare, maxColumns);
-    const rows = Math.ceil(numberOfParticipants / columns);
-
-    // if (numberOfParticipants > maxColumns) {
-    //     columns = Math.ceil(maxColumns / rows);
-    // } else {
-    //     columns = Math.ceil(numberOfParticipants / 2);
-    // }
 
     const visibleRows = Math.min(maxColumns, rows);
 
