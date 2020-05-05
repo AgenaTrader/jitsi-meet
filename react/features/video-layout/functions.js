@@ -62,14 +62,18 @@ export function getTileViewGridDimensions(state: Object, maxColumns: number = ge
         columnsToMaintainASquare = columnsToMaintainASquare * Math.floor(clientWidth / clientHeight);
     }
 
+    if (clientHeight > (clientWidth * 2)) {
+        columnsToMaintainASquare = columnsToMaintainASquare / Math.floor(clientHeight / clientWidth);
+    }
+
     let columns = Math.min(columnsToMaintainASquare, maxColumns);
     const rows = Math.ceil(numberOfParticipants / columns);
 
-    if (numberOfParticipants > maxColumns) {
-        columns = Math.ceil(maxColumns / rows);
-    } else {
-        columns = Math.ceil(numberOfParticipants / rows);
-    }
+    // if (numberOfParticipants > maxColumns) {
+    //     columns = Math.ceil(maxColumns / rows);
+    // } else {
+    //     columns = Math.ceil(numberOfParticipants / 2);
+    // }
 
     const visibleRows = Math.min(maxColumns, rows);
 
