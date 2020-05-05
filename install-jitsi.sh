@@ -5,7 +5,7 @@ if [[ "$EUID" -ne 0 ]]; then
 	exit 1
 fi
 
-DEFAULT_DOMAIN="local.jisti.com"
+DEFAULT_DOMAIN=${PWD##*/}
 DEFAULT_INSTALLPATH="/srv"
 DEFAULT_PROSODYPASSWORD="choopchat"
 
