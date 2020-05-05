@@ -29,9 +29,9 @@ export function getCurrentLayout(state: Object) {
  * @returns {number}
  */
 export function getMaxColumnCount() {
-    const configuredMax = interfaceConfig.TILE_VIEW_MAX_COLUMNS || 5;
+    const configuredMax = interfaceConfig.TILE_VIEW_MAX_COLUMNS || 7;
 
-    return Math.min(Math.max(configuredMax, 1), 5);
+    return Math.min(Math.max(configuredMax, 1), 7);
 }
 
 /**
@@ -50,7 +50,7 @@ export function getTileViewGridDimensions(state: Object, maxColumns: number = ge
     // tile is not visible.
     const { iAmRecorder } = state['features/base/config'];
     const numberOfParticipants = state['features/base/participants'].length - (iAmRecorder ? 1 : 0);
-    const { clientWidth } = state['features/base/responsive-ui'];
+    const { clientWidth, clientHeight } = state['features/base/responsive-ui'];
 
     let columnsToMaintainASquare = Math.round(Math.sqrt(numberOfParticipants));
 
@@ -58,8 +58,17 @@ export function getTileViewGridDimensions(state: Object, maxColumns: number = ge
         columnsToMaintainASquare = Math.ceil(Math.sqrt(numberOfParticipants));
     }
 
-    const columns = Math.min(columnsToMaintainASquare, maxColumns);
+    if (clientWidth > (clientHeight * 2)) {
+        columnsToMaintainASquare = columnsToMaintainASquare * Math.floor(clientWidth / clientHeight);
+    }
+
+    let columns = Math.min(columnsToMaintainASquare, maxColumns);
     const rows = Math.ceil(numberOfParticipants / columns);
+
+    if (numberOfParticipants > columns) {
+        columns = Math.ceil(numberOfParticipants / rows);
+    }
+
     const visibleRows = Math.min(maxColumns, rows);
 
     return {
