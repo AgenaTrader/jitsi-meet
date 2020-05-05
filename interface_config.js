@@ -8,7 +8,7 @@ var interfaceConfig = {
     /**
      * Show coming soon page besides welcome page.
      */
-    COMING_SOON_ENABLED: true,
+    COMING_SOON_ENABLED: false,
 
     /**
      * Whether or not the blurred video background for large video should be
