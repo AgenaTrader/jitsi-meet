@@ -12,6 +12,7 @@ import { UnsupportedDesktopBrowser } from '../unsupported-browser';
 import {
     BlankPage,
     WelcomePage,
+    WelcomePageChoopChat,
     ComingSoon,
     isWelcomePageAppEnabled,
     isWelcomePageUserEnabled
@@ -121,7 +122,10 @@ function _getWebWelcomePageRoute(state): Promise<Route> {
         if (isComingSoonEnabled()) {
             route.component = ComingSoon;
         } else if (isSupportedBrowser()) {
-            route.component = WelcomePage;
+            route.component = WelcomePageChoopChat;
+
+            // old page
+            // route.component = WelcomePage;
         } else {
             route.component = UnsupportedDesktopBrowser;
         }

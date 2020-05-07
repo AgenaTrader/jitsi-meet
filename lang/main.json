@@ -767,6 +767,19 @@
         "videomute": "Participant has stopped the camera"
     },
     "welcomepage": {
+        "choopchat": {
+            "title": "Start your next meeting",
+            "roomButtonName": "Create Meeting",
+            "roomPlaceholder": "just type your meeting name and press \"Create Meeting\"",
+            "createAccount": "Create Account",
+            "needHelp": "Need Help?"
+        },
+        "aboutUs": {
+            "header": "About Us"
+        },
+        "impressum": {
+            "header": "Impressum"
+        },
         "accessibilityLabel": {
             "join": "Tap to join",
             "roomname": "Enter room name"
