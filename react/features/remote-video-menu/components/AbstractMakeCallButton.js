@@ -76,7 +76,7 @@ export function _mapStateToProps(state: Object, ownProps: Props) {
 
     const participant = APP.conference.getParticipantById(ownProps.participantID);
 
-    if (participant) {
+    if (participant && participant._identity) {
         secondUserId = participant._identity.user.id;
     }
 
