@@ -71,8 +71,12 @@ export default class AbstractMakeCallButton extends AbstractButton<Props, *> {
 export function _mapStateToProps(state: Object, ownProps: Props) {
     const { jwt, user } = state['features/base/jwt'];
 
-    const ownerUserId = user.id;
+    let ownerUserId = undefined;
     let secondUserId = undefined;
+
+    if (user) {
+        ownerUserId = user.id;
+    }
 
     const participant = APP.conference.getParticipantById(ownProps.participantID);
 
