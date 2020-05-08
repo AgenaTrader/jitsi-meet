@@ -301,6 +301,27 @@ function Util:process_and_verify_token(session)
     end
 end
 
+function strpos (haystack, needle, offset)
+    local pattern = string.format("(%s)", needle)
+    local i       = string.find (haystack, pattern, (offset or 0))
+
+    return (i ~= nil and i or false)
+end
+
+function Util:traydersyard_meeting (room_address)
+    local room,_,_ = jid.split(room_address);
+
+    if strpos(room, 'group-') == false
+        and strpos(room, 'webinar-') == false
+        and strpos(room, 'friend-chat') == false
+    then
+        module:log(
+            "info",
+            "Room created in traydersyard - %s", room);
+        return true;
+    end
+end
+
 --- Verifies room name and domain if necesarry.
 -- Checks configs and if necessary checks the room name extracted from
 -- room_address against the one saved in the session when token was verified.
@@ -324,6 +345,12 @@ function Util:verify_room(session, room_address)
     if room == nil then
         log("error",
             "Unable to get name of the MUC room ? to: %s", room_address);
+        return true;
+    end
+
+    if self.allowEmptyToken == false and self:traydersyard_meeting(room_address)
+    then
+        module:log("info", "Give access to creating room - %s", room);
         return true;
     end
 
