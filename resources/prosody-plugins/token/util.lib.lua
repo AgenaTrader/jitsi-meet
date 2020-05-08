@@ -244,7 +244,7 @@ end
 -- @return false and error
 function Util:process_and_verify_token(session, room)
     if session.auth_token == nil then
-        if self.allowEmptyToken or self:traydersyard_meeting(room) then
+        if self.allowEmptyToken or self:not_traydersyard_meeting(room) then
             return true;
         else
             return false, "not-allowed", "token required";
@@ -308,11 +308,13 @@ function strpos (haystack, needle, offset)
     return (i ~= nil and i or false)
 end
 
-function Util:traydersyard_meeting (room_address)
+function Util:not_traydersyard_meeting (room_address)
     if room_address == nil
     then
-        return false;
+        module:log("info", "Room address is empty");
+        return true;
     end
+
 
     local room,_,_ = jid.split(room_address);
 
@@ -320,9 +322,11 @@ function Util:traydersyard_meeting (room_address)
         and strpos(room, 'webinar-') == false
         and strpos(room, 'friend-chat') == false
     then
-        module:log("info", "Room created in traydersyard - %s", room);
+        module:log("info", "Not traydersyard room - %s - true", room);
         return true;
     end
+
+    return false;
 end
 
 --- Verifies room name and domain if necesarry.
@@ -351,7 +355,7 @@ function Util:verify_room(session, room_address)
         return true;
     end
 
-    if self.allowEmptyToken == false and self:traydersyard_meeting(room_address)
+    if self.allowEmptyToken == false and self:not_traydersyard_meeting(room_address)
     then
         module:log("info", "Give access to creating room - %s", room);
         return true;
