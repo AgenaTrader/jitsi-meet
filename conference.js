@@ -2070,6 +2070,9 @@ export default {
             if (this.isLocalId(id)) {
                 logger.info(`My role changed, new role: ${role}`);
 
+                const conferenceRoomName = APP.conference.roomName;
+                APP.store.dispatch(updateCurrentUserLocalRole(conferenceRoomName));
+
                 if (!this.isLocalAudioMuted()) {
                     if (!_verifyUserHasPermission(MEDIA_TYPE.AUDIO)) {
                         this.muteAudio(true);
@@ -2081,10 +2084,6 @@ export default {
                         this.muteVideo(true);
                     }
                 }
-
-                const conferenceRoomName = APP.conference.roomName;
-
-                APP.store.dispatch(updateCurrentUserLocalRole(conferenceRoomName));
 
                 APP.store.dispatch(localParticipantRoleChanged(role));
             } else {
