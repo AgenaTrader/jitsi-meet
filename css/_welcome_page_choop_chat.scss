@@ -59,9 +59,14 @@
                 text-align: center;
                 border: none;
                 color: #fffbff;
-                background-color: rgba(108,108,109,.5);
+                background-color: rgba(108,108,109,0.8);
                 box-shadow: 0 3px 15px 0 rgb(6, 6, 6);
                 font-size: $welcomePageButtonFontSize;
+                transition: background-color .25s;
+
+                &:hover {
+                    background-color: rgba(108,108,109,1);
+                }
             }
 
             ::placeholder {
@@ -70,7 +75,7 @@
 
             .connection-buttons {
                 width: 40%;
-                margin:10px auto 0 auto;
+                margin:20px auto 0 auto;
 
                 .welcome-page-button {
                     min-width: $welcomePageButtonMinWidth;
@@ -93,6 +98,8 @@
                     }
                 }
                 .addition-buttons {
+                    margin-top:8px;
+
                     .create-account {
                         float: left;
                     }
@@ -164,6 +171,10 @@
     }
     a:hover {
         text-decoration: underline;
+    }
+
+    .button a {
+        border-radius: 12px;
     }
 
     .button.secondary {

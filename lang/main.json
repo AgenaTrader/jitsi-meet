@@ -772,7 +772,10 @@
             "roomButtonName": "Create Meeting",
             "roomPlaceholder": "just type your meeting name and press \"Create Meeting\"",
             "createAccount": "Create Account",
-            "needHelp": "Need Help?"
+            "needHelp": "Need Help?",
+            "aboutUs": "About us",
+            "impressum": "Impressum",
+            "termsConditions": "Terms & Conditions"
         },
         "aboutUs": {
             "header": "About Us"

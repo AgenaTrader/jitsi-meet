@@ -247,8 +247,8 @@ class WelcomePageChoopChat extends AbstractWelcomePage {
                             <div className = 'addition-buttons'>
                                 <a
                                     className = 'create-account'
-                                    onClick = { this._handleLoginClick }
-                                    href = '#'>
+                                    href = '#'
+                                    onClick = { this._handleLoginClick }>
                                     { t('welcomepage.choopchat.createAccount') }
                                 </a>
                                 <a
@@ -270,13 +270,23 @@ class WelcomePageChoopChat extends AbstractWelcomePage {
                     <div className = 'navigation'>
                         <ul className = 'menu'>
                             <li className = 'item'>
-                                <a onClick = { this._handleAboutUsClick } href="#">About Hs</a>
+                                <a
+                                    href="#"
+                                    onClick = { this._handleAboutUsClick }>
+                                    { t('welcomepage.choopchat.aboutUs') }
+                                </a>
                             </li>
                             <li className = 'item'>
-                                <a onClick = { this._handleImpressumClick } href="#">Impressum</a>
+                                <a
+                                    href="#"
+                                    onClick = { this._handleImpressumClick }>
+                                    { t('welcomepage.choopchat.impressum') }
+                                </a>
                             </li>
                             <li className = 'item'>
-                                <a href = "https://tradersyard.com/intl/terms-conditions">Terms&Conditions</a>
+                                <a href = "https://tradersyard.com/intl/terms-conditions">
+                                    { t('welcomepage.choopchat.termsConditions') }
+                                </a>
                             </li>
                         </ul>
                     </div>
@@ -296,7 +306,11 @@ class WelcomePageChoopChat extends AbstractWelcomePage {
         event.preventDefault();
 
         if (!this._roomInputRef || this._roomInputRef.reportValidity()) {
-            this._onJoin();
+            // this._onJoin();
+
+            const room = this.state.room || this.state.generatedRoomname;
+
+            window.open(room, '_blank');
         }
     }
 
