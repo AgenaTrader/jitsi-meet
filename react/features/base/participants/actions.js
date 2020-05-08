@@ -502,3 +502,27 @@ export function setLocalRole(participantId, role) {
         }
     };
 }
+
+/**
+ * Update current user local role if used no TY group.
+ *
+ * @param {string} room - current room name.
+ * @returns {Function}
+ */
+export function updateCurrentUserLocalRole(room) {
+    return (dispatch, getState) => {
+
+        if (room.indexOf('friend-chat') === -1 && room.indexOf('webinar') === -1 && room.indexOf('group') === -1) {
+            const localParticipant = getLocalParticipant(getState);
+
+            if (localParticipant) {
+                const newProperties = {
+                    id: localParticipant.id,
+                    localRole: 'presenter'
+                };
+
+                dispatch(participantUpdated(newProperties));
+            }
+        }
+    };
+}

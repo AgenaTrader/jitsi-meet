@@ -126,6 +126,7 @@ import { createPresenterEffect } from './react/features/stream-effects/presenter
 import { endpointMessageReceived } from './react/features/subtitles';
 import { createRnnoiseProcessorPromise } from './react/features/rnnoise';
 import { toggleScreenshotCaptureEffect } from './react/features/screenshot-capture';
+import { updateCurrentUserLocalRole } from './react/features/base/participants/actions';
 
 const logger = require('jitsi-meet-logger').getLogger(__filename);
 
@@ -2080,6 +2081,10 @@ export default {
                         this.muteVideo(true);
                     }
                 }
+
+                const conferenceRoomName = APP.conference.roomName;
+
+                APP.store.dispatch(updateCurrentUserLocalRole(conferenceRoomName));
 
                 APP.store.dispatch(localParticipantRoleChanged(role));
             } else {

@@ -49,15 +49,19 @@ function setupAffiliation(room, origin, stanza)
                         local dotSecond = origin.auth_token:sub(dotFirst + 1):find("%.");
                         if dotSecond then
                                 local bodyB64 = origin.auth_token:sub(dotFirst + 1, dotFirst + dotSecond - 1);
+
                                 local body = json.decode(basexx.from_url64(bodyB64));
-                                -- If user is a moderator, set their affiliation to be an owner
-                                log('info', "connected user with role: %s", tostring(body["role"]));
-                                if body["role"] == "owner" or body["role"] == "executive" then
-                                    room:set_affiliation("token_plugin", jid_bare(stanza.attr.from), "owner");
-                                elseif body["role"] == "presenter" then
-                                    room:set_affiliation("token_plugin", jid_bare(stanza.attr.from), "member");
-                                else
-                                    room:set_affiliation("token_plugin", jid_bare(stanza.attr.from), "none");
+                                if (body["context"] and body["context"].user) then
+                                    local context = body["context"];
+                                    -- If user is a moderator, set their affiliation to be an owner
+
+                                    if context.user.role == "owner" or context.user.role == "executive" then
+                                        room:set_affiliation("token_plugin", jid_bare(stanza.attr.from), "owner");
+                                    elseif context.user.role == "presenter" then
+                                        room:set_affiliation("token_plugin", jid_bare(stanza.attr.from), "member");
+                                    else
+                                        room:set_affiliation("token_plugin", jid_bare(stanza.attr.from), "none");
+                                    end;
                                 end;
                         end;
                 end;
