@@ -6,6 +6,7 @@ import collapse from '@atlaskit/icon/glyph/editor/collapse';
 import { _checkPermissionByRole } from '../base/media';
 import _ from 'lodash';
 
+declare var APP: Object;
 declare var interfaceConfig: Object;
 
 /**
@@ -53,7 +54,9 @@ export function getTileViewGridDimensions(state: Object, maxColumns: number = ge
     // tile is not visible.
     const { iAmRecorder } = state['features/base/config'];
     const numberOfParticipants = state['features/base/participants'].filter(
-        participant => _.isUndefined(participant.localRole) || _checkPermissionByRole(participant.localRole, 'tiles')
+        participant => _.isUndefined(participant.localRole)
+            || _checkPermissionByRole(participant.localRole, 'tiles')
+            || participant.id === APP.conference.getMyUserId()
     ).length - (iAmRecorder ? 1 : 0);
 
     const { clientWidth, clientHeight } = state['features/base/responsive-ui'];
