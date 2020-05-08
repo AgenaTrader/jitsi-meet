@@ -242,9 +242,9 @@ end
 -- session.jitsi_meet_context_features - the features value from the token
 -- @param session the current session
 -- @return false and error
-function Util:process_and_verify_token(session)
+function Util:process_and_verify_token(session, room)
     if session.auth_token == nil then
-        if self.allowEmptyToken then
+        if self.allowEmptyToken or self:traydersyard_meeting(room) then
             return true;
         else
             return false, "not-allowed", "token required";
@@ -309,15 +309,18 @@ function strpos (haystack, needle, offset)
 end
 
 function Util:traydersyard_meeting (room_address)
+    if room_address == nil
+    then
+        return false;
+    end
+
     local room,_,_ = jid.split(room_address);
 
     if strpos(room, 'group-') == false
         and strpos(room, 'webinar-') == false
         and strpos(room, 'friend-chat') == false
     then
-        module:log(
-            "info",
-            "Room created in traydersyard - %s", room);
+        module:log("info", "Room created in traydersyard - %s", room);
         return true;
     end
 end

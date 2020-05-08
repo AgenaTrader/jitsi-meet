@@ -58,7 +58,7 @@ function verify_token(token, room_address)
 
     local session = {};
     session.auth_token = token;
-    local verified, reason = token_util:process_and_verify_token(session);
+    local verified, reason = token_util:process_and_verify_token(session, room_address);
     if not verified then
         log("warn", "not a valid token %s", tostring(reason));
         return false;
