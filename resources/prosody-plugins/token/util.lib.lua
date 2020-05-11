@@ -312,7 +312,7 @@ function Util:not_traydersyard_meeting (room_address)
     if room_address == nil
     then
         module:log("info", "Room address is empty");
-        return true;
+        return self.allowEmptyToken;
     end
 
 

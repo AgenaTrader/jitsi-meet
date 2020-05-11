@@ -4,6 +4,7 @@
 local formdecode = require "util.http".formdecode;
 local generate_uuid = require "util.uuid".generate;
 local new_sasl = require "util.sasl".new;
+local jid = require "util.jid";
 local sasl = require "util.sasl";
 local token_util = module:require "token/util".new(module);
 local sessions = prosody.full_sessions;
@@ -67,7 +68,10 @@ end
 function provider.get_sasl_handler(session)
 
 	local function get_username_from_token(self, message)
-        local res, error, reason = token_util:process_and_verify_token(session);
+        local room_address = jid.join(session.jitsi_bosh_query_room, module:get_host());
+        log("warn",
+            "------------------------------------:%s", room_address);
+        local res, error, reason = token_util:process_and_verify_token(session, room_address);
 
         if (res == false) then
             log("warn",
