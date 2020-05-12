@@ -69,6 +69,8 @@ export class AbstractSettingsView<P: Props, S: *> extends Component<P, S> {
             = this._onStartVideoMutedChange.bind(this);
         this._onDisableNotifications
             = this._onDisableNotifications.bind(this);
+        this._onDisableConnectionLostSound
+            = this._onDisableConnectionLostSound.bind(this);
     }
 
     _onChangeDisplayName: (string) => void;
@@ -98,6 +100,21 @@ export class AbstractSettingsView<P: Props, S: *> extends Component<P, S> {
     _onDisableNotifications(newValue) {
         this._updateSettings({
             disableNotifications: newValue
+        });
+    }
+
+    _onDisableConnectionLostSound: (string) => void;
+
+    /**
+     * Handles the disable notifications lost sound for me.
+     *
+     * @param {boolean} newValue - The value typed in the disable notification lost sound field.
+     * @protected
+     * @returns {void}
+     */
+    _onDisableConnectionLostSound(newValue) {
+        this._updateSettings({
+            disableConnectionLostSound: newValue
         });
     }
 

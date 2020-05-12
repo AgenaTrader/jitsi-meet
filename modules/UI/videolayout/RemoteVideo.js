@@ -12,7 +12,8 @@ import {
     JitsiParticipantConnectionStatus
 } from '../../../react/features/base/lib-jitsi-meet';
 import {
-    getPinnedParticipant,
+    getParticipantDisplayName,
+    getPinnedParticipant, PARTICIPANT_LOST_SOUND_ID,
     pinParticipant
 } from '../../../react/features/base/participants';
 import { PresenceLabel } from '../../../react/features/presence-status';
@@ -30,7 +31,12 @@ const logger = require('jitsi-meet-logger').getLogger(__filename);
 import SmallVideo from './SmallVideo';
 import UIUtils from '../util/UIUtil';
 import { _verifyUserHasPermissionById } from '../../../react/features/base/media';
-import _ from "lodash";
+
+import {
+    NOTIFICATION_TIMEOUT,
+    showNotification
+} from '../../../react/features/notifications';
+import { playSound } from '../../../react/features/base/sounds';
 
 /**
  *
@@ -445,6 +451,7 @@ export default class RemoteVideo extends SmallVideo {
         // Update 'mutedWhileDisconnected' flag
         this._figureOutMutedWhileDisconnected();
         this.updateConnectionStatus(connectionStatus);
+        this.notifyAboutConnectionLost(connectionStatus);
     }
 
     /**
@@ -454,6 +461,37 @@ export default class RemoteVideo extends SmallVideo {
         super.remove();
         this.removePresenceLabel();
         this.removeRemoteVideoMenu();
+    }
+
+    /**
+     * Show notification if connection lost.
+     *
+     * @param connectionStatus
+     */
+    notifyAboutConnectionLost(connectionStatus) {
+        if (connectionStatus === JitsiParticipantConnectionStatus.INTERRUPTED) {
+            if (_verifyUserHasPermissionById(this.id, 'lostconnection')) {
+                const store = APP.store;
+
+                const { disableConnectionLostSound } = store.getState()['features/base/settings'];
+
+                if (disableConnectionLostSound) {
+                    return;
+                }
+
+                const displayName = getParticipantDisplayName(store.getState, this.id);
+
+                store.dispatch(playSound(PARTICIPANT_LOST_SOUND_ID));
+
+                store.dispatch(showNotification({
+                    descriptionArguments: { to: displayName || '$t(notify.somebody)' },
+                    descriptionKey: 'notify.connectionLost',
+                    titleKey: 'notify.somebody',
+                    title: displayName
+                },
+                NOTIFICATION_TIMEOUT));
+            }
+        }
     }
 
     /**

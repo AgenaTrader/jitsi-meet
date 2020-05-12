@@ -11,7 +11,6 @@ import { assignIfDefined } from '../util';
 
 import { SETTINGS_UPDATED } from './actionTypes';
 import logger from './logger';
-import { setNotificationsEnabled } from '../../notifications';
 
 /**
  * The default/initial redux state of the feature {@code base/settings}.
@@ -34,6 +33,7 @@ const DEFAULT_STATE = {
     startWithAudioMuted: false,
     startWithVideoMuted: false,
     disableNotifications: false,
+    disableConnectionLostSound: true,
     userSelectedAudioOutputDeviceId: undefined,
     userSelectedCameraDeviceId: undefined,
     userSelectedMicDeviceId: undefined,
@@ -128,6 +128,7 @@ function _initSettings(featureState) {
     const savedDisplayName = window.localStorage.getItem('displayname');
     const savedEmail = window.localStorage.getItem('email');
     const savedDisableNotifications = window.localStorage.getItem('disablenotifications');
+    const savedDisableConnectionLostSound = window.localStorage.getItem('disablelostconnectionsound');
     let avatarID = _.escape(window.localStorage.getItem('avatarId'));
 
     // The helper _.escape will convert null to an empty strings. The empty
@@ -139,8 +140,11 @@ function _initSettings(featureState) {
         = savedDisplayName === null ? undefined : _.escape(savedDisplayName);
     const email = savedEmail === null ? undefined : _.escape(savedEmail);
     const disableNotifications = savedDisableNotifications === null
-        ? false
+        ? DEFAULT_STATE.disableNotifications
         : _.escape(savedDisableNotifications);
+    const disableConnectionLostSound = savedDisableConnectionLostSound === null
+        ? DEFAULT_STATE.disableConnectionLostSound
+        : _.escape(savedDisableConnectionLostSound);
 
     if (!avatarID) {
         // if there is no avatar id, we generate a unique one and use it forever
@@ -151,7 +155,8 @@ function _initSettings(featureState) {
         avatarID,
         displayName,
         email,
-        disableNotifications
+        disableNotifications,
+        disableConnectionLostSound
     }, settings);
 
     if (!browser.isReactNative()) {

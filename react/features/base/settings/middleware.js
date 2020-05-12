@@ -10,7 +10,7 @@ import { MiddlewareRegistry } from '../redux';
 
 import { SETTINGS_UPDATED } from './actionTypes';
 import { handleCallIntegrationChange } from './functions';
-import { setNotificationsEnabled } from '../../notifications';
+import { setNotificationsEnabled, setDisableLostConnectionSound } from '../../notifications';
 
 declare var APP: Object;
 
@@ -30,9 +30,10 @@ MiddlewareRegistry.register(store => next => action => {
         _initializeCallIntegration(store);
 
         const state = store.getState();
-        const { disableNotifications } = state['features/base/settings'];
+        const { disableNotifications, disableConnectionLostSound } = state['features/base/settings'];
 
         APP.store.dispatch(setNotificationsEnabled(!disableNotifications));
+        APP.store.dispatch(setDisableLostConnectionSound(disableConnectionLostSound));
         break;
     case SETTINGS_UPDATED:
         _maybeHandleCallIntegrationChange(action);

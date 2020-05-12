@@ -88,7 +88,7 @@ export function getMoreTabProps(stateful: Object | Function) {
     } = state['features/base/conference'];
     const followMeActive = isFollowMeActive(state);
     const configuredTabs = interfaceConfig.SETTINGS_SECTIONS || [];
-    const disableNotifications = Boolean(state['features/base/settings'].disableNotifications);
+    const { disableNotifications, disableConnectionLostSound } = state['features/base/settings'];
 
     // The settings sections to display.
     const showModeratorSettings = Boolean(
@@ -105,7 +105,8 @@ export function getMoreTabProps(stateful: Object | Function) {
         showModeratorSettings,
         startAudioMuted: Boolean(conference && startAudioMutedPolicy),
         startVideoMuted: Boolean(conference && startVideoMutedPolicy),
-        disableNotifications: Boolean(disableNotifications)
+        disableNotifications: Boolean(disableNotifications),
+        disableConnectionLostSound: Boolean(disableConnectionLostSound)
     };
 }
 

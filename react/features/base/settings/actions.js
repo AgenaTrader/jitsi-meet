@@ -19,7 +19,8 @@ import { SETTINGS_UPDATED } from './actionTypes';
  *         startAudioOnly: boolean,
  *         startWithAudioMuted: boolean,
  *         startWithVideoMuted: boolean,
- *         disableNotifications: boolean
+ *         disableNotifications: boolean,
+ *         disableLostConnectionSound: boolean
  *     }
  * }}
  */

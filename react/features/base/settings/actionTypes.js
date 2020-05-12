@@ -16,7 +16,8 @@
  *         startAudioOnly: boolean,
  *         startWithAudioMuted: boolean,
  *         startWithVideoMuted: boolean,
- *         disableNotifications: boolean
+ *         disableNotifications: boolean.
+ *         disableLostConnectionSound: boolean.
  *     }
  * }
  */

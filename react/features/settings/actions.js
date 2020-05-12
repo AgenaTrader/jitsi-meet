@@ -11,7 +11,7 @@ import {
 import { SettingsDialog } from './components';
 import { getMoreTabProps, getProfileTabProps } from './functions';
 import { updateSettings } from '../base/settings';
-import { setNotificationsEnabled } from '../notifications';
+import { setNotificationsEnabled, setDisableLostConnectionSound } from '../notifications';
 
 declare var APP: Object;
 
@@ -81,6 +81,14 @@ export function submitMoreTab(newState: Object): Function {
 
             dispatch(updateSettings({
                 disableNotifications: newState.disableNotifications
+            }));
+        }
+
+        if (newState.disableConnectionLostSound !== currentState.disableConnectionLostSound) {
+            APP.store.dispatch(setDisableLostConnectionSound(!newState.disableConnectionLostSound));
+
+            dispatch(updateSettings({
+                disableConnectionLostSound: newState.disableConnectionLostSound
             }));
         }
     };

@@ -28,6 +28,7 @@ import {
     setTileView,
     shouldDisplayTileView
 } from '../../../react/features/video-layout';
+import { JitsiParticipantConnectionStatus } from '../../../react/features/base/lib-jitsi-meet';
 /* eslint-enable no-unused-vars */
 
 const logger = require('jitsi-meet-logger').getLogger(__filename);
@@ -71,6 +72,11 @@ const DISPLAY_VIDEO_WITH_NAME = 3;
  */
 const DISPLAY_AVATAR_WITH_NAME = 4;
 
+/**
+ *  Display mode constant used when user connection is lost.
+ * @type {number}
+ */
+const DISPLAY_CONNECTION_LOST = 5;
 
 /**
  *
@@ -449,6 +455,10 @@ export default class SmallVideo {
      * or <tt>DISPLAY_BLACKNESS_WITH_NAME</tt>.
      */
     selectDisplayMode(input) {
+        if (input.connectionStatus === JitsiParticipantConnectionStatus.INTERRUPTED) {
+            return DISPLAY_CONNECTION_LOST;
+        }
+
         // Display name is always and only displayed when user is on the stage
         if (input.isCurrentlyOnLargeVideo && !input.tileViewEnabled) {
             return input.isVideoPlayable && !input.isAudioOnly ? DISPLAY_BLACKNESS_WITH_NAME : DISPLAY_AVATAR_WITH_NAME;
@@ -524,6 +534,11 @@ export default class SmallVideo {
         case DISPLAY_VIDEO_WITH_NAME:
             displayModeString = 'video-with-name';
             this.$container.addClass('display-name-on-video');
+            break;
+        case DISPLAY_CONNECTION_LOST:
+            displayModeString = 'avatar-with-name';
+            this.$container.addClass('display-avatar-with-name');
+            this.$container.addClass('display-connection-lost');
             break;
         case DISPLAY_AVATAR:
         default:

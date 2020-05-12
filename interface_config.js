@@ -236,7 +236,8 @@ var interfaceConfig = {
         videobackgroundblur: [ 'owner', 'presenter', 'executive' ],
         raisehand: [],
         invite: [ 'owner', 'presenter', 'executive' ],
-        desktop: [ 'owner', 'presenter', 'executive' ]
+        desktop: [ 'owner', 'presenter', 'executive' ],
+        lostconnection: [ 'owner', 'presenter', 'executive' ]
     },
 
     /**

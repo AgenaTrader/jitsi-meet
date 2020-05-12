@@ -66,6 +66,11 @@ export type Props = {
     disableNotifications: boolean,
 
     /**
+     * Whether or not to disable connection lost sound for me.
+     */
+    disableConnectionLostSound: boolean,
+
+    /**
      * Invoked to obtain translated strings.
      */
     t: Function
@@ -205,7 +210,6 @@ class MoreTab extends AbstractDialogTab<Props, State> {
             followMeEnabled,
             startAudioMuted,
             startVideoMuted,
-            disableNotifications,
             t
         } = this.props;
 
@@ -257,6 +261,7 @@ class MoreTab extends AbstractDialogTab<Props, State> {
     _renderGeneralSettings() {
         const {
             disableNotifications,
+            disableConnectionLostSound,
             t
         } = this.props;
 
@@ -275,6 +280,15 @@ class MoreTab extends AbstractDialogTab<Props, State> {
                     onChange = {
                         ({ target: { checked } }) =>
                             super._onChange({ disableNotifications: checked })
+                    } />
+                <Checkbox
+                    isChecked = { disableConnectionLostSound }
+                    label = { t('settings.disableConnectionLostSound') }
+                    name = 'disable-connection-lost-sound'
+                    // eslint-disable-next-line react/jsx-no-bind
+                    onChange = {
+                        ({ target: { checked } }) =>
+                            super._onChange({ disableConnectionLostSound: checked })
                     } />
             </div>
         );

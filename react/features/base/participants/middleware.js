@@ -36,7 +36,8 @@ import {
 import {
     LOCAL_PARTICIPANT_DEFAULT_ID,
     PARTICIPANT_JOINED_SOUND_ID,
-    PARTICIPANT_LEFT_SOUND_ID
+    PARTICIPANT_LEFT_SOUND_ID,
+    PARTICIPANT_LOST_SOUND_ID
 } from './constants';
 import {
     getFirstLoadableAvatarUrl,
@@ -47,11 +48,9 @@ import {
 } from './functions';
 
 import {
-    getParticipantLocalRoleById,
-    getRolesForParticipants
+    getParticipantLocalRoleById
 } from '../participants-roles/functions';
-import { PARTICIPANT_JOINED_FILE, PARTICIPANT_LEFT_FILE } from './sounds';
-import { _checkPermissionByRole } from '../media';
+import { PARTICIPANT_JOINED_FILE, PARTICIPANT_LEFT_FILE, PARTICIPANT_LOST_FILE } from './sounds';
 
 declare var APP: Object;
 
@@ -464,6 +463,7 @@ function _registerSounds({ dispatch }) {
     dispatch(
         registerSound(PARTICIPANT_JOINED_SOUND_ID, PARTICIPANT_JOINED_FILE));
     dispatch(registerSound(PARTICIPANT_LEFT_SOUND_ID, PARTICIPANT_LEFT_FILE));
+    dispatch(registerSound(PARTICIPANT_LOST_SOUND_ID, PARTICIPANT_LOST_FILE));
 }
 
 /**
@@ -476,4 +476,5 @@ function _registerSounds({ dispatch }) {
 function _unregisterSounds({ dispatch }) {
     dispatch(unregisterSound(PARTICIPANT_JOINED_SOUND_ID));
     dispatch(unregisterSound(PARTICIPANT_LEFT_SOUND_ID));
+    dispatch(unregisterSound(PARTICIPANT_LOST_SOUND_ID));
 }
