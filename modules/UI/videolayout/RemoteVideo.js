@@ -475,21 +475,22 @@ export default class RemoteVideo extends SmallVideo {
 
                 const { disableConnectionLostSound } = store.getState()['features/base/settings'];
 
+                const displayName = getParticipantDisplayName(store.getState, this.id);
+
+                store.dispatch(
+                    showNotification({
+                        descriptionArguments: { to: displayName || '$t(notify.somebody)' },
+                        descriptionKey: 'notify.connectionLost',
+                        titleKey: 'notify.somebody',
+                        title: displayName
+                    }, NOTIFICATION_TIMEOUT)
+                );
+
                 if (disableConnectionLostSound) {
                     return;
                 }
 
-                const displayName = getParticipantDisplayName(store.getState, this.id);
-
                 store.dispatch(playSound(PARTICIPANT_LOST_SOUND_ID));
-
-                store.dispatch(showNotification({
-                    descriptionArguments: { to: displayName || '$t(notify.somebody)' },
-                    descriptionKey: 'notify.connectionLost',
-                    titleKey: 'notify.somebody',
-                    title: displayName
-                },
-                NOTIFICATION_TIMEOUT));
             }
         }
     }
