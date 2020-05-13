@@ -100,6 +100,7 @@ export default class RemoteVideo extends SmallVideo {
         this.isLocal = false;
         this.popupMenuIsHovered = false;
         this._isRemoteControlSessionActive = false;
+        this.lostConnectionNotify = null;
 
         /**
          * The flag is set to <tt>true</tt> after the 'canplay' event has been
@@ -475,23 +476,30 @@ export default class RemoteVideo extends SmallVideo {
 
                 const { disableConnectionLostSound } = store.getState()['features/base/settings'];
 
-                const displayName = getParticipantDisplayName(store.getState, this.id);
+                clearTimeout(this.lostConnectionNotify);
+                const self = this;
 
-                store.dispatch(
-                    showNotification({
-                        descriptionArguments: { to: displayName || '$t(notify.somebody)' },
-                        descriptionKey: 'notify.connectionLost',
-                        titleKey: 'notify.somebody',
-                        title: displayName
-                    }, NOTIFICATION_TIMEOUT)
-                );
+                this.lostConnectionNotify = setTimeout(() => {
+                    const displayName = getParticipantDisplayName(store.getState, self.id);
 
-                if (disableConnectionLostSound) {
-                    return;
-                }
+                    store.dispatch(
+                        showNotification({
+                            descriptionArguments: { to: displayName || '$t(notify.somebody)' },
+                            descriptionKey: 'notify.connectionLost',
+                            titleKey: 'notify.somebody',
+                            title: displayName
+                        }, NOTIFICATION_TIMEOUT)
+                    );
 
-                store.dispatch(playSound(PARTICIPANT_LOST_SOUND_ID));
+                    if (disableConnectionLostSound) {
+                        return;
+                    }
+
+                    store.dispatch(playSound(PARTICIPANT_LOST_SOUND_ID));
+                }, 4000);
             }
+        } else {
+            clearTimeout(this.lostConnectionNotify);
         }
     }
 
