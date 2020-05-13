@@ -24,6 +24,16 @@
     top:0;
 }
 
+.gpUwQx,
+.mIBKA {
+    .kuyJLl,
+    .kGQNDu,
+    .dRfhRk,
+    .beynCI {
+        color: $darkPopupsHoverColor !important;
+    }
+}
+
 .gpUwQx {
     bottom: auto !important;
     transition: width 1s !important;
@@ -37,13 +47,6 @@
 
     [class^="styledFlag__Header"] > *:not(:first-child) {
         transition: visibility 0s, opacity 0.5s linear !important;
-    }
-
-    .kuyJLl,
-    .kGQNDu,
-    .dRfhRk,
-    .beynCI {
-        color: $darkPopupsHoverColor !important;
     }
 }
 
