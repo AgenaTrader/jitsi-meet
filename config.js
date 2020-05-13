@@ -28,13 +28,12 @@ var config = {
         // jirecon: 'jirecon.choop.chat',
 
         // Call control component (Jigasi).
+        // call_control: 'callcontrol.jitsi-meet.example.com',
 
         bridge: 'jitsi-videobridge.choop.chat',
 
-        // call_control: 'callcontrol.jitsi-meet.example.com',
-
         // Focus component domain. Defaults to focus.<domain>.
-        focus: 'focus.choop.chat',
+        // focus: 'focus.choop.chat',
 
         // XMPP MUC domain. FIXME: use XEP-0030 to discover it.
         muc: 'conference.choop.chat'
@@ -50,7 +49,7 @@ var config = {
     clientNode: 'http://jitsi.org/jitsimeet',
 
     // The real JID of focus participant - can be overridden here
-    focusUserJid: 'focus@auth.choop.chat',
+    // focusUserJid: 'focus@auth.choop.chat',
 
 
     // Testing / experimental features.
@@ -69,7 +68,7 @@ var config = {
     // signalling.
     // webrtcIceUdpDisable: false,
 
-         // Disables ICE/TCP by filtering out local and remote TCP candidates in
+    // Disables ICE/TCP by filtering out local and remote TCP candidates in
     // signalling.
     // webrtcIceTcpDisable: false,
 
@@ -99,14 +98,14 @@ var config = {
     startAudioOnly: false,
 
     // Every participant after the Nth will start audio muted.
-    //startAudioMuted: false,
+    // startAudioMuted: false,
 
     // Start calls with audio muted. Unlike the option above, this one is only
     // applied locally. FIXME: having these 2 options is confusing.
     startWithAudioMuted: false,
 
-    //startAudioMuted: false,
-    //startVideoMuted: false,
+    // startAudioMuted: false,
+    // startVideoMuted: false,
 
     // Enabling it (with #params) will disable local audio output of remote
     // participants and to enable it back a reload is needed.
@@ -191,7 +190,7 @@ var config = {
     // Recording
 
     // Whether to enable file recording or not.
-//    fileRecordingsEnabled: true,
+    // fileRecordingsEnabled: true,
     // Enable the dropbox integration.
     // dropbox: {
     //     appKey: '<APP_KEY>' // Specify your app key here.
@@ -206,15 +205,15 @@ var config = {
     // and the generic recording service (its configuration and storage type
     // depends on jibri configuration)
     // fileRecordingsServiceEnabled: false,
- // Whether to show the possibility to share file recording with other people
+    // Whether to show the possibility to share file recording with other people
     // (e.g. meeting participants), based on the actual implementation
     // on the backend.
     // fileRecordingsServiceSharingEnabled: false,
 
     // Whether to enable live streaming or not.
-//    liveStreamingEnabled: true,
+    // liveStreamingEnabled: true,
 
-//    hiddenDomain: 'recorder.choop.chat',
+    //  hiddenDomain: 'recorder.choop.chat',
     // Transcription (in interface_config,
     // subtitles and buttons can be configured)
     // transcribingEnabled: false,
@@ -288,7 +287,7 @@ var config = {
     // Whether or not some features are checked based on token.
     // enableFeaturesBasedOnToken: false,
 
-        // Enable lock room for all moderators, even when userRolesBasedOnToken is enabled and participants are guests.
+    // Enable lock room for all moderators, even when userRolesBasedOnToken is enabled and participants are guests.
     // lockRoomGuestEnabled: false,
 
     // When enabled the password used for locking a room is restricted to up to the number of digits specified
@@ -357,7 +356,7 @@ var config = {
             { urls: 'stun:meet-jit-si-turnrelay.jitsi.net:443' }
         ],
 
-                 // Sets the ICE transport policy for the p2p connection. At the time
+        // Sets the ICE transport policy for the p2p connection. At the time
         // of this writing the list of possible values are 'all' and 'relay',
         // but that is subject to change in the future. The enum is defined in
         // the WebRTC standard:
@@ -420,13 +419,13 @@ var config = {
     // Local Recording
     //
 
-//    localRecording: {
+    //  localRecording: {
     // Enables local recording.
     // Additionally, 'localrecording' (all lowercase) needs to be added to
     // TOOLBAR_BUTTONS in interface_config.js for the Local Recording
     // button to show up on the toolbar.
     //
-//         enabled: true,
+    //  enabled: true,
     //
 
     // The recording format, can be one of 'ogg', 'flac' or 'wav'.
@@ -442,7 +441,7 @@ var config = {
     //   pingInterval: 10000,
     //
     //   // The interval in milliseconds at which analytics events
-        //   // with the measured RTT will be sent. Defaults to 60000, set
+    //   // with the measured RTT will be sent. Defaults to 60000, set
     //   // to <= 0 to disable.
     //   analyticsInterval: 60000,
     //   },
@@ -470,15 +469,14 @@ var config = {
     // Disables storing the room name to the recents list
     // doNotStoreRoom: true,
 
+    // dialOutCodesUrl: 'https://jitsi-api.jitsi.net/countrycodes',
+    // dialOutAuthUrl: 'https://jitsi-api.jitsi.net/authorizephone',
+    peopleSearchUrl: '/peopleSearch',
+    inviteServiceUrl: '/conferenceInvite',
+    peopleSearchQueryTypes: [ 'user' /*, 'conferenceRooms'*/ ],
 
-//dialOutCodesUrl: 'https://jitsi-api.jitsi.net/countrycodes',
-//dialOutAuthUrl: 'https://jitsi-api.jitsi.net/authorizephone',
-peopleSearchUrl: '/peopleSearch',
-inviteServiceUrl: '/conferenceInvite',
-peopleSearchQueryTypes: ['user' /*, 'conferenceRooms'*/],
-
-    tokenAuthUrl: '/joinRoom?roomName={room}', //'https://' + tyHost + '/meeting/join-meeting?room_type={room}',
-    makeCall: '/makeCall?jwt={jwt}&userId={userId}', //'https://' + tyHost + '/makeCall?jwt={jwt}&=userId={userId}',
+    tokenAuthUrl: '/joinRoom?roomName={room}', // 'https://' + tyHost + '/meeting/join-meeting?room_type={room}',
+    makeCall: '/makeCall?jwt={jwt}&userId={userId}', // 'https://' + tyHost + '/makeCall?jwt={jwt}&=userId={userId}',
 
     // List of undocumented settings used in jitsi-meet
     /**
@@ -520,8 +518,8 @@ peopleSearchQueryTypes: ['user' /*, 'conferenceRooms'*/],
      disableAGC
      disableAP
      disableHPF
-        disableNS
-	 enableLipSync
+     disableNS
+     enableLipSync
      enableTalkWhileMuted
      forceJVB121Ratio
      hiddenDomain
