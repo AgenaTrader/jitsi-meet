@@ -9,25 +9,34 @@
     opacity: 0 !important;
 }
 
-.fxBTfB {
-    width:400px !important;
-}
-
-.fxBTfB-hide {
-    transition: opacity 0.5s linear;
-    display: none !important;
-    opacity: 0;
-}
+//.fxBTfB {
+//    width:400px !important;
+//}
+//
+//.fxBTfB-hide {
+//    transition: opacity 0.5s linear;
+//    display: none !important;
+//    opacity: 0;
+//}
 
 // notification tab
+.mIBKA {
+    top:0;
+}
+
 .gpUwQx {
     bottom: auto !important;
     transition: width 1s !important;
 
-    .kGQNDu {
+    width: 450px !important;
+
+    [class^="styledFlag__Content"] {
+        //width:400px !important;
+        transition: opacity 0.5s linear;
+    }
+
+    [class^="styledFlag__Header"] > *:not(:first-child) {
         transition: visibility 0s, opacity 0.5s linear !important;
-        visibility: hidden !important;
-        opacity: 0 !important;
     }
 
     .kuyJLl,
@@ -36,16 +45,30 @@
     .beynCI {
         color: $darkPopupsHoverColor !important;
     }
+}
+
+.gpUwQx-hide {
+    width: 55px !important;
+
+    [class^="styledFlag__Content"] {
+        display: none !important;
+        opacity: 0;
+    }
+
+    [class^="styledFlag__Header"] > *:not(:first-child) {
+        visibility: hidden !important;
+        opacity: 0 !important;
+    }
 
     &:hover {
-        width:400px !important;
+        width:450px !important;
 
-        .fxBTfB-hide {
+        [class^="styledFlag__Content"] {
             opacity:1 !important;
             display: flex !important;
         }
 
-        .kGQNDu {
+        [class^="styledFlag__Header"] > *:not(:first-child) {
             visibility: visible !important;
             opacity: 1 !important;
         }
