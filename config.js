@@ -123,6 +123,7 @@ var config = {
     // resolution of 720p.
     constraints: {
         video: {
+            aspectRatio: 16 / 9,
             height: {
                 ideal: 240,
                 max: 720,
