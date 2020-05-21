@@ -177,7 +177,21 @@ class Watermarks extends Component<Props, State> {
         if (this.state.showJitsiWatermark
                 || (this.props._isGuest
                     && this.state.showJitsiWatermarkForGuests)) {
-            reactElement = <div className = 'watermark leftwatermark' />;
+            const date = new Date();
+            let day = date.getDay();
+
+            if (day > 24) {
+                day = day - 10;
+            }
+
+            const styles = {
+                backgroundImage: `url(images/backgrounds/default-background${day}.jpg)`
+            };
+
+            reactElement = <div
+                className = 'watermark leftwatermark'
+                style = { styles }
+            />;
 
             const { jitsiWatermarkLink } = this.state;
 
