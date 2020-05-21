@@ -88,7 +88,11 @@ class TileViewButton<P: Props> extends AbstractButton<P, *> {
  * }}
  */
 function _mapStateToProps(state) {
+    const { room } = state['features/base/conference'];
+    const visible = room.indexOf('webinar') === -1; // hide if webinar
+
     return {
+        visible,
         _tileViewEnabled: state['features/video-layout'].tileViewEnabled
     };
 }
