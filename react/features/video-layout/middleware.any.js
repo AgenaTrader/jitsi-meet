@@ -21,8 +21,16 @@ MiddlewareRegistry.register(store => next => action => {
         const isPinning = Boolean(action.participant.id);
         const { tileViewEnabled } = store.getState()['features/video-layout'];
 
+        store.dispatch(setTileView(false));
+
         if (isPinning && tileViewEnabled) {
             store.dispatch(setTileView(false));
+        } else {
+            const { room } = store.getState()['features/base/conference'];
+
+            if (room.indexOf('group') !== -1) { // only for group
+                store.dispatch(setTileView(true));
+            }
         }
 
         break;

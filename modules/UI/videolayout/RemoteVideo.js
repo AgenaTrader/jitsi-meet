@@ -479,9 +479,9 @@ export default class RemoteVideo extends SmallVideo {
                 clearTimeout(this.lostConnectionNotify);
                 const self = this;
 
-                this.lostConnectionNotify = setTimeout(() => {
-                    const displayName = getParticipantDisplayName(store.getState, self.id);
+                const displayName = getParticipantDisplayName(store.getState, self.id);
 
+                this.lostConnectionNotify = setTimeout(() => {
                     store.dispatch(
                         showNotification({
                             descriptionArguments: { to: displayName || '$t(notify.somebody)' },
