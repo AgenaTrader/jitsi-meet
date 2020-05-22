@@ -1204,6 +1204,9 @@ class Toolbox extends Component<Props, State> {
         if (this._shouldShowButton('tileview')) {
             buttonsRight.push('tileview');
         }
+        if (this._shouldShowButton('mute-everyone')) {
+            buttonsRight.push('mute-everyone');
+        }
         if (this._shouldShowButton('localrecording')) {
             buttonsRight.push('localrecording');
         }
@@ -1281,6 +1284,9 @@ class Toolbox extends Component<Props, State> {
                                 this._onToolbarOpenLocalRecordingInfoDialog
                             } />
                     }
+                    { buttonsRight.indexOf('mute-everyone') !== -1
+                        && <MuteEveryoneButton
+                            visible = { this._shouldShowButton('mute-everyone') } /> }
                     { buttonsRight.indexOf('tileview') !== -1
                         && <TileViewButton /> }
                     { buttonsRight.indexOf('invite') !== -1
