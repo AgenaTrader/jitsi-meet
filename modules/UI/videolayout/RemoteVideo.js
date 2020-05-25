@@ -37,6 +37,7 @@ import {
     showNotification
 } from '../../../react/features/notifications';
 import { playSound } from '../../../react/features/base/sounds';
+import { updateAllParticipantAudioVolume } from '../../../react/features/base/settings';
 
 /**
  *
@@ -566,6 +567,10 @@ export default class RemoteVideo extends SmallVideo {
             // attached we need to update the menu in order to show the volume
             // slider.
             this.updateRemoteVideoMenu();
+
+            const { enabledAudioVolume } = APP.store.getState()['features/base/settings'];
+
+            updateAllParticipantAudioVolume(enabledAudioVolume ? 1 : 0);
         }
     }
 

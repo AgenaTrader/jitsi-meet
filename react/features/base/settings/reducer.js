@@ -39,7 +39,8 @@ const DEFAULT_STATE = {
     userSelectedMicDeviceId: undefined,
     userSelectedAudioOutputDeviceLabel: undefined,
     userSelectedCameraDeviceLabel: undefined,
-    userSelectedMicDeviceLabel: undefined
+    userSelectedMicDeviceLabel: undefined,
+    enabledAudioVolume: true
 };
 
 const STORE_NAME = 'features/base/settings';
@@ -146,6 +147,8 @@ function _initSettings(featureState) {
         ? DEFAULT_STATE.disableConnectionLostSound
         : _.escape(savedDisableConnectionLostSound);
 
+    const enabledAudioVolume = DEFAULT_STATE.enabledAudioVolume;
+
     if (!avatarID) {
         // if there is no avatar id, we generate a unique one and use it forever
         avatarID = randomHexString(32);
@@ -156,7 +159,8 @@ function _initSettings(featureState) {
         displayName,
         email,
         disableNotifications,
-        disableConnectionLostSound
+        disableConnectionLostSound,
+        enabledAudioVolume
     }, settings);
 
     if (!browser.isReactNative()) {

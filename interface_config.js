@@ -58,7 +58,7 @@ var interfaceConfig = {
         'etherpad', 'sharedvideo', 'settings', 'raisehand',
         'videoquality', 'filmstrip', 'invite', 'feedback', 'stats', 'shortcuts',
         'tileview', 'videobackgroundblur', 'download', 'help', 'mute-everyone',
-        'e2ee'
+        'e2ee', 'toggle-audio'
     ],
 
     SETTINGS_SECTIONS: [ 'devices', 'language', 'moderator', 'profile', 'calendar' ],

@@ -82,6 +82,7 @@ import OverflowMenuProfileItem from './OverflowMenuProfileItem';
 import MuteEveryoneButton from './MuteEveryoneButton';
 import ToolbarButton from './ToolbarButton';
 import VideoSettingsButton from './VideoSettingsButton';
+import ToggleAudioButton from './ToggleAudioButton';
 import {
     ClosedCaptionButton
 } from '../../../subtitles';
@@ -1189,6 +1190,9 @@ class Toolbox extends Component<Props, State> {
         if (this._shouldShowButton('mute-everyone')) {
             buttonsLeft.push('mute-everyone');
         }
+        if (this._shouldShowButton('toggle-audio')) {
+            buttonsLeft.push('toggle-audio');
+        }
         if (this._shouldShowButton('chat')) {
             buttonsLeft.push('chat');
         }
@@ -1251,6 +1255,9 @@ class Toolbox extends Component<Props, State> {
                     { buttonsLeft.indexOf('mute-everyone') !== -1
                         && <MuteEveryoneButton
                             visible = { this._shouldShowButton('mute-everyone') } /> }
+                    { buttonsLeft.indexOf('toggle-audio') !== -1
+                        && <ToggleAudioButton
+                            visible = { this._shouldShowButton('toggle-audio') } /> }
                     { buttonsLeft.indexOf('raisehand') !== -1
                         && <ToolbarButton
                             accessibilityLabel = { t('toolbar.accessibilityLabel.raiseHand') }
