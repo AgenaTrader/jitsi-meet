@@ -3,6 +3,12 @@
 import React, { Component } from 'react';
 
 import { Icon, IconVolume } from '../../../base/icons';
+import {
+    isAllParticipantAudioVolumeMuted,
+    updateSettings
+} from '../../../base/settings';
+
+declare var APP: Object;
 
 /**
  * Used to modify initialValue, which is expected to be a decimal value between
@@ -106,6 +112,11 @@ class VolumeSlider extends Component<Props, State> {
         const volumeLevel = event.currentTarget.value;
 
         this.props.onChange(volumeLevel / VOLUME_SLIDER_SCALE);
+
+        APP.store.dispatch(updateSettings({
+            enabledAudioVolume: !isAllParticipantAudioVolumeMuted()
+        }));
+
         this.setState({ volumeLevel });
     }
 }

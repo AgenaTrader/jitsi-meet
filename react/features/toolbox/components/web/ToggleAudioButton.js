@@ -7,7 +7,7 @@ import {
     sendAnalytics
 } from '../../../analytics';
 import { translate } from '../../../base/i18n';
-import { IconVolume } from '../../../base/icons';
+import { IconVolumeMedium, IconVolumeMute } from '../../../base/icons';
 import { connect } from '../../../base/redux';
 import {
     AbstractButton,
@@ -41,7 +41,8 @@ type Props = AbstractButtonProps & {
  */
 class ToggleAudioButton<P: Props> extends AbstractButton<P, *> {
     accessibilityLabel = 'toolbar.accessibilityLabel.toggleAudio';
-    icon = IconVolume;
+    icon = IconVolumeMute;
+    toggledIcon = IconVolumeMedium;
     label = 'toolbar.disableAudioMode';
     toggledLabel = 'toolbar.enableAudioMode';
     tooltip = 'toolbar.toggleAudio';

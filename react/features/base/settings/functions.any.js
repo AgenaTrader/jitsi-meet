@@ -199,6 +199,30 @@ export function updateAllParticipantAudioVolume(volume) {
 }
 
 /**
+ * Check if all participant audio volume is muted.
+ *
+ * @returns {boolean}
+ */
+export function isAllParticipantAudioVolumeMuted() {
+    let muted = true;
+    const participants = APP.conference.listMembers();
+
+    participants.forEach(participant => {
+        participant._tracks.forEach(track => {
+            if (track.isAudioTrack()) {
+                track.containers.forEach(audio => {
+                    if (audio.volume > 0 && muted) {
+                        muted = false;
+                    }
+                });
+            }
+        });
+    });
+
+    return muted;
+}
+
+/**
  * Update audio track volume.
  *
  * @param {Object} track - audio track
