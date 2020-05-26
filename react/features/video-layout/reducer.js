@@ -24,7 +24,7 @@ const DEFAULT_STATE = {
 const STORE_NAME = 'features/video-layout';
 
 PersistenceRegistry.register(STORE_NAME, {
-    tileViewEnabled: true
+    tileViewEnabled: false
 });
 
 ReducerRegistry.register(STORE_NAME, (state = DEFAULT_STATE, action) => {

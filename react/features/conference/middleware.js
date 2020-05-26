@@ -17,6 +17,7 @@ import { MiddlewareRegistry, StateListenerRegistry } from '../base/redux';
 import { FeedbackDialog } from '../feedback';
 import { setFilmstripEnabled } from '../filmstrip';
 import { setToolboxEnabled } from '../toolbox';
+import { setTileView } from '../video-layout';
 
 MiddlewareRegistry.register(store => next => action => {
     const result = next(action);
@@ -31,6 +32,10 @@ MiddlewareRegistry.register(store => next => action => {
 
         dispatch(setToolboxEnabled(!reducedUI));
         dispatch(setFilmstripEnabled(!reducedUI));
+
+        if (room.indexOf('group') !== -1) { // only for group
+            store.dispatch(setTileView(true));
+        }
 
         const quality = reducedUI || room.indexOf('group') !== -1
             ? VIDEO_QUALITY_LEVELS.LOW
