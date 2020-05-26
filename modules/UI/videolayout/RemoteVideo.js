@@ -632,12 +632,14 @@ export default class RemoteVideo extends SmallVideo {
     /**
      * Add visibility for container by permissions.
      */
-    async changeContainerVisibility() {
-        const permission = await _verifyUserHasPermissionById(this.id, 'tiles')
+    changeContainerVisibility() {
+        const self = this;
 
-        if (permission === false) {
-            this.container.style.display = 'none';
-        }
+        _verifyUserHasPermissionById(this.id, 'tiles').then(permission => {
+            if (permission === false) {
+                self.container.style.display = 'none';
+            }
+        });
     }
 
     /**
