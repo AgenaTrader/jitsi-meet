@@ -9,6 +9,8 @@ import { RecordingLabel } from '../../recording';
 import { TranscribingLabel } from '../../transcribing';
 import { shouldDisplayTileView } from '../../video-layout';
 import { VideoQualityLabel } from '../../video-quality';
+import VideoQualitySlider
+    from "../../video-quality/components/VideoQualitySlider.web";
 
 /**
  * The type of the React {@code Component} props of {@link AbstractLabels}.

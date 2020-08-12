@@ -83,6 +83,7 @@ import MuteEveryoneButton from './MuteEveryoneButton';
 import ToolbarButton from './ToolbarButton';
 import VideoSettingsButton from './VideoSettingsButton';
 import ToggleAudioButton from './ToggleAudioButton';
+import VideoQualityDialogButton from '../../../video-quality/components/VideoQualityDialogButton';
 import {
     ClosedCaptionButton
 } from '../../../subtitles';
@@ -1211,6 +1212,9 @@ class Toolbox extends Component<Props, State> {
         if (this._shouldShowButton('tileview')) {
             buttonsRight.push('tileview');
         }
+        if (this._shouldShowButton('videoquality')) {
+            buttonsRight.push('videoquality');
+        }
         if (this._shouldShowButton('localrecording')) {
             buttonsRight.push('localrecording');
         }
@@ -1294,6 +1298,8 @@ class Toolbox extends Component<Props, State> {
                                 this._onToolbarOpenLocalRecordingInfoDialog
                             } />
                     }
+                    { buttonsRight.indexOf('videoquality') !== -1
+                        && <VideoQualityDialogButton /> }
                     { buttonsRight.indexOf('tileview') !== -1
                         && <TileViewButton /> }
                     { buttonsRight.indexOf('invite') !== -1
