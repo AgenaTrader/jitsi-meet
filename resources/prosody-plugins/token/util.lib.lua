@@ -245,7 +245,7 @@ end
 -- @param session the current session
 -- @param acceptedIssuers optional list of accepted issuers to check
 -- @return false and error
-function Util:process_and_verify_token(session, acceptedIssuers, room)
+function Util:process_and_verify_token(session, room, acceptedIssuers)
     if not acceptedIssuers then
         acceptedIssuers = self.acceptedIssuers;
     end

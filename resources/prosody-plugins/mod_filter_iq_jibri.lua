@@ -21,6 +21,8 @@ module:hook("pre-iq/full", function(event)
                     if iq_token then
                         local session = {};
                         session.auth_token = iq_token;
+                        local room_address = jid.join(session.jitsi_bosh_query_room, module:get_host());
+
                         local verified, reason = token_util:process_and_verify_token(
                             session, accepted_rayo_iq_token_issuers);
                         if verified then

@@ -1,7 +1,6 @@
 // @flow
 
-import { ReducerRegistry } from '../redux';
-import { PersistenceRegistry } from '../storage';
+import { PersistenceRegistry, ReducerRegistry } from '../redux';
 
 import { ADD_PARTICIPANTS_ROLES, CHANGE_LOADING_STATUS } from './actionTypes';
 import { APP_WILL_MOUNT } from '../app';

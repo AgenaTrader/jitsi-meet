@@ -1,7 +1,6 @@
 // @flow
 import type { Dispatch } from 'redux';
 
-import UIEvents from '../../../service/UI/UIEvents';
 import {
     AUDIO_MUTE,
     createRemoteMuteConfirmedEvent,

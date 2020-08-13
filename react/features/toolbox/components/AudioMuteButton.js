@@ -169,8 +169,8 @@ function _mapStateToProps(state): Object {
 
     return {
         _audioMuted,
-        _disabled
-        visible: userHasPermission && toolbarButtons.includes('microphone'),
+        _disabled,
+        visible: userHasPermission && toolbarButtons.includes('microphone')
     };
 }
 

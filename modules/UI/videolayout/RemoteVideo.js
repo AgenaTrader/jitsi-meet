@@ -25,7 +25,6 @@ import {
 } from '../../../react/features/remote-video-menu';
 import { LAYOUTS, getCurrentLayout } from '../../../react/features/video-layout';
 /* eslint-enable no-unused-vars */
-import UIUtils from '../util/UIUtil';
 
 import SmallVideo from './SmallVideo';
 import UIUtils from '../util/UIUtil';
