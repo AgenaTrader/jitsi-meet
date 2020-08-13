@@ -4,7 +4,7 @@ import { generateRoomWithoutSeparator } from '@jitsi/js-utils/random';
 import type { Component } from 'react';
 
 import { isRoomValid } from '../base/conference';
-import { isSupportedBrowser } from '../base/environment';
+import { isSupportedBrowser, isComingSoonEnabled } from '../base/environment';
 import { toState } from '../base/redux';
 import { Conference } from '../conference';
 import { getDeepLinkingPage } from '../deep-linking';
@@ -12,6 +12,8 @@ import { UnsupportedDesktopBrowser } from '../unsupported-browser';
 import {
     BlankPage,
     WelcomePage,
+    WelcomePageChoopChat,
+    ComingSoon,
     isWelcomePageAppEnabled,
     isWelcomePageUserEnabled
 } from '../welcome';
@@ -117,8 +119,13 @@ function _getWebWelcomePageRoute(state): Promise<Route> {
     const route = _getEmptyRoute();
 
     if (isWelcomePageUserEnabled(state)) {
-        if (isSupportedBrowser()) {
-            route.component = WelcomePage;
+        if (isComingSoonEnabled()) {
+            route.component = ComingSoon;
+        } else if (isSupportedBrowser()) {
+            route.component = WelcomePageChoopChat;
+
+            // old page
+            // route.component = WelcomePage;
         } else {
             route.component = UnsupportedDesktopBrowser;
         }

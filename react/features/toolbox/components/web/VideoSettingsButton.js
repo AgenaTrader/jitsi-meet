@@ -12,6 +12,9 @@ import { getMediaPermissionPromptVisibility } from '../../../overlay';
 import { toggleVideoSettings, VideoSettingsPopup } from '../../../settings';
 import { isVideoSettingsButtonDisabled } from '../../functions';
 import VideoMuteButton from '../VideoMuteButton';
+import { _verifyUserHasPermission, MEDIA_TYPE } from '../../../base/media';
+
+declare var interfaceConfig: Object;
 
 type Props = {
 
@@ -159,11 +162,16 @@ class VideoSettingsButton extends Component<Props, State> {
  * @returns {Object}
  */
 function mapStateToProps(state) {
+    const userHasPermission = _verifyUserHasPermission(MEDIA_TYPE.VIDEO);
+    const toolbarButtons = interfaceConfig.TOOLBAR_BUTTONS;
+
+    const visible = userHasPermission && toolbarButtons.includes('camera');
+
     return {
         hasVideoTrack: Boolean(getLocalJitsiVideoTrack(state)),
         isDisabled: isVideoSettingsButtonDisabled(state),
         permissionPromptVisibility: getMediaPermissionPromptVisibility(state),
-        visible: !isMobileBrowser()
+        visible: !isMobileBrowser() && visible
     };
 }
 

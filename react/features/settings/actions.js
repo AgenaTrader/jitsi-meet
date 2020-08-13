@@ -10,6 +10,8 @@ import {
 } from './actionTypes';
 import { SettingsDialog } from './components';
 import { getMoreTabProps, getProfileTabProps } from './functions';
+import { updateSettings } from '../base/settings';
+import { setNotificationsEnabled, setDisableLostConnectionSound } from '../notifications';
 
 declare var APP: Object;
 
@@ -72,6 +74,22 @@ export function submitMoreTab(newState: Object): Function {
 
         if (newState.currentLanguage !== currentState.currentLanguage) {
             i18next.changeLanguage(newState.currentLanguage);
+        }
+
+        if (newState.disableNotifications !== currentState.disableNotifications) {
+            APP.store.dispatch(setNotificationsEnabled(!newState.disableNotifications));
+
+            dispatch(updateSettings({
+                disableNotifications: newState.disableNotifications
+            }));
+        }
+
+        if (newState.disableConnectionLostSound !== currentState.disableConnectionLostSound) {
+            APP.store.dispatch(setDisableLostConnectionSound(!newState.disableConnectionLostSound));
+
+            dispatch(updateSettings({
+                disableConnectionLostSound: newState.disableConnectionLostSound
+            }));
         }
     };
 }

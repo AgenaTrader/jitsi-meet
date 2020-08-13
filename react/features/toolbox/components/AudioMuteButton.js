@@ -7,14 +7,16 @@ import {
     sendAnalytics
 } from '../../analytics';
 import { translate } from '../../base/i18n';
-import { MEDIA_TYPE } from '../../base/media';
+import { _verifyUserHasPermission, MEDIA_TYPE } from '../../base/media';
 import { connect } from '../../base/redux';
 import { AbstractAudioMuteButton } from '../../base/toolbox';
 import type { AbstractButtonProps } from '../../base/toolbox';
 import { isLocalTrackMuted } from '../../base/tracks';
 import { muteLocal } from '../../remote-video-menu/actions';
+import { showNotification } from '../../notifications';
 
 declare var APP: Object;
+declare var interfaceConfig: Object;
 
 /**
  * The type of the React {@code Component} props of {@link AudioMuteButton}.
@@ -124,6 +126,17 @@ class AudioMuteButton extends AbstractAudioMuteButton<Props, *> {
      * @returns {void}
      */
     _setAudioMuted(audioMuted: boolean) {
+        const userHasPermission = _verifyUserHasPermission(MEDIA_TYPE.AUDIO);
+
+        if (!userHasPermission) {
+            this.props.dispatch(showNotification({
+                titleKey: 'toolbar.enableMicrophoneDeniedTitle',
+                descriptionKey: 'toolbar.enableMicrophoneDeniedDescription'
+            }, 3000));
+
+            return;
+        }
+
         this.props.dispatch(muteLocal(audioMuted));
     }
 
@@ -151,10 +164,13 @@ class AudioMuteButton extends AbstractAudioMuteButton<Props, *> {
 function _mapStateToProps(state): Object {
     const _audioMuted = isLocalTrackMuted(state['features/base/tracks'], MEDIA_TYPE.AUDIO);
     const _disabled = state['features/base/config'].startSilent;
+    const userHasPermission = _verifyUserHasPermission(MEDIA_TYPE.AUDIO);
+    const toolbarButtons = interfaceConfig.TOOLBAR_BUTTONS;
 
     return {
         _audioMuted,
         _disabled
+        visible: userHasPermission && toolbarButtons.includes('microphone'),
     };
 }
 

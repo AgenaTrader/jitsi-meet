@@ -14,7 +14,8 @@ import {
     PARTICIPANT_LEFT,
     PARTICIPANT_UPDATED,
     PIN_PARTICIPANT,
-    SET_LOADABLE_AVATAR_URL
+    SET_LOADABLE_AVATAR_URL,
+    SET_LOCAL_ROLE
 } from './actionTypes';
 import {
     getLocalParticipant,
@@ -492,6 +493,53 @@ export function setLoadableAvatarUrl(participantId, url) {
         participant: {
             id: participantId,
             loadableAvatarUrl: url
+        }
+    };
+}
+
+/**
+ * Change local role for participant.
+ *
+ * @param {string} participantId - The ID of the participant.
+ * @param {string} role - participant local role.
+ * @returns {{
+ *     type: SET_LOCAL_ROLE,
+ *     participant: {
+ *         id: string,
+ *         localRole: string
+ *     }
+ * }}
+*/
+export function setLocalRole(participantId, role) {
+    return {
+        type: SET_LOCAL_ROLE,
+        participant: {
+            id: participantId,
+            localRole: role
+        }
+    };
+}
+
+/**
+ * Update current user local role if used no TY group.
+ *
+ * @param {string} room - current room name.
+ * @returns {Function}
+ */
+export function updateCurrentUserLocalRole(room) {
+    return (dispatch, getState) => {
+
+        if (room.indexOf('friend-chat') === -1 && room.indexOf('webinar') === -1 && room.indexOf('group') === -1) {
+            const localParticipant = getLocalParticipant(getState);
+
+            if (localParticipant) {
+                const newProperties = {
+                    id: localParticipant.id,
+                    localRole: 'presenter'
+                };
+
+                dispatch(participantUpdated(newProperties));
+            }
         }
     };
 }

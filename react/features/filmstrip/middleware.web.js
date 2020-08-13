@@ -5,7 +5,7 @@ import { getNearestReceiverVideoQualityLevel, setMaxReceiverVideoQuality } from 
 import { MiddlewareRegistry } from '../base/redux';
 import { CLIENT_RESIZED } from '../base/responsive-ui';
 import {
-    getCurrentLayout,
+    getCurrentLayout, getTileViewGridDimensions,
     LAYOUTS,
     shouldDisplayTileView
 } from '../video-layout';
@@ -28,7 +28,7 @@ MiddlewareRegistry.register(store => next => action => {
 
         switch (layout) {
         case LAYOUTS.TILE_VIEW: {
-            const { gridDimensions } = state['features/filmstrip'].tileViewDimensions;
+            const gridDimensions = getTileViewGridDimensions(state);
             const { clientHeight, clientWidth } = state['features/base/responsive-ui'];
 
             store.dispatch(setTileViewDimensions(gridDimensions, {

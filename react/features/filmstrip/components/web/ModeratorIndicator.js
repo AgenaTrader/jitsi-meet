@@ -30,7 +30,7 @@ class ModeratorIndicator extends Component<Props> {
      */
     render() {
         return (
-            <div className = 'moderator-icon right'>
+            <div className = 'moderator-icon'>
                 <BaseIndicator
                     className = 'focusindicator toolbar-icon'
                     icon = { IconModerator }

@@ -49,6 +49,43 @@ class NotificationsContainer extends AbstractNotificationsContainer<Props> {
     _onDismissed: number => void;
 
     /**
+     * Autohide all notifications items after 5sec.
+     *
+     * @returns { void }
+     */
+    hideAllNotifications() {
+        const self = this;
+
+        setTimeout(() => {
+            const elements = document.getElementsByClassName('gpUwQx');
+
+            if (elements.length) {
+                for (let i = 0; i < elements.length; i++) {
+                    elements[i].classList.add('gpUwQx-hide');
+                    elements[i].addEventListener('mouseenter', self.showAllNotifications, false);
+                }
+            }
+        }, 5000);
+    }
+
+    /**
+     * Show all notifications items.
+     *
+     * @returns { void }
+     */
+    showAllNotifications() {
+        const self = this;
+        const elements = document.getElementsByClassName('gpUwQx');
+
+        if (elements.length) {
+            for (let i = 0; i < elements.length; i++) {
+                elements[i].classList.remove('gpUwQx-hide');
+                elements[i].addEventListener('mouseover', self.hideAllNotifications, false);
+            }
+        }
+    }
+
+    /**
      * Renders notifications to display as ReactElements. An empty array will
      * be returned if notifications are disabled.
      *
@@ -58,7 +95,9 @@ class NotificationsContainer extends AbstractNotificationsContainer<Props> {
     _renderFlags() {
         const { _notifications } = this.props;
 
-        return _notifications.map(notification => {
+        this.hideAllNotifications();
+
+        return _notifications.reverse().map(notification => {
             const { props, uid } = notification;
 
             // The id attribute is necessary as {@code FlagGroup} looks for

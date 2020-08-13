@@ -67,6 +67,10 @@ export class AbstractSettingsView<P: Props, S: *> extends Component<P, S> {
             = this._onStartAudioMutedChange.bind(this);
         this._onStartVideoMutedChange
             = this._onStartVideoMutedChange.bind(this);
+        this._onDisableNotifications
+            = this._onDisableNotifications.bind(this);
+        this._onDisableConnectionLostSound
+            = this._onDisableConnectionLostSound.bind(this);
     }
 
     _onChangeDisplayName: (string) => void;
@@ -81,6 +85,36 @@ export class AbstractSettingsView<P: Props, S: *> extends Component<P, S> {
     _onChangeDisplayName(text) {
         this._updateSettings({
             displayName: text
+        });
+    }
+
+    _onDisableNotifications: (string) => void;
+
+    /**
+     * Handles the disable notifications for me.
+     *
+     * @param {boolean} newValue - The value typed in the disable notification field.
+     * @protected
+     * @returns {void}
+     */
+    _onDisableNotifications(newValue) {
+        this._updateSettings({
+            disableNotifications: newValue
+        });
+    }
+
+    _onDisableConnectionLostSound: (string) => void;
+
+    /**
+     * Handles the disable notifications lost sound for me.
+     *
+     * @param {boolean} newValue - The value typed in the disable notification lost sound field.
+     * @protected
+     * @returns {void}
+     */
+    _onDisableConnectionLostSound(newValue) {
+        this._updateSettings({
+            disableConnectionLostSound: newValue
         });
     }
 

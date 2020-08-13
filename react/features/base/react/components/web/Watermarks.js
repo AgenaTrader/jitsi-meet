@@ -229,9 +229,21 @@ class Watermarks extends Component<Props, State> {
                 maxHeight: 70
             };
 
-            reactElement = (<div
+            const date = new Date();
+            let day = date.getDay();
+
+            if (day > 24) {
+                day = day - 10;
+            }
+
+            const styles = {
+                backgroundImage: `url(images/backgrounds/default-background${day}.jpg)`
+            };
+
+            reactElement = <div
                 className = 'watermark leftwatermark'
-                style = { style } />);
+                style = { styles }
+            />;
 
             if (link) {
                 reactElement = (

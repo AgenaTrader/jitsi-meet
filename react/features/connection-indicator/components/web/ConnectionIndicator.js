@@ -141,8 +141,8 @@ class ConnectionIndicator extends AbstractConnectionIndicator<Props, State> {
      * @returns {ReactElement}
      */
     render() {
-        const visibilityClass = this._getVisibilityClass();
-        const rootClassNames = `indicator-container ${visibilityClass}`;
+        // const visibilityClass = this._getVisibilityClass();
+        const rootClassNames = 'indicator-container';
 
         const colorClass = this._getConnectionColorClass();
         const indicatorContainerClassNames
@@ -314,8 +314,7 @@ class ConnectionIndicator extends AbstractConnectionIndicator<Props, State> {
                 className = { emptyIconWrapperClassName }
                 key = 'icon-empty'>
                 <Icon
-                    className = 'icon-gsm-bars'
-                    size = '1em'
+                    className = 'icon-connection'
                     src = { IconConnectionActive } />
             </span>,
             <span
@@ -323,8 +322,7 @@ class ConnectionIndicator extends AbstractConnectionIndicator<Props, State> {
                 key = 'icon-full'
                 style = {{ width: iconWidth }}>
                 <Icon
-                    className = 'icon-gsm-bars'
-                    size = '1em'
+                    className = 'icon-connection'
                     src = { IconConnectionActive } />
             </span>
         ];

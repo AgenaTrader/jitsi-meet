@@ -67,6 +67,11 @@ type Props = {
     dispatch: Dispatch<any>,
 
     /**
+     * Callback invoked when the dialog should be closed.
+     */
+    onClose: Function,
+
+    /**
      * Invoked to obtain translated strings.
      */
     t: Function

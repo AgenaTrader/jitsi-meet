@@ -45,3 +45,14 @@ export const SHOW_NOTIFICATION = 'SHOW_NOTIFICATION';
  * }
  */
 export const SET_NOTIFICATIONS_ENABLED = 'SET_NOTIFICATIONS_ENABLED';
+
+/**
+ * The type of (redux) action which signals that notifications connection sound
+ * should not play.
+ *
+ * {
+ *     type: SET_CONNECTION_LOST_SOUND_ENABLED,
+ *     enabled: Boolean
+ * }
+ */
+export const SET_CONNECTION_LOST_SOUND_ENABLED = 'SET_CONNECTION_LOST_SOUND_ENABLED';

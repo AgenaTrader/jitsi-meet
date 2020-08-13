@@ -2,6 +2,7 @@
 
 import React from 'react';
 
+import '../../base/participants-roles';
 import { setColorScheme } from '../../base/color-scheme';
 import { DialogContainer } from '../../base/dialog';
 import { CALL_INTEGRATION_ENABLED, SERVER_URL_CHANGE_ENABLED, updateFlags } from '../../base/flags';

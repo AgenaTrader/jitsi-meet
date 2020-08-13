@@ -2,9 +2,24 @@
 /* eslint sort-keys: ["error", "asc", {"caseSensitive": false}] */
 
 var interfaceConfig = {
-    APP_NAME: 'Jitsi Meet',
+    APP_NAME: 'Choop Chat',
     AUDIO_LEVEL_PRIMARY_COLOR: 'rgba(255,255,255,0.4)',
     AUDIO_LEVEL_SECONDARY_COLOR: 'rgba(255,255,255,0.2)',
+
+    /**
+     * Show coming soon page besides welcome page.
+     */
+    COMING_SOON_ENABLED: false,
+
+    /**
+     * If we should show authentication block in profile
+     */
+    AUTHENTICATION_ENABLE: true,
+
+    /**
+     * Disable notification about rights granted.
+     */
+    DISABLE_RIGHTS_GRANTED_NOTIFICATIONS: true,
 
     /**
      * A UX mode where the last screen share participant is automatically
@@ -14,7 +29,7 @@ var interfaceConfig = {
      *
      * Note: this mode is experimental and subject to breakage.
      */
-    AUTO_PIN_LATEST_SCREEN_SHARE: 'remote-only',
+    AUTO_PIN_LATEST_SCREEN_SHARE: false, // 'remote-only',
     BRAND_WATERMARK_LINK: '',
 
     CLOSE_PAGE_GUEST_HINT: false, // A html text to be shown to guests on the close page, false disables it
@@ -44,10 +59,10 @@ var interfaceConfig = {
      */
     CONNECTION_INDICATOR_DISABLED: false,
 
-    DEFAULT_BACKGROUND: '#474747',
+    DEFAULT_BACKGROUND: '#d1d1d1',
     DEFAULT_LOCAL_DISPLAY_NAME: 'me',
     DEFAULT_LOGO_URL: 'images/watermark.png',
-    DEFAULT_REMOTE_DISPLAY_NAME: 'Fellow Jitster',
+    DEFAULT_REMOTE_DISPLAY_NAME: 'ChoopChat User',
 
     DISABLE_DOMINANT_SPEAKER_INDICATOR: false,
 
@@ -99,15 +114,15 @@ var interfaceConfig = {
      */
     filmStripOnly: false,
 
-    GENERATE_ROOMNAMES_ON_WELCOME_PAGE: true,
+    GENERATE_ROOMNAMES_ON_WELCOME_PAGE: false,
 
     /**
      * Hide the invite prompt in the header when alone in the meeting.
      */
     HIDE_INVITE_MORE_HEADER: false,
 
-    INITIAL_TOOLBAR_TIMEOUT: 20000,
-    JITSI_WATERMARK_LINK: 'https://jitsi.org',
+    INITIAL_TOOLBAR_TIMEOUT: 4000,
+    JITSI_WATERMARK_LINK: '',
 
     LANG_DETECTION: true, // Allow i18n to detect the system language
     LIVE_STREAMING_HELP_LINK: 'https://jitsi.org/live', // Documentation reference for the live streaming feature.
@@ -130,7 +145,7 @@ var interfaceConfig = {
      */
     MOBILE_APP_PROMO: true,
 
-    NATIVE_APP_NAME: 'Jitsi Meet',
+    NATIVE_APP_NAME: 'Choop Chat',
 
     // Names of browsers which should show a warning stating the current browser
     // has a suboptimal experience. Browsers which are not listed as optimal or
@@ -139,7 +154,7 @@ var interfaceConfig = {
     OPTIMAL_BROWSERS: [ 'chrome', 'chromium', 'firefox', 'nwjs', 'electron', 'safari' ],
 
     POLICY_LOGO: null,
-    PROVIDER_NAME: 'Jitsi',
+    PROVIDER_NAME: 'ChoopChat',
 
     /**
      * If true, will display recent list
@@ -159,17 +174,37 @@ var interfaceConfig = {
     */
     SHOW_CHROME_EXTENSION_BANNER: false,
 
+    /**
+     * Functionality permissions for each roles.
+     */
+
+    ROLE_PERMISSIONS: {
+        tiles: [ 'owner', 'presenter', 'executive' ],
+        video: [ 'owner', 'presenter', 'executive' ],
+        audio: [ 'owner', 'presenter', 'executive' ],
+        sharing: [ 'owner', 'presenter', 'executive' ],
+        makecall: [ 'owner', 'presenter', 'executive' ],
+
+        // settings button
+        sharedvideo: [ 'owner', 'presenter', 'executive' ],
+        videobackgroundblur: [ 'owner', 'presenter', 'executive' ],
+        raisehand: [],
+        invite: [ 'owner', 'presenter', 'executive' ],
+        desktop: [ 'owner', 'presenter', 'executive' ],
+        lostconnection: [ 'owner', 'presenter', 'executive' ]
+    },
+
     SHOW_DEEP_LINKING_IMAGE: false,
-    SHOW_JITSI_WATERMARK: true,
+    SHOW_JITSI_WATERMARK: false,
     SHOW_POWERED_BY: false,
     SHOW_PROMOTIONAL_CLOSE_PAGE: false,
-    SHOW_WATERMARK_FOR_GUESTS: true, // if watermark is disabled by default, it can be shown only for guests
+    SHOW_WATERMARK_FOR_GUESTS: false, // if watermark is disabled by default, it can be shown only for guests
 
     /*
      * If indicated some of the error dialogs may point to the support URL for
      * help.
      */
-    SUPPORT_URL: 'https://community.jitsi.org/',
+    SUPPORT_URL: 'https://github.com/AgenaTrader/jitsi-meet/issues/new',
 
     TOOLBAR_ALWAYS_VISIBLE: false,
 
@@ -184,13 +219,17 @@ var interfaceConfig = {
      * - it's impossible to control the placement of buttons
      * - 'desktop' controls the "Share your screen" button
      */
+
     TOOLBAR_BUTTONS: [
-        'microphone', 'camera', 'closedcaptions', 'desktop', 'fullscreen',
-        'fodeviceselection', 'hangup', 'profile', 'chat', 'recording',
-        'livestreaming', 'etherpad', 'sharedvideo', 'settings', 'raisehand',
-        'videoquality', 'filmstrip', 'invite', 'feedback', 'stats', 'shortcuts',
-        'tileview', 'videobackgroundblur', 'download', 'help', 'mute-everyone', 'security'
-    ],
+    'microphone', 'camera', 'closedcaptions', 'desktop', 'fullscreen',
+    'fodeviceselection', 'hangup', 'profile', 'info',
+
+    // 'chat', 'localrecording', 'recording', 'livestreaming',
+    'etherpad', 'sharedvideo', 'settings', 'raisehand',
+    'videoquality', 'filmstrip', 'invite', 'feedback', 'stats', 'shortcuts',
+    'tileview', 'videobackgroundblur', 'download', 'help', 'mute-everyone',
+    'security', 'toggle-audio'
+],
 
     TOOLBAR_TIMEOUT: 4000,
 
@@ -207,7 +246,7 @@ var interfaceConfig = {
     // screen, 'height' would fit the original video height to the height of the
     // screen, 'width' would fit the original video width to the width of the
     // screen respecting ratio.
-    VIDEO_LAYOUT_FIT: 'both',
+    VIDEO_LAYOUT_FIT: 'width',
 
     /**
      * If true, hides the video quality label indicating the resolution status

@@ -61,6 +61,16 @@ export type Props = {
     startVideoMuted: boolean,
 
     /**
+     * Whether or not to disable notifications for me.
+     */
+    disableNotifications: boolean,
+
+    /**
+     * Whether or not to disable connection lost sound for me.
+     */
+    disableConnectionLostSound: boolean,
+
+    /**
      * Invoked to obtain translated strings.
      */
     t: Function
@@ -114,6 +124,8 @@ class MoreTab extends AbstractDialogTab<Props, State> {
         if (showModeratorSettings) {
             content.push(this._renderModeratorSettings());
         }
+
+        content.push(this._renderGeneralSettings());
 
         if (showLanguageSettings) {
             content.push(this._renderLangaugeSelect());
@@ -235,6 +247,48 @@ class MoreTab extends AbstractDialogTab<Props, State> {
                     onChange = {
                         ({ target: { checked } }) =>
                             super._onChange({ followMeEnabled: checked })
+                    } />
+            </div>
+        );
+    }
+
+    /**
+     * Returns the React Element for modifying conference-wide settings.
+     *
+     * @private
+     * @returns {ReactElement}
+     */
+    _renderGeneralSettings() {
+        const {
+            disableNotifications,
+            disableConnectionLostSound,
+            t
+        } = this.props;
+
+        return (
+            <div
+                className = 'settings-sub-pane'
+                key = 'me'>
+                <div className = 'mock-atlaskit-label'>
+                    { t('settings.mySetting') }
+                </div>
+                <Checkbox
+                    isChecked = { disableNotifications }
+                    label = { t('settings.disableNotifications') }
+                    name = 'disable-notifications'
+                    // eslint-disable-next-line react/jsx-no-bind
+                    onChange = {
+                        ({ target: { checked } }) =>
+                            super._onChange({ disableNotifications: checked })
+                    } />
+                <Checkbox
+                    isChecked = { disableConnectionLostSound }
+                    label = { t('settings.disableConnectionLostSound') }
+                    name = 'disable-connection-lost-sound'
+                    // eslint-disable-next-line react/jsx-no-bind
+                    onChange = {
+                        ({ target: { checked } }) =>
+                            super._onChange({ disableConnectionLostSound: checked })
                     } />
             </div>
         );

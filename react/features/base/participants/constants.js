@@ -54,6 +54,14 @@ export const PARTICIPANT_JOINED_SOUND_ID = 'PARTICIPANT_JOINED_SOUND';
 export const PARTICIPANT_LEFT_SOUND_ID = 'PARTICIPANT_LEFT_SOUND';
 
 /**
+ * The identifier of the sound to be played when the participant connection
+ * status is lost.
+ *
+ * @type {string}
+ */
+export const PARTICIPANT_LOST_SOUND_ID = 'PARTICIPANT_LOST_SOUND';
+
+/**
  * The set of possible XMPP MUC roles for conference participants.
  *
  * @enum {string}

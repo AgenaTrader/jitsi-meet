@@ -1,0 +1,174 @@
+
+.cjMOOK{
+    top: calc(#{$newToolbarSizeWithPadding}) !important;
+    bottom: auto !important;
+    left: 20px !important;
+}
+
+.Wrapper-sc-19lmueh-0:not(:first-child) {
+    opacity: 0 !important;
+}
+
+//.fxBTfB {
+//    width:400px !important;
+//}
+//
+//.fxBTfB-hide {
+//    transition: opacity 0.5s linear;
+//    display: none !important;
+//    opacity: 0;
+//}
+
+// notification tab
+.mIBKA {
+    top:0;
+}
+
+.gpUwQx,
+.mIBKA {
+    .kuyJLl,
+    .kGQNDu,
+    .dRfhRk,
+    .beynCI {
+        color: $darkPopupsHoverColor !important;
+    }
+}
+
+.gpUwQx {
+    bottom: auto !important;
+    transition: width 1s !important;
+
+    width: 450px !important;
+
+    [class^="styledFlag__Content"] {
+        //width:400px !important;
+        transition: opacity 0.5s linear;
+    }
+
+    [class^="styledFlag__Header"] > *:not(:first-child) {
+        transition: visibility 0s, opacity 0.5s linear !important;
+    }
+}
+
+.gpUwQx-hide {
+    width: 55px !important;
+
+    [class^="styledFlag__Content"] {
+        display: none !important;
+        opacity: 0;
+    }
+
+    [class^="styledFlag__Header"] > *:not(:first-child) {
+        visibility: hidden !important;
+        opacity: 0 !important;
+    }
+
+    &:hover {
+        width:450px !important;
+
+        [class^="styledFlag__Content"] {
+            opacity:1 !important;
+            display: flex !important;
+        }
+
+        [class^="styledFlag__Header"] > *:not(:first-child) {
+            visibility: visible !important;
+            opacity: 1 !important;
+        }
+    }
+}
+
+.kuyJLl {
+    background-color: $darkPopupsColor !important;
+}
+
+
+//popups or popover
+.eoRGoR,
+.remotevideomenu > div > div > div > div:nth-child(2) > div > div,
+.indicator-container > div > div:nth-child(2) > div > div,
+.toolbox-button-wth-dialog > div > div:nth-child(2) > div > div,
+.audio-preview > div > div:nth-child(2) > div > div {
+    background-color: $darkPopupsColor !important;
+    color: $darkPopupsHoverColor !important;
+
+    .audio-preview-header,
+    .audio-preview-entry-text,
+    .connection-info__container {
+        color: $popupMenuColor;
+    }
+
+    li:hover {
+        background-color: $darkPopupsHoverColor !important;
+        color:white;
+
+        svg {
+            fill: $popupMenuHoverIconColor !important;
+        }
+    }
+
+    svg {
+        fill: $darkPopupsHoverColor !important;
+    }
+}
+
+.oQiLZ,
+.iVWXDg,
+.kNWCdZ { //checkbox after clicking
+    color: inherit !important;
+}
+
+//checkbox
+.jacfej,
+.cRiLYT,
+.fWoEvM {
+    color: inherit !important;
+
+    svg {
+        fill:white !important;
+    }
+}
+
+.UyZlz {
+    color: inherit !important;
+}
+
+
+.gUwyVH {
+    color: inherit !important;
+}
+
+.dBbYpJ,
+.ihpcrA {
+    background: #489afe !important;
+}
+
+.OZnnZ,
+.OZnnZ:hover,
+.hiHxeB {
+    background-color: white !important;
+}
+
+
+.eoRGoR {
+    .device-selector-trigger {
+        background-color: inherit !important;
+    }
+}
+
+#modal-dialog-cancel-button {
+    background: #b7b7b7 !important;
+    color: #1b2638 !important;
+
+    &:hover {
+        background: #d4d4d4 !important;
+    }
+}
+
+.cksvax {
+    background: #4c9afe !important;
+
+    .Item__Span-aiqnor-1 {
+        color:#f2f2f2 !important;
+    }
+}

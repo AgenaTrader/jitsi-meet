@@ -7,7 +7,8 @@ import {
     CLEAR_NOTIFICATIONS,
     HIDE_NOTIFICATION,
     SET_NOTIFICATIONS_ENABLED,
-    SHOW_NOTIFICATION
+    SHOW_NOTIFICATION,
+    SET_CONNECTION_LOST_SOUND_ENABLED
 } from './actionTypes';
 import { NOTIFICATION_TIMEOUT, NOTIFICATION_TYPE } from './constants';
 
@@ -53,6 +54,22 @@ export function hideNotification(uid: number) {
 export function setNotificationsEnabled(enabled: boolean) {
     return {
         type: SET_NOTIFICATIONS_ENABLED,
+        enabled
+    };
+}
+
+/**
+ * Stops notifications sound when user lost.
+ *
+ * @param {boolean} enabled - Whether or not notifications sound should play.
+ * @returns {{
+ *     type: SET_CONNECTION_LOST_SOUND_ENABLED,
+ *     enabled: boolean
+ * }}
+ */
+export function setDisableLostConnectionSound(enabled: boolean) {
+    return {
+        type: SET_CONNECTION_LOST_SOUND_ENABLED,
         enabled
     };
 }

@@ -48,11 +48,9 @@ class Toolbar extends Component<Props> {
                     tooltipPosition = 'left'
                     visible = { this._shouldShowButton('hangup') } />
                 <AudioMuteButton
-                    tooltipPosition = 'left'
-                    visible = { this._shouldShowButton('microphone') } />
+                    tooltipPosition = 'left' />
                 <VideoMuteButton
-                    tooltipPosition = 'left'
-                    visible = { this._shouldShowButton('camera') } />
+                    tooltipPosition = 'left' />
                 <SettingsButton
                     tooltipPosition = 'left'
                     visible = { this._shouldShowButton('fodeviceselection') } />

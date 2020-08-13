@@ -198,7 +198,9 @@ function _mapStateToProps(state) {
                     currentLanguage: tabState.currentLanguage,
                     followMeEnabled: tabState.followMeEnabled,
                     startAudioMuted: tabState.startAudioMuted,
-                    startVideoMuted: tabState.startVideoMuted
+                    startVideoMuted: tabState.startVideoMuted,
+                    disableNotifications: tabState.disableNotifications,
+                    disableConnectionLostSound: tabState.disableConnectionLostSound
                 };
             },
             styles: 'settings-pane more-pane',

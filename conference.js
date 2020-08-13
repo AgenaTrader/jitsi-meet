@@ -66,6 +66,7 @@ import {
     JitsiTrackEvents
 } from './react/features/base/lib-jitsi-meet';
 import {
+    _verifyUserHasPermission,
     isVideoMutedByUser,
     MEDIA_TYPE,
     setAudioAvailable,
@@ -1340,17 +1341,30 @@ export default {
      * @private
      */
     _setLocalAudioVideoStreams(tracks = []) {
-        return tracks.map(track => {
-            if (track.isAudioTrack()) {
-                return this.useAudioStream(track);
-            } else if (track.isVideoTrack()) {
-                return this.useVideoStream(track);
-            }
-            logger.error(
+        return tracks.forEach(track => {
+            if (Array.isArray(track)) {
+                track.forEach(trackDevice => {
+                    if (trackDevice.isAudioTrack()) {
+                        return this.useAudioStream(trackDevice);
+                    } else if (trackDevice.isVideoTrack()) {
+                        return this.useVideoStream(trackDevice);
+                    }
+                    logger.error(
+                        'Ignored not an audio nor a video track: ', track);
+
+                    return Promise.resolve();
+                });
+            } else {
+                if (track.isAudioTrack()) {
+                    return this.useAudioStream(track);
+                } else if (track.isVideoTrack()) {
+                    return this.useVideoStream(track);
+                }
+                logger.error(
                     'Ignored not an audio nor a video track: ', track);
 
-            return Promise.resolve();
-
+                return Promise.resolve();
+            }
         });
     },
 
@@ -1644,12 +1658,37 @@ export default {
         }
 
         if (toggle) {
+            const wasVideoMuted = this.isLocalVideoMuted();
+
             try {
                 await this._switchToScreenSharing(options);
+            } catch (err) {
+                logger.error('Failed to switch to screensharing', err);
+
+                return;
+            }
+            if (wasVideoMuted) {
+                return;
+            }
+            const { height } = this.localVideo.track.getSettings();
+            const defaultCamera
+                = getUserSelectedCameraDeviceId(APP.store.getState());
+            let effect;
+
+            try {
+                effect = await this._createPresenterStreamEffect(height, defaultCamera);
+            } catch (err) {
+                logger.error('Failed to create the presenter effect');
+
+                return;
+            }
+            try {
+                await this.localVideo.setEffect(effect);
+                muteLocalVideo(false);
 
                 return;
             } catch (err) {
-                logger.error('Failed to switch to screensharing', err);
+                logger.error('Failed to create the presenter effect', err);
 
                 return;
             }
@@ -2011,6 +2050,21 @@ export default {
         room.on(JitsiConferenceEvents.USER_ROLE_CHANGED, (id, role) => {
             if (this.isLocalId(id)) {
                 logger.info(`My role changed, new role: ${role}`);
+
+                const conferenceRoomName = APP.conference.roomName;
+                APP.store.dispatch(updateCurrentUserLocalRole(conferenceRoomName));
+
+                if (!this.isLocalAudioMuted()) {
+                    if (!_verifyUserHasPermission(MEDIA_TYPE.AUDIO)) {
+                        this.muteAudio(true);
+                    }
+                }
+
+                if (!this.isLocalVideoMuted()) {
+                    if (!_verifyUserHasPermission(MEDIA_TYPE.VIDEO)) {
+                        this.muteVideo(true);
+                    }
+                }
 
                 APP.store.dispatch(localParticipantRoleChanged(role));
                 APP.API.notifyUserRoleChanged(id, role);

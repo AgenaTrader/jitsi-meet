@@ -13,11 +13,13 @@ import {
     JitsiParticipantConnectionStatus
 } from '../../../react/features/base/lib-jitsi-meet';
 import {
-    getPinnedParticipant,
+    getParticipantDisplayName,
+    getPinnedParticipant, PARTICIPANT_LOST_SOUND_ID,
     pinParticipant
 } from '../../../react/features/base/participants';
 import { PresenceLabel } from '../../../react/features/presence-status';
 import {
+    MakeCallButton,
     REMOTE_CONTROL_MENU_STATES,
     RemoteVideoMenuTriggerButton
 } from '../../../react/features/remote-video-menu';
@@ -26,6 +28,15 @@ import { LAYOUTS, getCurrentLayout } from '../../../react/features/video-layout'
 import UIUtils from '../util/UIUtil';
 
 import SmallVideo from './SmallVideo';
+import UIUtils from '../util/UIUtil';
+import { _verifyUserHasPermissionById } from '../../../react/features/base/media';
+
+import {
+    NOTIFICATION_TIMEOUT,
+    showNotification
+} from '../../../react/features/notifications';
+import { playSound } from '../../../react/features/base/sounds';
+import { updateAllParticipantAudioVolume } from '../../../react/features/base/settings';
 
 const logger = Logger.getLogger(__filename);
 
@@ -80,14 +91,18 @@ export default class RemoteVideo extends SmallVideo {
         this._audioStreamElement = null;
         this._supportsRemoteControl = false;
         this.statsPopoverLocation = interfaceConfig.VERTICAL_FILMSTRIP ? 'left bottom' : 'top center';
+
         this.addRemoteVideoContainer();
+        this.changeContainerVisibility();
         this.updateIndicators();
         this.updateDisplayName();
+
         this.bindHoverHandler();
         this.flipX = false;
         this.isLocal = false;
         this.popupMenuIsHovered = false;
         this._isRemoteControlSessionActive = false;
+        this.lostConnectionNotify = null;
 
         /**
          * The flag is set to <tt>true</tt> after the 'canplay' event has been
@@ -194,7 +209,7 @@ export default class RemoteVideo extends SmallVideo {
         let remoteMenuPosition;
 
         if (currentLayout === LAYOUTS.TILE_VIEW) {
-            remoteMenuPosition = 'left top';
+            remoteMenuPosition = 'right top';
         } else if (currentLayout === LAYOUTS.VERTICAL_FILMSTRIP_VIEW) {
             remoteMenuPosition = 'left bottom';
         } else {
@@ -217,6 +232,13 @@ export default class RemoteVideo extends SmallVideo {
                             remoteControlState = { remoteControlState } />
                     </AtlasKitThemeProvider>
                 </I18nextProvider>
+                { participantID === APP.conference.getMyUserId()
+                    ? null
+                    : <MakeCallButton
+                        callButton = { true }
+                        key = 'make-call'
+                        participantID = { participantID } />
+                }
             </Provider>,
             remoteVideoMenuContainer);
     }
@@ -432,6 +454,7 @@ export default class RemoteVideo extends SmallVideo {
         // Update 'mutedWhileDisconnected' flag
         this._figureOutMutedWhileDisconnected();
         this.updateConnectionStatus(connectionStatus);
+        this.notifyAboutConnectionLost(connectionStatus);
     }
 
     /**
@@ -441,6 +464,45 @@ export default class RemoteVideo extends SmallVideo {
         super.remove();
         this.removePresenceLabel();
         this.removeRemoteVideoMenu();
+    }
+
+    /**
+     * Show notification if connection lost.
+     *
+     * @param connectionStatus
+     */
+    notifyAboutConnectionLost(connectionStatus) {
+        if (connectionStatus === JitsiParticipantConnectionStatus.INTERRUPTED) {
+            if (_verifyUserHasPermissionById(this.id, 'lostconnection')) {
+                const store = APP.store;
+
+                const { disableConnectionLostSound } = store.getState()['features/base/settings'];
+
+                clearTimeout(this.lostConnectionNotify);
+                const self = this;
+
+                const displayName = getParticipantDisplayName(store.getState, self.id);
+
+                this.lostConnectionNotify = setTimeout(() => {
+                    store.dispatch(
+                        showNotification({
+                            descriptionArguments: { to: displayName || '$t(notify.somebody)' },
+                            descriptionKey: 'notify.connectionLost',
+                            titleKey: 'notify.somebody',
+                            title: displayName
+                        }, NOTIFICATION_TIMEOUT)
+                    );
+
+                    if (disableConnectionLostSound) {
+                        return;
+                    }
+
+                    store.dispatch(playSound(PARTICIPANT_LOST_SOUND_ID));
+                }, 4000);
+            }
+        } else {
+            clearTimeout(this.lostConnectionNotify);
+        }
     }
 
     /**
@@ -506,6 +568,10 @@ export default class RemoteVideo extends SmallVideo {
             // attached we need to update the menu in order to show the volume
             // slider.
             this.updateRemoteVideoMenu();
+
+            const { enabledAudioVolume } = APP.store.getState()['features/base/settings'];
+
+            updateAllParticipantAudioVolume(enabledAudioVolume ? 1 : 0);
         }
     }
 
@@ -562,6 +628,19 @@ export default class RemoteVideo extends SmallVideo {
                 </Provider>,
                 presenceLabelContainer);
         }
+    }
+
+    /**
+     * Add visibility for container by permissions.
+     */
+    changeContainerVisibility() {
+        const self = this;
+
+        _verifyUserHasPermissionById(this.id, 'tiles').then(permission => {
+            if (permission === false) {
+                self.container.style.display = 'none';
+            }
+        });
     }
 
     /**

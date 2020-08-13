@@ -9,11 +9,16 @@ import {
     sendAnalytics
 } from '../analytics';
 import { hideDialog } from '../base/dialog';
-import { setAudioMuted } from '../base/media';
 import {
     getLocalParticipant,
     muteRemoteParticipant
 } from '../base/participants';
+import {
+    _verifyUserHasPermission,
+    MEDIA_TYPE,
+    setAudioMuted
+} from '../base/media';
+import UIEvents from '../../../service/UI/UIEvents';
 
 import { RemoteVideoMenu } from './components';
 
@@ -36,13 +41,16 @@ export function hideRemoteVideoMenu() {
  */
 export function muteLocal(enable: boolean) {
     return (dispatch: Dispatch<any>) => {
-        sendAnalytics(createToolbarEvent(AUDIO_MUTE, { enable }));
-        dispatch(setAudioMuted(enable, /* ensureTrack */ true));
+        const userHasPermission = _verifyUserHasPermission(MEDIA_TYPE.AUDIO);
+        const muteAudio = userHasPermission ? enable : true;
+
+        sendAnalytics(createToolbarEvent(AUDIO_MUTE, { muteAudio }));
+        dispatch(setAudioMuted(muteAudio, /* ensureTrack */ true));
 
         // FIXME: The old conference logic as well as the shared video feature
         // still rely on this event being emitted.
         typeof APP === 'undefined'
-            || APP.UI.emitEvent(UIEvents.AUDIO_MUTED, enable, true);
+            || APP.UI.emitEvent(UIEvents.AUDIO_MUTED, muteAudio, true);
     };
 }
 

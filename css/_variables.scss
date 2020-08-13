@@ -1,4 +1,5 @@
-@import "themes/light";
+//@import "themes/light";
+@import "themes/light-choop";
 
 /**
  * Style variables
@@ -44,13 +45,10 @@ $AOTToolbarButtonHoverColor: rgba(14, 20, 35, 0.6);
 $AOTToolbarButtonToggleColor: rgba(14, 20, 35, 1);
 $newToolbarFontSize: 24px;
 $newToolbarHangupFontSize: 32px;
-$newToolbarSize: 40px;
-$newToolbarSizeWithPadding: calc(#{$newToolbarSize} + 24px);
 $toolbarTitleFontSize: 19px;
 $overflowMenuBG: initial;
 $overflowMenuItemHoverBG: #313D52;
 $overflowMenuItemHoverColor: #B8C7E0;
-$overflowMenuItemColor: #B8C7E0;
 
 /**
  * Video layout
@@ -100,6 +98,7 @@ $sidebarWidth: 375px;
  /**
  * Misc.
  */
+$defaultWatermarkLink: '../images/watermark.png';
 $borderRadius: 4px;
 $popoverMenuPadding: 13px;
 $happySoftwareBackground: transparent;
@@ -194,7 +193,6 @@ $welcomePageHeaderTextDescriptionFontWeight: 400;
 $welcomePageHeaderTextDescriptionLineHeight: 24px;
 $welcomePageHeaderTextDescriptionMarginBottom: 20px;
 $welcomePageHeaderTextDescriptionAlignSelf: inherit;
-
 $welcomePageEnterRoomWidth: 680px;
 $welcomePageEnterRoomPadding: 25px 30px;
 $welcomePageEnterRoomBorderRadius: 0px;

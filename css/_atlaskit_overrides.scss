@@ -5,7 +5,6 @@
 .cjMOOK{
     bottom: calc(#{$newToolbarSizeWithPadding}) !important;
 }
-
 /**
  * Disable the slide-in animation for @atlaskit/flag due to the animation
  * repeating for each queued flag once it becomes the top flag.

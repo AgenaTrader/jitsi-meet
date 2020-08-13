@@ -467,6 +467,7 @@
         "focus": "Conference focus",
         "focusFail": "{{component}} not available - retry in {{ms}} sec",
         "grantedTo": "Moderator rights granted to {{to}}!",
+        "connectionLost": "Connection lost was detected for member {{to}}!",
         "invitedOneMember": "{{name}} has been invited",
         "invitedThreePlusMembers": "{{name}} and {{count}} others have been invited",
         "invitedTwoMembers": "{{first}} and {{second}} have been invited",
@@ -613,7 +614,10 @@
         "speakers": "Speakers",
         "startAudioMuted": "Everyone starts muted",
         "startVideoMuted": "Everyone starts hidden",
-        "title": "Settings"
+        "disableNotifications": "Disable notifications",
+        "disableConnectionLostSound": "Disable connection lost sound",
+        "title": "Settings",
+        "mySetting": "My Settings"
     },
     "settingsView": {
         "advanced": "Advanced",
@@ -691,6 +695,7 @@
             "recording": "Toggle recording",
             "remoteMute": "Mute participant",
             "security": "Security options",
+            "makeCall": "Make private Call",
             "Settings": "Toggle settings",
             "sharedvideo": "Toggle Youtube video sharing",
             "shareRoom": "Invite someone",
@@ -699,6 +704,7 @@
             "show": "Show on stage",
             "speakerStats": "Toggle speaker statistics",
             "tileView": "Toggle tile view",
+            "toggleAudio": "Toggle audio",
             "toggleCamera": "Toggle camera",
             "toggleFilmstrip": "Toggle filmstrip",
             "videomute": "Toggle mute video",
@@ -718,6 +724,8 @@
         "e2ee": "End-to-End Encryption",
         "enterFullScreen": "View full screen",
         "enterTileView": "Enter tile view",
+        "disableAudioMode": "Disable audio",
+        "enableAudioMode": "Enable audio",
         "exitFullScreen": "Exit full screen",
         "exitTileView": "Exit tile view",
         "feedback": "Leave feedback",
@@ -740,6 +748,10 @@
         "noAudioSignalDialInLinkDesc": "Dial-in numbers",
         "noisyAudioInputTitle": "Your microphone appears to be noisy!",
         "noisyAudioInputDesc": "It sounds like your microphone is making noise, please consider muting or changing the device.",
+        "enableVideoDeniedTitle": "Permission to enable video denied",
+        "enableVideoDeniedDescription": "Sorry you don't have enough permissions to enable your video",
+        "enableMicrophoneDeniedTitle": "Permission to enable microphone denied",
+        "enableMicrophoneDeniedDescription": "Sorry you don't have enough permissions to enable your microphone",
         "openChat": "Open chat",
         "pip": "Enter Picture-in-Picture mode",
         "privateMessage": "Send private message",
@@ -759,6 +771,7 @@
         "stopSharedVideo": "Stop YouTube video",
         "talkWhileMutedPopup": "Trying to speak? You are muted.",
         "tileViewToggle": "Toggle tile view",
+        "toggleAudio": "Toggle audio",
         "toggleCamera": "Toggle camera",
         "videomute": "Start / Stop camera",
         "startvideoblur": "Blur my background",
@@ -830,6 +843,22 @@
         "videomute": "Participant has stopped the camera"
     },
     "welcomepage": {
+        "choopchat": {
+            "title": "Start your next meeting",
+            "roomButtonName": "Create Meeting",
+            "roomPlaceholder": "just type your meeting name and press \"Create Meeting\"",
+            "createAccount": "Create Account",
+            "needHelp": "Need Help?",
+            "aboutUs": "About us",
+            "impressum": "Impressum",
+            "termsConditions": "Terms & Conditions"
+        },
+        "aboutUs": {
+            "header": "About Us"
+        },
+        "impressum": {
+            "header": "Impressum"
+        },
         "accessibilityLabel": {
             "join": "Tap to join",
             "roomname": "Enter room name"
@@ -900,5 +929,8 @@
         "passwordJoinButton": "Join",
         "reject": "Reject",
         "toggleLabel": "Enable lobby"
+    },
+    "comingsoon": {
+        "title": "coming soon"
     }
 }

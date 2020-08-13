@@ -1,34 +1,46 @@
 /* eslint-disable no-unused-vars, no-var */
 
 var config = {
+    // Configuration
+    //
+
+    // Alternative location for the configuration.
+    // configLocation: './config.json',
+
+    // Custom function which given the URL path should return a room name.
+    // getroomnode: function (path) { return 'someprefixpossiblybasedonpath'; },
+
+
     // Connection
     //
 
     hosts: {
         // XMPP domain.
-        domain: 'jitsi-meet.example.com',
+        domain: 'choop.chat',
 
         // When using authentication, domain for guest users.
         // anonymousdomain: 'guest.example.com',
 
         // Domain for authenticated users. Defaults to <domain>.
-        // authdomain: 'jitsi-meet.example.com',
+        // authdomain: 'choop.chat',
 
         // Jirecon recording component domain.
-        // jirecon: 'jirecon.jitsi-meet.example.com',
+        // jirecon: 'jirecon.choop.chat',
 
         // Call control component (Jigasi).
         // call_control: 'callcontrol.jitsi-meet.example.com',
 
+        bridge: 'jitsi-videobridge.choop.chat',
+
         // Focus component domain. Defaults to focus.<domain>.
-        // focus: 'focus.jitsi-meet.example.com',
+        // focus: 'focus.choop.chat',
 
         // XMPP MUC domain. FIXME: use XEP-0030 to discover it.
-        muc: 'conference.jitsi-meet.example.com'
+        muc: 'conference.choop.chat'
     },
 
     // BOSH URL. FIXME: use XEP-0156 to discover it.
-    bosh: '//jitsi-meet.example.com/http-bind',
+    bosh: '/http-bind',
 
     // Websocket URL
     // websocket: 'wss://jitsi-meet.example.com/xmpp-websocket',
@@ -37,7 +49,7 @@ var config = {
     clientNode: 'http://jitsi.org/jitsimeet',
 
     // The real JID of focus participant - can be overridden here
-    // focusUserJid: 'focus@auth.jitsi-meet.example.com',
+    // focusUserJid: 'focus@auth.choop.chat',
 
 
     // Testing / experimental features.
@@ -98,14 +110,17 @@ var config = {
 
     // Start the conference in audio only mode (no video is being received nor
     // sent).
-    // startAudioOnly: false,
+    startAudioOnly: false,
 
     // Every participant after the Nth will start audio muted.
-    // startAudioMuted: 10,
+    // startAudioMuted: false,
 
     // Start calls with audio muted. Unlike the option above, this one is only
     // applied locally. FIXME: having these 2 options is confusing.
-    // startWithAudioMuted: false,
+    startWithAudioMuted: false,
+
+    // startAudioMuted: false,
+    // startVideoMuted: false,
 
     // Enabling it (with #params) will disable local audio output of remote
     // participants and to enable it back a reload is needed.
@@ -144,12 +159,16 @@ var config = {
     // are requested again.
     // enableLayerSuspension: false,
 
+    // Suspend sending video if bandwidth estimation is too low. This may cause
+    // problems with audio playback. Disabled until these are fixed.
+    disableSuspendVideo: true,
+
     // Every participant after the Nth will start video muted.
-    // startVideoMuted: 10,
+    startVideoMuted: false,
 
     // Start calls with video muted. Unlike the option above, this one is only
     // applied locally. FIXME: having these 2 options is confusing.
-    // startWithVideoMuted: false,
+    startWithVideoMuted: false,
 
     // If set to true, prefer to use the H.264 video codec (if supported).
     // Note that it's not recommended to do this because simulcast is not
@@ -181,9 +200,9 @@ var config = {
     //     appKey: '<APP_KEY>' // Specify your app key here.
     //     // A URL to redirect the user to, after authenticating
     //     // by default uses:
-    //     // 'https://jitsi-meet.example.com/static/oauth.html'
+    //     // 'https://choop.chat/static/oauth.html'
     //     redirectURI:
-    //          'https://jitsi-meet.example.com/subfolder/static/oauth.html'
+    //          'https://choop.chat/subfolder/static/oauth.html'
     // },
     // When integrations like dropbox are enabled only that will be shown,
     // by enabling fileRecordingsServiceEnabled, we show both the integrations
@@ -198,12 +217,10 @@ var config = {
     // Whether to enable live streaming or not.
     // liveStreamingEnabled: false,
 
+    // hiddenDomain: 'recorder.choop.chat',
     // Transcription (in interface_config,
     // subtitles and buttons can be configured)
     // transcribingEnabled: false,
-
-    // Enables automatic turning on captions when recording is started
-    // autoCaptionOnRecord: false,
 
     // Misc
 
@@ -272,8 +289,11 @@ var config = {
     // UI
     //
 
+    // Use display name as XMPP nickname.
+    useNicks: true,
+
     // Require users to always specify a display name.
-    // requireDisplayName: true,
+    requireDisplayName: true,
 
     // Whether to use a welcome page or not. In case it's false a random room
     // will be joined when no room is specified.
@@ -281,7 +301,7 @@ var config = {
 
     // Enabling the close page will ignore the welcome page redirection when
     // a call is hangup.
-    // enableClosePage: false,
+    enableClosePage: true,
 
     // Disable hiding of remote thumbnails when in a 1-on-1 conference call.
     // disable1On1Mode: false,
@@ -292,7 +312,7 @@ var config = {
     // If true all users without a token will be considered guests and all users
     // with token will be considered non-guests. Only guests will be allowed to
     // edit their profile.
-    enableUserRolesBasedOnToken: false,
+    enableUserRolesBasedOnToken: true,
 
     // Whether or not some features are checked based on token.
     // enableFeaturesBasedOnToken: false,
@@ -338,7 +358,7 @@ var config = {
     // callStatsSecret: '',
 
     // Enables sending participants' display names to callstats
-    // enableDisplayNameInStats: false,
+    enableDisplayNameInStats: true,
 
     // Enables sending participants' emails (if available) to callstats and other analytics
     // enableEmailInStats: false,
@@ -372,7 +392,7 @@ var config = {
 
             // { urls: 'stun:jitsi-meet.example.com:3478' },
             { urls: 'stun:meet-jit-si-turnrelay.jitsi.net:443' }
-        ]
+        ],
 
         // Sets the ICE transport policy for the p2p connection. At the time
         // of this writing the list of possible values are 'all' and 'relay',
@@ -384,7 +404,7 @@ var config = {
 
         // If set to true, it will prefer to use H.264 for P2P calls (if H.264
         // is supported).
-        // preferH264: true
+        preferH264: true
 
         // If set to true, disable H.264 video codec by stripping it out of the
         // SDP.
@@ -397,7 +417,7 @@ var config = {
 
     analytics: {
         // The Google Analytics Tracking ID:
-        // googleAnalyticsTrackingId: 'your-tracking-id-UA-123456-1'
+        googleAnalyticsTrackingId: 'UA-167283179-1',
 
         // Matomo configuration:
         // matomoEndpoint: 'https://your-matomo-endpoint/',
@@ -416,10 +436,10 @@ var config = {
         // rtcstatsPolIInterval: 1000
 
         // Array of script URLs to load as lib-jitsi-meet "analytics handlers".
-        // scriptURLs: [
-        //      "libs/analytics-ga.min.js", // google-analytics
-        //      "https://example.com/my-custom-analytics.js"
-        // ],
+        scriptURLs: [
+            'libs/analytics-ga.min.js' // google-analytics
+            // "https://www.googletagmanager.com/gtag/js?id=UA-167283179-1"
+        ]
     },
 
     // Information about the jitsi-meet instance we are connecting to, including
@@ -500,6 +520,9 @@ var config = {
     // Disables storing the room name to the recents list
     // doNotStoreRoom: true,
 
+    // dialOutCodesUrl: 'https://jitsi-api.jitsi.net/countrycodes',
+    // dialOutAuthUrl: 'https://jitsi-api.jitsi.net/authorizephone',
+
     // Deployment specific URLs.
     // deploymentUrls: {
     //    // If specified a 'Help' button will be displayed in the overflow menu with a link to the specified URL for
@@ -509,6 +532,13 @@ var config = {
     //    // to the specified URL for an app download page.
     //    downloadAppsUrl: 'https://docs.example.com/our-apps.html'
     // },
+
+    peopleSearchUrl: '/peopleSearch',
+    inviteServiceUrl: '/conferenceInvite',
+    peopleSearchQueryTypes: [ 'user' /*, 'conferenceRooms'*/ ],
+
+    tokenAuthUrl: '/joinRoom?roomName={room}', // 'https://' + tyHost + '/meeting/join-meeting?room_type={room}',
+    makeCall: '/makeCall?jwt={jwt}&userId={userId}', // 'https://' + tyHost + '/makeCall?jwt={jwt}&=userId={userId}',
 
     // Options related to the remote participant menu.
     // remoteVideoMenu: {

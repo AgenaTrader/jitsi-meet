@@ -12,7 +12,7 @@ import {
 import { JitsiConferenceEvents } from '../lib-jitsi-meet';
 import { MiddlewareRegistry, StateListenerRegistry } from '../redux';
 import { playSound, registerSound, unregisterSound } from '../sounds';
-
+import { setLocalRole } from './actions';
 import {
     DOMINANT_SPEAKER_CHANGED,
     GRANT_MODERATOR,
@@ -34,7 +34,8 @@ import {
 import {
     LOCAL_PARTICIPANT_DEFAULT_ID,
     PARTICIPANT_JOINED_SOUND_ID,
-    PARTICIPANT_LEFT_SOUND_ID
+    PARTICIPANT_LEFT_SOUND_ID,
+    PARTICIPANT_LOST_SOUND_ID
 } from './constants';
 import {
     getFirstLoadableAvatarUrl,
@@ -43,7 +44,11 @@ import {
     getParticipantCount,
     getParticipantDisplayName
 } from './functions';
-import { PARTICIPANT_JOINED_FILE, PARTICIPANT_LEFT_FILE } from './sounds';
+
+import {
+    getParticipantLocalRoleById
+} from '../participants-roles/functions';
+import { PARTICIPANT_JOINED_FILE, PARTICIPANT_LEFT_FILE, PARTICIPANT_LOST_FILE } from './sounds';
 
 declare var APP: Object;
 
@@ -405,6 +410,18 @@ function _participantJoinedOrUpdated({ dispatch, getState }, next, action) {
     if (typeof APP === 'object') {
         const currentKnownId = local ? APP.conference.getMyUserId() : id;
 
+        const participant = APP.conference.getParticipantById(currentKnownId);
+
+        if (participant && !participant.localRole) {
+            const userRole = getParticipantLocalRoleById(currentKnownId);
+
+            dispatch(setLocalRole(currentKnownId, 'none'));
+
+            if (userRole) {
+                dispatch(setLocalRole(currentKnownId, userRole));
+            }
+        }
+
         // Force update of local video getting a new id.
         APP.UI.refreshAvatarDisplay(currentKnownId);
     }
@@ -451,6 +468,7 @@ function _registerSounds({ dispatch }) {
     dispatch(
         registerSound(PARTICIPANT_JOINED_SOUND_ID, PARTICIPANT_JOINED_FILE));
     dispatch(registerSound(PARTICIPANT_LEFT_SOUND_ID, PARTICIPANT_LEFT_FILE));
+    dispatch(registerSound(PARTICIPANT_LOST_SOUND_ID, PARTICIPANT_LOST_FILE));
 }
 
 /**
@@ -463,4 +481,5 @@ function _registerSounds({ dispatch }) {
 function _unregisterSounds({ dispatch }) {
     dispatch(unregisterSound(PARTICIPANT_JOINED_SOUND_ID));
     dispatch(unregisterSound(PARTICIPANT_LEFT_SOUND_ID));
+    dispatch(unregisterSound(PARTICIPANT_LOST_SOUND_ID));
 }

@@ -13,6 +13,7 @@ import { MiddlewareRegistry } from '../redux';
 import { SET_JWT } from './actionTypes';
 import { setJWT } from './actions';
 import { parseJWTFromURLParams } from './functions';
+import { loadParticipantsRoles } from '../participants-roles';
 
 declare var APP: Object;
 
@@ -35,6 +36,10 @@ MiddlewareRegistry.register(store => next => action => {
         return _setConfigOrLocationURL(store, next, action);
 
     case SET_JWT:
+        if (action.jwt) {
+            APP.store.dispatch(loadParticipantsRoles(action.jwt));
+        }
+
         return _setJWT(store, next, action);
     }
 
@@ -54,10 +59,10 @@ MiddlewareRegistry.register(store => next => action => {
  */
 function _overwriteLocalParticipant(
         { dispatch, getState },
-        { avatarURL, email, name, features }) {
+        { avatarURL, email, name, features, role }) {
     let localParticipant;
 
-    if ((avatarURL || email || name)
+    if ((avatarURL || email || name || role)
             && (localParticipant = getLocalParticipant(getState))) {
         const newProperties: Object = {
             id: localParticipant.id,
@@ -72,6 +77,9 @@ function _overwriteLocalParticipant(
         }
         if (name) {
             newProperties.name = name;
+        }
+        if (role) {
+            newProperties.localRole = role;
         }
         if (features) {
             newProperties.features = features;
@@ -222,7 +230,7 @@ function _undoOverwriteLocalParticipant(
  *     name: ?string
  * }}
  */
-function _user2participant({ avatar, avatarUrl, email, id, name }) {
+function _user2participant({ avatar, avatarUrl, email, id, name, role }) {
     const participant = {};
 
     if (typeof avatarUrl === 'string') {
@@ -238,6 +246,9 @@ function _user2participant({ avatar, avatarUrl, email, id, name }) {
     }
     if (typeof name === 'string') {
         participant.name = name.trim();
+    }
+    if (typeof role === 'string') {
+        participant.role = role.trim();
     }
 
     return Object.keys(participant).length ? participant : undefined;

@@ -5,6 +5,8 @@ import { parseURLParams } from '../util';
 
 import { DEFAULT_SERVER_URL } from './constants';
 
+declare var APP: Object;
+
 /**
  * Returns the effective value of a configuration/preference/setting by applying
  * a precedence among the values specified by JWT, URL, settings,
@@ -179,6 +181,61 @@ export function getUserSelectedOutputDeviceId(stateful: Object | Function) {
         userSelectedDeviceLabel: userSelectedAudioOutputDeviceLabel,
         replacement: undefined
     });
+}
+
+/**
+ * Update all joined participant audio volume.
+ *
+ * @param {boolean} volume - audio volume
+ * @returns {void}
+ */
+export function updateAllParticipantAudioVolume(volume) {
+    const participants = APP.conference.listMembers();
+
+    participants.forEach(participant => {
+        participant._tracks.forEach(track => {
+            updateAudioTrackVolume(track, volume);
+        });
+    });
+}
+
+/**
+ * Check if all participant audio volume is muted.
+ *
+ * @returns {boolean}
+ */
+export function isAllParticipantAudioVolumeMuted() {
+    let muted = true;
+    const participants = APP.conference.listMembers();
+
+    participants.forEach(participant => {
+        participant._tracks.forEach(track => {
+            if (track.isAudioTrack()) {
+                track.containers.forEach(audio => {
+                    if (audio.volume > 0 && muted) {
+                        muted = false;
+                    }
+                });
+            }
+        });
+    });
+
+    return muted;
+}
+
+/**
+ * Update audio track volume.
+ *
+ * @param {Object} track - audio track
+ * @param {boolean} volume - audio volume
+ * @returns {void}
+ */
+export function updateAudioTrackVolume(track, volume) {
+    if (track.isAudioTrack()) {
+        track.containers.forEach(audio => {
+            audio.volume = volume;
+        });
+    }
 }
 
 /**

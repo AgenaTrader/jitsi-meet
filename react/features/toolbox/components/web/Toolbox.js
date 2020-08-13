@@ -80,6 +80,9 @@ import OverflowMenuButton from './OverflowMenuButton';
 import OverflowMenuProfileItem from './OverflowMenuProfileItem';
 import ToolbarButton from './ToolbarButton';
 import VideoSettingsButton from './VideoSettingsButton';
+import ToggleAudioButton from './ToggleAudioButton';
+import VideoQualityDialogButton from '../../../video-quality/components/VideoQualityDialogButton';
+import { _verifyUserHasPermission } from '../../../base/media';
 
 /**
  * The type of the React {@code Component} props of {@link Toolbox}.
@@ -655,13 +658,17 @@ class Toolbox extends Component<Props, State> {
      * @returns {void}
      */
     _onShortcutToggleScreenshare() {
-        sendAnalytics(createToolbarEvent(
-            'screen.sharing',
-            {
-                enable: !this.props._screensharing
-            }));
+        const accessToFunctionality = _verifyUserHasPermission('desktop');
 
-        this._doToggleScreenshare();
+        if (accessToFunctionality) {
+            sendAnalytics(createToolbarEvent(
+                'screen.sharing',
+                {
+                    enable: !this.props._screensharing
+                }));
+
+            this._doToggleScreenshare();
+        }
     }
 
     _onToolbarOpenFeedback: () => void;
@@ -873,6 +880,12 @@ class Toolbox extends Component<Props, State> {
             _desktopSharingEnabled,
             _desktopSharingDisabledTooltipKey
         } = this.props;
+
+        const userHasPermission = _verifyUserHasPermission('sharing');
+
+        if (!userHasPermission) {
+            return false;
+        }
 
         return _desktopSharingEnabled || _desktopSharingDisabledTooltipKey;
     }
@@ -1126,11 +1139,7 @@ class Toolbox extends Component<Props, State> {
      * @returns {ReactElement}
      */
     _renderAudioButton() {
-        return this._shouldShowButton('microphone')
-            ? <AudioSettingsButton
-                key = 'asb'
-                visible = { true } />
-            : null;
+        return <AudioSettingsButton key = 'asb' />;
     }
 
     /**
@@ -1139,11 +1148,7 @@ class Toolbox extends Component<Props, State> {
      * @returns {ReactElement}
      */
     _renderVideoButton() {
-        return this._shouldShowButton('camera')
-            ? <VideoSettingsButton
-                key = 'vsb'
-                visible = { true } />
-            : null;
+        return <VideoSettingsButton key = 'vsb' />;
     }
 
     /**
@@ -1181,6 +1186,12 @@ class Toolbox extends Component<Props, State> {
         if (this._shouldShowButton('raisehand')) {
             buttonsLeft.push('raisehand');
         }
+        if (this._shouldShowButton('mute-everyone')) {
+            buttonsLeft.push('mute-everyone');
+        }
+        if (this._shouldShowButton('toggle-audio')) {
+            buttonsLeft.push('toggle-audio');
+        }
         if (this._shouldShowButton('chat')) {
             buttonsLeft.push('chat');
         }
@@ -1199,6 +1210,9 @@ class Toolbox extends Component<Props, State> {
 
         if (this._shouldShowButton('tileview')) {
             buttonsRight.push('tileview');
+        }
+        if (this._shouldShowButton('videoquality')) {
+            buttonsRight.push('videoquality');
         }
         if (this._shouldShowButton('localrecording')) {
             buttonsRight.push('localrecording');
@@ -1241,13 +1255,20 @@ class Toolbox extends Component<Props, State> {
                 <div className = 'button-group-left'>
                     { buttonsLeft.indexOf('desktop') !== -1
                         && this._renderDesktopSharingButton() }
+                    { buttonsLeft.indexOf('mute-everyone') !== -1
+                        && <MuteEveryoneButton
+                            visible = { this._shouldShowButton('mute-everyone') } /> }
+                    { buttonsLeft.indexOf('toggle-audio') !== -1
+                        && <ToggleAudioButton
+                            visible = { this._shouldShowButton('toggle-audio') } /> }
                     { buttonsLeft.indexOf('raisehand') !== -1
                         && <ToolbarButton
                             accessibilityLabel = { t('toolbar.accessibilityLabel.raiseHand') }
                             icon = { IconRaisedHand }
                             onClick = { this._onToolbarToggleRaiseHand }
                             toggled = { _raisedHand }
-                            tooltip = { t('toolbar.raiseHand') } /> }
+                            tooltip = { t('toolbar.raiseHand') }
+                            visible = { this._shouldShowButton('raisehand') } /> }
                     { buttonsLeft.indexOf('chat') !== -1
                         && <div className = 'toolbar-button-with-badge'>
                             <ToolbarButton
@@ -1276,6 +1297,8 @@ class Toolbox extends Component<Props, State> {
                                 this._onToolbarOpenLocalRecordingInfoDialog
                             } />
                     }
+                    { buttonsRight.indexOf('videoquality') !== -1
+                        && <VideoQualityDialogButton /> }
                     { buttonsRight.indexOf('tileview') !== -1
                         && <TileViewButton /> }
                     { buttonsRight.indexOf('invite') !== -1
@@ -1284,7 +1307,8 @@ class Toolbox extends Component<Props, State> {
                                 { t('toolbar.accessibilityLabel.invite') }
                             icon = { IconInviteMore }
                             onClick = { this._onToolbarOpenInvite }
-                            tooltip = { t('toolbar.invite') } /> }
+                            tooltip = { t('toolbar.invite') }
+                            visible = { this._shouldShowButton('invite') } /> }
                     { buttonsRight.indexOf('security') !== -1
                         && <SecurityDialogButton customClass = 'security-toolbar-button' /> }
                     { buttonsRight.indexOf('overflowmenu') !== -1
@@ -1312,6 +1336,12 @@ class Toolbox extends Component<Props, State> {
      * @returns {boolean} True if the button should be displayed.
      */
     _shouldShowButton(buttonName) {
+        const accessToFunctionality = _verifyUserHasPermission(buttonName);
+
+        if (!accessToFunctionality) {
+            return false;
+        }
+
         return this.props._visibleButtons.has(buttonName);
     }
 }

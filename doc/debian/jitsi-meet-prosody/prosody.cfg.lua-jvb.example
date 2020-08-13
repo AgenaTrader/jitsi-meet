@@ -22,16 +22,11 @@ ssl = {
 }
 
 VirtualHost "jitmeet.example.com"
-        -- enabled = false -- Remove this line to enable this host
-        authentication = "anonymous"
-        -- Properties below are modified by jitsi-meet-tokens package config
-        -- and authentication above is switched to "token"
-        --app_id="example_app_id"
-        --app_secret="example_app_secret"
-        -- Assign this host a certificate for TLS, otherwise it would use the one
-        -- set in the global section (if any).
-        -- Note that old-style SSL on port 5223 only supports one certificate, and will always
-        -- use the global one.
+        authentication = "token"
+        app_id="appId"
+        app_secret="appSecret"
+        allow_empty_token=false
+
         ssl = {
                 key = "/etc/prosody/certs/jitmeet.example.com.key";
                 certificate = "/etc/prosody/certs/jitmeet.example.com.crt";
@@ -47,6 +42,7 @@ VirtualHost "jitmeet.example.com"
             "turncredentials";
             "conference_duration";
             "muc_lobby_rooms";
+            "presence_identity";
         }
         c2s_require_encryption = false
         lobby_muc = "lobby.jitmeet.example.com"
@@ -58,9 +54,10 @@ Component "conference.jitmeet.example.com" "muc"
     modules_enabled = {
         "muc_meeting_id";
         "muc_domain_mapper";
-        -- "token_verification";
+        "token_verification";
+        "token_moderation";
     }
-    admins = { "focusUser@auth.jitmeet.example.com" }
+    admins = { "focus@auth.jitmeet.example.com" }
     muc_room_locking = false
     muc_room_default_public_jids = true
 
@@ -70,15 +67,22 @@ Component "internal.auth.jitmeet.example.com" "muc"
     modules_enabled = {
       "ping";
     }
-    admins = { "focusUser@auth.jitmeet.example.com", "jvb@auth.jitmeet.example.com" }
+    admins = { "focus@auth.jitmeet.example.com", "jvb@auth.jitmeet.example.com" }
     muc_room_locking = false
     muc_room_default_public_jids = true
 
 VirtualHost "auth.jitmeet.example.com"
+    ssl = {
+        key = "/etc/prosody/certs/auth.jitmeet.example.com.key";
+        certificate = "/etc/prosody/certs/auth.jitmeet.example.com.crt";
+    }
     authentication = "internal_plain"
 
 Component "focus.jitmeet.example.com"
     component_secret = "focusSecret"
+
+Component "jitsi-videobridge.dev.choop.chat"
+    component_secret = "jvbSecret"
 
 Component "speakerstats.jitmeet.example.com" "speakerstats_component"
     muc_component = "conference.jitmeet.example.com"

@@ -1,9 +1,13 @@
 // @flow
 
 import { getPinnedParticipant } from '../base/participants';
+import collapse from '@atlaskit/icon/glyph/editor/collapse';
+import { _checkPermissionByRole } from '../base/media';
+import _ from 'lodash';
 
 import { LAYOUTS } from './constants';
 
+declare var APP: Object;
 declare var interfaceConfig: Object;
 
 /**
@@ -30,9 +34,9 @@ export function getCurrentLayout(state: Object) {
  * @returns {number}
  */
 export function getMaxColumnCount() {
-    const configuredMax = interfaceConfig.TILE_VIEW_MAX_COLUMNS || 5;
+    const configuredMax = interfaceConfig.TILE_VIEW_MAX_COLUMNS || 7;
 
-    return Math.min(Math.max(configuredMax, 1), 5);
+    return Math.min(Math.max(configuredMax, 1), 7);
 }
 
 /**
@@ -50,11 +54,49 @@ export function getTileViewGridDimensions(state: Object, maxColumns: number = ge
     // When in tile view mode, we must discount ourselves (the local participant) because our
     // tile is not visible.
     const { iAmRecorder } = state['features/base/config'];
-    const numberOfParticipants = state['features/base/participants'].length - (iAmRecorder ? 1 : 0);
+    const numberOfParticipants = state['features/base/participants'].filter(
+        participant => _.isUndefined(participant.localRole)
+            || _checkPermissionByRole(participant.localRole, 'tiles')
+            || participant.id === APP.conference.getMyUserId()
+    ).length - (iAmRecorder ? 1 : 0);
 
-    const columnsToMaintainASquare = Math.ceil(Math.sqrt(numberOfParticipants));
-    const columns = Math.min(columnsToMaintainASquare, maxColumns);
-    const rows = Math.ceil(numberOfParticipants / columns);
+    const { clientWidth, clientHeight } = state['features/base/responsive-ui'];
+
+    let columnsToMaintainASquare = Math.round(Math.sqrt(numberOfParticipants));
+
+    if (clientWidth > 1350) {
+        columnsToMaintainASquare = Math.ceil(Math.sqrt(numberOfParticipants));
+    }
+
+    let columns = Math.min(columnsToMaintainASquare, maxColumns);
+    let rows = Math.ceil(numberOfParticipants / columns);
+
+    if (clientWidth > clientHeight) {
+        if (rows > columns) {
+            const tempRows = rows;
+            rows = columns;
+            columns = tempRows;
+        }
+    } else {
+        if (rows < columns) {
+            const tempColumns = columns;
+            columns = rows;
+            rows = tempColumns;
+        }
+    }
+
+    const halfOfColumns = Math.ceil(columns / 2) > 1 ? Math.ceil(columns / 2) : 2;
+
+    if (clientWidth > (clientHeight * 2)) {
+        rows = rows - 1;
+        columns = columns + halfOfColumns;
+    }
+
+    if (clientHeight > (clientWidth * 2)) {
+        rows = rows + 1;
+        columns = columns - halfOfColumns;
+    }
+
     const visibleRows = Math.min(maxColumns, rows);
 
     return {

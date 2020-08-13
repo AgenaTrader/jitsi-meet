@@ -11,6 +11,9 @@ import { getMediaPermissionPromptVisibility } from '../../../overlay';
 import { AudioSettingsPopup, toggleAudioSettings } from '../../../settings';
 import { isAudioSettingsButtonDisabled } from '../../functions';
 import AudioMuteButton from '../AudioMuteButton';
+import { _verifyUserHasPermission, MEDIA_TYPE } from '../../../base/media';
+
+declare var interfaceConfig: Object;
 
 type Props = {
 
@@ -143,10 +146,13 @@ class AudioSettingsButton extends Component<Props, State> {
  * @returns {Object}
  */
 function mapStateToProps(state) {
+    const userHasPermission = _verifyUserHasPermission(MEDIA_TYPE.AUDIO);
+    const toolbarButtons = interfaceConfig.TOOLBAR_BUTTONS;
+
     return {
         isDisabled: isAudioSettingsButtonDisabled(state),
         permissionPromptVisibility: getMediaPermissionPromptVisibility(state),
-        visible: !isMobileBrowser()
+        visible: !isMobileBrowser() && userHasPermission && toolbarButtons.includes('microphone')
     };
 }
 

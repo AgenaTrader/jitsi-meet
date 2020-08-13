@@ -245,13 +245,13 @@ end
 -- @param session the current session
 -- @param acceptedIssuers optional list of accepted issuers to check
 -- @return false and error
-function Util:process_and_verify_token(session, acceptedIssuers)
+function Util:process_and_verify_token(session, acceptedIssuers, room)
     if not acceptedIssuers then
         acceptedIssuers = self.acceptedIssuers;
     end
 
     if session.auth_token == nil then
-        if self.allowEmptyToken then
+        if self.allowEmptyToken or self:not_traydersyard_meeting(room) then
             return true;
         else
             return false, "not-allowed", "token required";
@@ -311,6 +311,34 @@ function Util:process_and_verify_token(session, acceptedIssuers)
     end
 end
 
+function strpos (haystack, needle, offset)
+    local pattern = string.format("(%s)", needle)
+    local i       = string.find (haystack, pattern, (offset or 0))
+
+    return (i ~= nil and i or false)
+end
+
+function Util:not_traydersyard_meeting (room_address)
+    if room_address == nil
+    then
+        module:log("info", "Room address is empty");
+        return self.allowEmptyToken;
+    end
+
+
+    local room,_,_ = jid.split(room_address);
+
+    if strpos(room, 'group-') == false
+        and strpos(room, 'webinar-') == false
+        and strpos(room, 'friend-chat') == false
+    then
+        module:log("info", "Not traydersyard room - %s - true", room);
+        return true;
+    end
+
+    return false;
+end
+
 --- Verifies room name and domain if necesarry.
 -- Checks configs and if necessary checks the room name extracted from
 -- room_address against the one saved in the session when token was verified.
@@ -334,6 +362,12 @@ function Util:verify_room(session, room_address)
     if room == nil then
         log("error",
             "Unable to get name of the MUC room ? to: %s", room_address);
+        return true;
+    end
+
+    if self.allowEmptyToken == false and self:not_traydersyard_meeting(room_address)
+    then
+        module:log("info", "Give access to creating room - %s", room);
         return true;
     end
 

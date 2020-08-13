@@ -75,13 +75,15 @@ function verify_token(token, room_name, group, session)
     end
 
     session.auth_token = token;
-    local verified, reason = token_util:process_and_verify_token(session);
+
+    local room_address = jid.join(room_name, module:get_host());
+    local verified, reason = token_util:process_and_verify_token(session, room_address);
     if not verified then
         log("warn", "not a valid token %s", tostring(reason));
         return false;
     end
 
-    local room_address = jid.join(room_name, module:get_host());
+
     -- if there is a group we are in multidomain mode and that group is not
     -- our parent host
     if group and group ~= "" and group ~= parentHostName then

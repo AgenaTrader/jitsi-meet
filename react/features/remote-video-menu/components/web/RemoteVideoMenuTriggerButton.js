@@ -15,10 +15,13 @@ import {
     PrivateMessageMenuButton,
     RemoteControlButton,
     RemoteVideoMenu,
-    VolumeSlider
+    VolumeSlider,
+    MakeCallButton
 } from './';
+import { _verifyUserHasPermission } from '../../../base/media';
 
 declare var $: Object;
+declare var APP: Object;
 declare var interfaceConfig: Object;
 
 /**
@@ -180,6 +183,17 @@ class RemoteVideoMenuTriggerButton extends Component<Props> {
         } = this.props;
 
         const buttons = [];
+
+        const myId = APP.conference.getMyUserId();
+        const userHasPermission = _verifyUserHasPermission('makecall');
+
+        if (myId !== participantID && userHasPermission) {
+            buttons.push(
+                <MakeCallButton
+                    key = 'make-call'
+                    participantID = { participantID } />
+            );
+        }
 
         if (_isModerator) {
             if (!_disableRemoteMute) {

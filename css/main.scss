@@ -52,6 +52,8 @@ $flagsImagePath: "../images/";
 @import 'chat';
 @import 'ringing/ringing';
 @import 'welcome_page';
+@import 'welcome_page_choop_chat';
+@import 'coming_soon';
 @import 'welcome_page_content';
 @import 'welcome_page_settings_toolbar';
 @import 'toolbars';
@@ -99,5 +101,7 @@ $flagsImagePath: "../images/";
 @import 'modals/security/security';
 @import 'premeeting-screens';
 @import 'e2ee';
+
+@import "choop-chat-theme";
 
 /* Modules END */

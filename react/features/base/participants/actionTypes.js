@@ -171,3 +171,16 @@ export const HIDDEN_PARTICIPANT_LEFT = 'HIDDEN_PARTICIPANT_LEFT';
  */
 export const SET_LOADABLE_AVATAR_URL = 'SET_LOADABLE_AVATAR_URL';
 
+/**
+ * The type of Redux action which update local participant role.
+ *
+ * {
+ *     type: SET_LOCAL_ROLE,
+ *     participant: {
+ *         id: string,
+           localRole: string
+ *     }
+ * }
+ */
+export const SET_LOCAL_ROLE = 'SET_LOCAL_ROLE';
+

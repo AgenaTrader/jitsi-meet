@@ -10,6 +10,9 @@ import { parseURLParams } from '../util';
 
 import { SETTINGS_UPDATED } from './actionTypes';
 import { handleCallIntegrationChange, handleCrashReportingChange } from './functions';
+import { setNotificationsEnabled, setDisableLostConnectionSound } from '../../notifications';
+
+declare var APP: Object;
 
 /**
  * The middleware of the feature base/settings. Distributes changes to the state
@@ -25,6 +28,12 @@ MiddlewareRegistry.register(store => next => action => {
     switch (action.type) {
     case APP_WILL_MOUNT:
         _initializeCallIntegration(store);
+
+        const state = store.getState();
+        const { disableNotifications, disableConnectionLostSound } = state['features/base/settings'];
+
+        APP.store.dispatch(setNotificationsEnabled(!disableNotifications));
+        APP.store.dispatch(setDisableLostConnectionSound(disableConnectionLostSound));
         break;
     case SETTINGS_UPDATED:
         _maybeHandleCallIntegrationChange(action);

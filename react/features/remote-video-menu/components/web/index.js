@@ -24,3 +24,4 @@ export {
     default as RemoteVideoMenuTriggerButton
 } from './RemoteVideoMenuTriggerButton';
 export { default as VolumeSlider } from './VolumeSlider';
+export { default as MakeCallButton } from './MakeCallButton';

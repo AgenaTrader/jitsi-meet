@@ -63,11 +63,74 @@ server {
         alias /usr/share/jitsi-meet/$1/$2;
     }
 
+    location ~ ^/js/(.*)$
+    {
+        alias /var/www/ChoopChat.TokenIssuer/wwwroot/js/$1;
+    }
+
+    location ~ ^/latest/js/(.*)$
+    {
+        alias /var/www/ChoopChat.TokenIssuer/wwwroot/latest/js/$1;
+    }
+
     # BOSH
     location = /http-bind {
         proxy_pass      http://localhost:5280/http-bind;
         proxy_set_header X-Forwarded-For $remote_addr;
         proxy_set_header Host $http_host;
+    }
+
+    # JWT Token Issuer
+    location = /jwt-token {
+        proxy_pass      http://localhost:5000/token;
+        proxy_set_header X-Forwarded-For $remote_addr;
+        proxy_set_header Host $http_host;
+    }
+
+    location = /peopleSearch {
+        proxy_pass      http://localhost:5000/peopleSearch;
+        proxy_set_header X-Forwarded-For $remote_addr;
+        proxy_set_header Host $http_host;
+    }
+
+    location = /conferenceInvite {
+        proxy_pass      http://localhost:5000/conferenceInvite;
+        proxy_set_header X-Forwarded-For $remote_addr;
+        proxy_set_header Host $http_host;
+    }
+
+    location = /getParticipants {
+        proxy_pass      http://localhost:5000/getParticipants;
+        proxy_set_header X-Forwarded-For $remote_addr;
+        proxy_set_header Host $http_host;
+    }
+
+    location = /joinRoom {
+        proxy_pass      http://localhost:5000/joinRoom;
+        proxy_set_header X-Forwarded-For $remote_addr;
+        proxy_set_header Host $http_host;
+    }
+
+    location = /makeCall {
+        proxy_pass      http://localhost:5000/makeCall;
+        proxy_set_header X-Forwarded-For $remote_addr;
+        proxy_set_header Host $http_host;
+    }
+
+    location = /external.html {
+        alias /var/www/ChoopChat.TokenIssuer/wwwroot/index_initial.html;
+    }
+
+    location = /external_api.html {
+        alias /var/www/ChoopChat.TokenIssuer/wwwroot/index.html;
+    }
+
+    location = /latest/external.html {
+        alias /var/www/ChoopChat.TokenIssuer/wwwroot/latest/index_initial.html;
+    }
+
+    location = /latest/external_api.html {
+        alias /var/www/ChoopChat.TokenIssuer/wwwroot/latest/index.html;
     }
 
     # xmpp websockets

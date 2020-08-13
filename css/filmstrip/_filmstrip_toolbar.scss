@@ -3,6 +3,8 @@
     flex-direction: column-reverse;
     flex-wrap: nowrap;
     position: relative;
+    bottom:55px;
+    z-index:100;
     width: $filmstripToggleButtonWidth;
 
     button {

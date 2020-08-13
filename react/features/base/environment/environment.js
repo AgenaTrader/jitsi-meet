@@ -96,6 +96,19 @@ export function isSupportedMobileBrowser() {
 }
 
 /**
+ * Check is coming soon page available.
+ *
+ * @returns {boolean}
+ */
+export function isComingSoonEnabled() {
+    if (interfaceConfig.COMING_SOON_ENABLED || false) {
+        return true;
+    }
+
+    return false;
+}
+
+/**
  * Runs various browser checks to know if the current browser is found within
  * the list.
  *

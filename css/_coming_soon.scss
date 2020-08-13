@@ -1,0 +1,44 @@
+body.coming-soon {
+    background: inherit;
+    overflow: auto;
+}
+
+.welcome-coming-soon {
+    background: rgb(63,168,251);
+    background: $comingSoonPageBackground;
+    display: table;
+    height: 100%;
+    width: 100%;
+
+    .text-content {
+        display: table-cell;
+        vertical-align: middle;
+        text-align: center;
+
+        .text-title {
+            color: $welcomePageTitleColor;
+            font-size: $comingSoonPageHeaderTextTitleFontSize;
+            font-weight: $welcomePageHeaderTextTitleFontWeight;
+            line-height: $welcomePageHeaderTextTitleLineHeight;
+            margin-bottom: $welcomePageHeaderTextTitleMarginBottom;
+            opacity: $welcomePageHeaderTextTitleOpacity;
+        }
+
+        .text-coming-soon {
+            margin-top:20px;
+            color: $welcomePageTitleColor;
+            font-size: $welcomePageHeaderTextTitleFontSize;
+            font-weight: $welcomePageHeaderTextTitleFontWeight;
+            line-height: $welcomePageHeaderTextTitleLineHeight;
+            margin-bottom: $welcomePageHeaderTextTitleMarginBottom;
+            opacity: $welcomePageHeaderTextTitleOpacity;
+        }
+
+    }
+
+    .welcome-watermark {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+    }
+}

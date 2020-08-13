@@ -33,13 +33,16 @@ const DEFAULT_STATE = {
     startAudioOnly: false,
     startWithAudioMuted: false,
     startWithVideoMuted: false,
+    disableNotifications: false,
+    disableConnectionLostSound: true,
     userSelectedAudioOutputDeviceId: undefined,
     userSelectedCameraDeviceId: undefined,
     userSelectedMicDeviceId: undefined,
     userSelectedAudioOutputDeviceLabel: undefined,
     userSelectedCameraDeviceLabel: undefined,
     userSelectedMicDeviceLabel: undefined,
-    userSelectedSkipPrejoin: undefined
+    userSelectedSkipPrejoin: undefined,
+    enabledAudioVolume: true
 };
 
 const STORE_NAME = 'features/base/settings';
@@ -126,6 +129,9 @@ function _initSettings(featureState) {
     // jibri, and remove the old settings.js values.
     const savedDisplayName = jitsiLocalStorage.getItem('displayname');
     const savedEmail = jitsiLocalStorage.getItem('email');
+    const savedDisableNotifications = jitsiLocalStorage.getItem('disablenotifications');
+    const savedDisableConnectionLostSound = jitsiLocalStorage.getItem('disablelostconnectionsound');
+
     let avatarID = _.escape(jitsiLocalStorage.getItem('avatarId'));
 
     // The helper _.escape will convert null to an empty strings. The empty
@@ -136,6 +142,14 @@ function _initSettings(featureState) {
     const displayName
         = savedDisplayName === null ? undefined : _.escape(savedDisplayName);
     const email = savedEmail === null ? undefined : _.escape(savedEmail);
+    const disableNotifications = savedDisableNotifications === null
+        ? DEFAULT_STATE.disableNotifications
+        : _.escape(savedDisableNotifications);
+    const disableConnectionLostSound = savedDisableConnectionLostSound === null
+        ? DEFAULT_STATE.disableConnectionLostSound
+        : _.escape(savedDisableConnectionLostSound);
+
+    const enabledAudioVolume = DEFAULT_STATE.enabledAudioVolume;
 
     if (!avatarID) {
         // if there is no avatar id, we generate a unique one and use it forever
@@ -145,7 +159,10 @@ function _initSettings(featureState) {
     settings = assignIfDefined({
         avatarID,
         displayName,
-        email
+        email,
+        disableNotifications,
+        disableConnectionLostSound,
+        enabledAudioVolume
     }, settings);
 
     if (!browser.isReactNative()) {

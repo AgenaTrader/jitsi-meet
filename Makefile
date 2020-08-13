@@ -7,6 +7,7 @@ RNNOISE_WASM_DIR = node_modules/rnnoise-wasm/dist/
 NODE_SASS = ./node_modules/.bin/node-sass
 NPM = npm
 OUTPUT_DIR = .
+PROD_DEPLOY_DIR = ../ChoopChat-Deployment
 STYLES_BUNDLE = css/all.bundle.css
 STYLES_DESTINATION = css/all.css
 STYLES_MAIN = css/main.scss

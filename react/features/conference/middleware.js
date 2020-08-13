@@ -16,6 +16,7 @@ import { SET_REDUCED_UI } from '../base/responsive-ui';
 import { FeedbackDialog } from '../feedback';
 import { setFilmstripEnabled } from '../filmstrip';
 import { setToolboxEnabled } from '../toolbox';
+import { setTileView } from '../video-layout';
 
 import { notifyKickedOut } from './actions';
 
@@ -28,15 +29,20 @@ MiddlewareRegistry.register(store => next => action => {
         const { dispatch, getState } = store;
         const state = getState();
         const { reducedUI } = state['features/base/responsive-ui'];
+        const { room } = state['features/base/conference'];
 
         dispatch(setToolboxEnabled(!reducedUI));
         dispatch(setFilmstripEnabled(!reducedUI));
 
-        dispatch(
-            setPreferredVideoQuality(
-                reducedUI
-                    ? VIDEO_QUALITY_LEVELS.LOW
-                    : VIDEO_QUALITY_LEVELS.HIGH));
+        if (room.indexOf('group') !== -1) { // only for group
+            store.dispatch(setTileView(true));
+        }
+
+        const quality = reducedUI || room.indexOf('group') !== -1
+            ? VIDEO_QUALITY_LEVELS.LOW
+            : VIDEO_QUALITY_LEVELS.HIGH;
+
+        dispatch(setPreferredVideoQuality(quality));
 
         break;
     }

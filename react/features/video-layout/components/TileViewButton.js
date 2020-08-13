@@ -87,12 +87,13 @@ class TileViewButton<P: Props> extends AbstractButton<P, *> {
  * @returns {Props}
  */
 function _mapStateToProps(state, ownProps) {
+    const { room } = state['features/base/conference'];
     const enabled = getFeatureFlag(state, TILE_VIEW_ENABLED, true);
     const { visible = enabled } = ownProps;
 
     return {
         _tileViewEnabled: state['features/video-layout'].tileViewEnabled,
-        visible
+        visible: visible && room.indexOf('webinar') === -1
     };
 }
 
