@@ -11,8 +11,6 @@ then
 
     if [ ! -d /etc/jitsi/videobridge ]
     then
-        apt-get install -y jitsi-videobridge
-
         # To support larger number of participants we need to increase some numbers
         tee -a /etc/systemd/system.conf << EOF
 DefaultLimitNOFILE=65000
@@ -21,7 +19,7 @@ DefaultTasksMax=65000
 EOF
 
         echo "jitsi-videobridge2 jitsi-videobridge/jvb-hostname string $DOMAIN" | debconf-set-selections
-        apt-get install -y jitsi-videobridge2=2.1-157-g389b69ff-1
+        apt-get install -y jitsi-videobridge2=2.1-273-g072dd44b-1
     fi
 
     echo "===================> VIDEOBRIDGE change config file <==================="
