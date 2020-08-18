@@ -54,10 +54,12 @@ export function getTileViewGridDimensions(state: Object, maxColumns: number = ge
     // When in tile view mode, we must discount ourselves (the local participant) because our
     // tile is not visible.
     const { iAmRecorder } = state['features/base/config'];
+    const { room } = state['features/base/conference'];
+
     const numberOfParticipants = state['features/base/participants'].filter(
-        participant => _.isUndefined(participant.localRole)
-            || _checkPermissionByRole(participant.localRole, 'tiles')
-            || participant.id === APP.conference.getMyUserId()
+        participant => room.indexOf('friend-chat') !== -1 || _.isUndefined(participant.localRole)
+                || _checkPermissionByRole(participant.localRole, 'tiles')
+                || participant.id === APP.conference.getMyUserId()
     ).length - (iAmRecorder ? 1 : 0);
 
     const { clientWidth, clientHeight } = state['features/base/responsive-ui'];

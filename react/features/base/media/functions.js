@@ -6,13 +6,12 @@ import { VIDEO_MUTISM_AUTHORITY } from './constants';
 import {
     getParticipantById,
     setLocalRole
-} from '../../base/participants';
+} from '../participants';
 
 import {
-    getRolesForParticipants
-} from '../../base/participants-roles';
+    getRolesForParticipants, getParticipantLocalRoleById
+} from '../participants-roles';
 import _ from 'lodash';
-import { getParticipantLocalRoleById } from '../participants-roles';
 
 declare var APP: Object;
 declare var interfaceConfig: Object;

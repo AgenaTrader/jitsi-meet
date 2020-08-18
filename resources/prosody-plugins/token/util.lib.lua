@@ -330,7 +330,7 @@ function Util:not_traydersyard_meeting (room_address)
 
     if strpos(room, 'group-') == false
         and strpos(room, 'webinar-') == false
-        and strpos(room, 'friend-chat') == false
+        and strpos(room, 'friend-chat-') == false
     then
         module:log("info", "Not traydersyard room - %s - true", room);
         return true;
