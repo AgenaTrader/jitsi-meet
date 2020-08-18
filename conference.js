@@ -86,7 +86,8 @@ import {
     participantMutedUs,
     participantPresenceChanged,
     participantRoleChanged,
-    participantUpdated
+    participantUpdated,
+    updateCurrentUserLocalRole
 } from './react/features/base/participants';
 import {
     getUserSelectedCameraDeviceId,
