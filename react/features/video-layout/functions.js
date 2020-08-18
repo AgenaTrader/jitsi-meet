@@ -57,9 +57,10 @@ export function getTileViewGridDimensions(state: Object, maxColumns: number = ge
     const { room } = state['features/base/conference'];
 
     const numberOfParticipants = state['features/base/participants'].filter(
-        participant => room.indexOf('friend-chat') !== -1 || _.isUndefined(participant.localRole)
-                || _checkPermissionByRole(participant.localRole, 'tiles')
-                || participant.id === APP.conference.getMyUserId()
+        participant => (room.indexOf('webinar') === -1 && room.indexOf('group') === -1)
+            || (_.isUndefined(participant.localRole)
+            || _checkPermissionByRole(participant.localRole, 'tiles')
+            || participant.id === APP.conference.getMyUserId())
     ).length - (iAmRecorder ? 1 : 0);
 
     const { clientWidth, clientHeight } = state['features/base/responsive-ui'];
