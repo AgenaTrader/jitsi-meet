@@ -96,7 +96,7 @@ function CopyMeetingLinkSection({ t, url }: Props) {
 
     return (
         <>
-            <span>{t('addPeople.shareLink')}</span>
+            <span className = { 'invite-information' }>{t('addPeople.shareLink')}</span>
             <div
                 className = { `invite-more-dialog copy-link${isClicked ? ' clicked' : ''}` }
                 onClick = { onClick }

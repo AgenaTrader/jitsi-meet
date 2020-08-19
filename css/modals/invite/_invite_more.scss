@@ -51,12 +51,16 @@
             font-weight: 600;
         }
 
+        & > span.invite-information {
+            color: $dialogTextColor
+        }
+
         &.header {
             display: flex;
             justify-content: space-between;
             margin: 16px 16px 24px;
             width: calc(100% - 32px);
-            color: #fff;
+            color: $dialogTextColor;
             font-weight: 600;
             font-size: 24px;
             line-height: 32px;
@@ -154,11 +158,11 @@
                     border-radius: 4px;
                     cursor: pointer;
                 }
-    
+
                 &:hover > div:hover {
                     background-color: rgba(255, 255, 255, 0.2);
                 }
-    
+
                 & > :not(:last-child) {
                     margin-right: 16px;
                 }

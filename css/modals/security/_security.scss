@@ -1,6 +1,6 @@
 .security {
     &-dialog {
-        color: #fff;
+        color: $dialogTextColor;
         font-size: 15px;
         line-height: 24px;
 
@@ -26,8 +26,8 @@
                         color: #6FB1EA;
                     }
 
-                    & > :first-child:not(:last-child) {	
-                        margin-right: 24px;	
+                    & > :first-child:not(:last-child) {
+                        margin-right: 24px;
                     }
                 }
             }
