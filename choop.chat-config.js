@@ -2,16 +2,16 @@
 
 var config = {
     hosts: {
-        domain: 'dev.choop.chat',
+        domain: 'choop.chat',
 
-        muc: 'conference.dev.choop.chat', // FIXME: use XEP-0030
+        muc: 'conference.choop.chat' // FIXME: use XEP-0030
 
         // focus: 'focus.meet.jit.si',
     },
     disableSimulcast: true,
     enableRemb: true,
     enableTcc: true,
-    resolution: 720,
+    resolution: 540,
     maxFps: 30,
     desktopSharingFrameRate: {
         max: 30
@@ -22,18 +22,18 @@ var config = {
                 max: 30
             },
             height: {
-                ideal: 720,
-                max: 720,
+                ideal: 540,
+                max: 540,
                 min: 180
             },
             width: {
-                ideal: 1280,
-                max: 1280,
+                ideal: 960,
+                max: 960,
                 min: 360
             }
         }
     },
-    enableInsecureRoomNameWarning: true,
+    enableInsecureRoomNameWarning: false,
     externalConnectUrl: '//meet.jit.si/http-pre-bind',
     analytics: {
         // The Google Analytics Tracking ID:
@@ -76,7 +76,7 @@ var config = {
     enableScreenshotCapture: false,
     openBridgeChannel: 'websocket', // One of true, 'datachannel', or 'websocket'
     channelLastN: 20, // The default value of the channel attribute last-n.
-    startBitrate: '800',
+    startBitrate: '600',
     disableAudioLevels: true, // TODO: change to false later
     disableSuspendVideo: true,
     stereo: false,
