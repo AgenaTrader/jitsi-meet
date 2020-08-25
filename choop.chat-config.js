@@ -100,17 +100,17 @@ var config = {
 
     // dialInConfCodeUrl:  'https://api.jitsi.net/conferenceMapper',
 
-    dialOutCodesUrl:  'https://api.jitsi.net/countrycodes',
+    dialOutCodesUrl: 'https://api.jitsi.net/countrycodes',
     dialOutAuthUrl: 'https://api.jitsi.net/authorizephone',
 
     // inviteServiceCallFlowsUrl: 'https://api.jitsi.net/conferenceinvitecallflows',
     startAudioMuted: 9,
     startVideoMuted: 9,
-    enableUserRolesBasedOnToken: false,
+    enableUserRolesBasedOnToken: true,
     enableLayerSuspension: true,
     feedbackPercentage: 0,
 
-    prejoinPageEnabled: true,
+    prejoinPageEnabled: false,
     e2eping: {
         pingInterval: -1
     },
@@ -118,7 +118,7 @@ var config = {
     },
     peopleSearchUrl: '/peopleSearch',
     inviteServiceUrl: '/conferenceInvite',
-    peopleSearchQueryTypes: ['user' /*, 'conferenceRooms'*/],
+    peopleSearchQueryTypes: [ 'user' /*, 'conferenceRooms'*/ ],
 
     tokenAuthUrl: '/joinRoom?roomName={room}',
     makeCall: '/makeCall?jwt={jwt}&userId={userId}',
