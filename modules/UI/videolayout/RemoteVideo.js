@@ -28,7 +28,7 @@ import { LAYOUTS, getCurrentLayout } from '../../../react/features/video-layout'
 
 import SmallVideo from './SmallVideo';
 import UIUtils from '../util/UIUtil';
-import { _verifyUserHasPermissionById } from '../../../react/features/base/media';
+import { _verifyUserHasPermissionById, _verifyUserHasPermission } from '../../../react/features/base/media';
 
 import {
     NOTIFICATION_TIMEOUT,
@@ -634,9 +634,19 @@ export default class RemoteVideo extends SmallVideo {
      */
     changeContainerVisibility() {
         const self = this;
+        const userId = APP.conference.getMyUserId();
+
+        self.showAll = false;
+
+        _verifyUserHasPermissionById(userId, 'ownerroles').then(access => {
+            if (access === true) { // not owner roles
+                self.showAll = true;
+                self.container.style.display = 'block';
+            }
+        });
 
         _verifyUserHasPermissionById(this.id, 'tiles').then(permission => {
-            if (permission === false) {
+            if (permission === false && self.showAll === false) {
                 self.container.style.display = 'none';
             }
         });
