@@ -1,9 +1,9 @@
-// @flow
+/* global APP */
 
 import { APP_WILL_MOUNT, APP_WILL_UNMOUNT } from '../base/app';
 import { CONFERENCE_JOINED } from '../base/conference';
 import { JitsiConferenceEvents } from '../base/lib-jitsi-meet';
-import { setAudioMuted } from '../base/media';
+import { _verifyUserHasPermissionById, setAudioMuted } from '../base/media';
 import { MiddlewareRegistry } from '../base/redux';
 import { playSound, registerSound, unregisterSound } from '../base/sounds';
 import {
@@ -47,13 +47,17 @@ MiddlewareRegistry.register(store => next => action => {
                     customActionHandler: () => dispatch(setAudioMuted(false))
                 });
 
-                dispatch(notification);
+                _verifyUserHasPermissionById(APP.conference.getMyUserId(), 'audio').then(access => {
+                    if (access === true) {
+                        dispatch(notification);
 
-                dispatch(playSound(TALK_WHILE_MUTED_SOUND_ID));
+                        dispatch(playSound(TALK_WHILE_MUTED_SOUND_ID));
 
-                // we store the last start muted notification id that we showed,
-                // so we can hide it when unmuted mic is detected
-                dispatch(setCurrentNotificationUid(notification.uid));
+                        // we store the last start muted notification id that we showed,
+                        // so we can hide it when unmuted mic is detected
+                        dispatch(setCurrentNotificationUid(notification.uid));
+                    }
+                });
             });
         break;
     }

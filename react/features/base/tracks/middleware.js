@@ -10,6 +10,7 @@ import {
     SET_AUDIO_MUTED,
     SET_CAMERA_FACING_MODE,
     SET_VIDEO_MUTED,
+    SET_PICTURE_IN_PICTURE_MODE,
     VIDEO_MUTISM_AUTHORITY,
     TOGGLE_CAMERA_FACING_MODE,
     toggleCameraFacingMode
@@ -31,6 +32,7 @@ import {
 import {
     getLocalTrack,
     getTrackByJitsiTrack,
+    togglePictureInPictureMode,
     isUserInteractionRequiredForUnmute,
     setTrackMuted
 } from './functions';
@@ -103,6 +105,10 @@ MiddlewareRegistry.register(store => next => action => {
         }
 
         _setMuted(store, action, action.mediaType);
+        break;
+
+    case SET_PICTURE_IN_PICTURE_MODE:
+        togglePictureInPictureMode(store.getState());
         break;
 
     case TOGGLE_CAMERA_FACING_MODE: {

@@ -229,7 +229,7 @@ var interfaceConfig = {
     'etherpad', 'sharedvideo', 'settings', 'raisehand',
     'videoquality', 'filmstrip', 'invite', 'feedback', 'stats', 'shortcuts',
     'tileview', 'videobackgroundblur', 'download', 'help', 'mute-everyone',
-    'security', 'toggle-audio'
+    'security', 'toggle-audio', 'toggle-picture'
 ],
 
     TOOLBAR_TIMEOUT: 4000,

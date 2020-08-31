@@ -28,7 +28,7 @@ import { LAYOUTS, getCurrentLayout } from '../../../react/features/video-layout'
 
 import SmallVideo from './SmallVideo';
 import UIUtils from '../util/UIUtil';
-import { _verifyUserHasPermissionById, _verifyUserHasPermission } from '../../../react/features/base/media';
+import { _verifyUserHasPermissionById } from '../../../react/features/base/media';
 
 import {
     NOTIFICATION_TIMEOUT,

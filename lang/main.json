@@ -710,6 +710,7 @@
             "videomute": "Toggle mute video",
             "videoblur": "Toggle video blur"
         },
+        "togglePictureMode": "Toggle picture in picture mode",
         "addPeople": "Add people to your call",
         "audioOnlyOff": "Disable low bandwidth mode",
         "audioOnlyOn": "Enable low bandwidth mode",
@@ -725,7 +726,9 @@
         "enterFullScreen": "View full screen",
         "enterTileView": "Enter tile view",
         "disableAudioMode": "Disable audio",
+        "disablePictureMode": "Disable picture in picture mode",
         "enableAudioMode": "Enable audio",
+        "enablePictureMode": "Enable picture in picture mode",
         "exitFullScreen": "Exit full screen",
         "exitTileView": "Exit tile view",
         "feedback": "Leave feedback",

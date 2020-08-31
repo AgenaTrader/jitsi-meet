@@ -68,7 +68,7 @@ import {
 import {
     _verifyUserHasPermission,
     isVideoMutedByUser,
-    MEDIA_TYPE,
+    MEDIA_TYPE, SET_PICTURE_IN_PICTURE_MODE,
     setAudioAvailable,
     setAudioMuted,
     setVideoAvailable,
@@ -883,6 +883,16 @@ export default {
      */
     toggleAudioMuted(showUI = true) {
         this.muteAudio(!this.isLocalAudioMuted(), showUI);
+    },
+
+    /**
+     * Toggle view to picture in picture mode.
+     * @param {boolean} [enable] Change PIP mode.
+     */
+    togglePictureInPicture(enable = true) {
+        APP.store.dispatch({
+            type: SET_PICTURE_IN_PICTURE_MODE
+        });
     },
 
     /**
@@ -2053,6 +2063,7 @@ export default {
                 logger.info(`My role changed, new role: ${role}`);
 
                 const conferenceRoomName = APP.conference.roomName;
+
                 APP.store.dispatch(updateCurrentUserLocalRole(conferenceRoomName));
 
                 if (!this.isLocalAudioMuted()) {

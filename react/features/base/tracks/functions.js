@@ -1,5 +1,6 @@
 /* global APP */
 
+import { setTileView } from '../../video-layout';
 import JitsiMeetJS, { JitsiTrackErrors, browser } from '../lib-jitsi-meet';
 import { MEDIA_TYPE, setAudioMuted } from '../media';
 import {
@@ -440,4 +441,52 @@ export function setTrackMuted(track, muted) {
             logger.error(`set track ${f} failed`, error);
         }
     });
+}
+
+/**
+ * Toggle picture in picture mode for background video.
+ *
+ * @param {Object} state - The redux state.
+ * @returns {boolean}
+ */
+export function togglePictureInPictureMode(state) {
+    const { tileViewEnabled } = state['features/video-layout'];
+    const videoBackground = document.getElementById('largeVideo');
+
+    if (document.pictureInPictureElement) {
+        document.exitPictureInPicture();
+
+        return true;
+    }
+
+    if (tileViewEnabled) {
+        APP.store.dispatch(setTileView(!tileViewEnabled));
+    }
+
+    if (APP.conference.isLocalVideoMuted()) {
+        videoBackground.addEventListener('loadedmetadata', () => {
+            videoBackground.requestPictureInPicture();
+
+            videoBackground.removeEventListener('loadedmetadata');
+        });
+
+        APP.conference.toggleVideoMuted(false /* no UI */);
+    } else {
+        videoBackground.requestPictureInPicture();
+    }
+
+    return true;
+}
+
+/**
+ * Get picture in picture current status.
+ *
+ * @returns {boolean}
+ */
+export function getPictureInPictureStatus() {
+    if (document.pictureInPictureElement) {
+        return true;
+    }
+
+    return false;
 }
