@@ -2053,6 +2053,7 @@ export default {
                 logger.info(`My role changed, new role: ${role}`);
 
                 const conferenceRoomName = APP.conference.roomName;
+
                 APP.store.dispatch(updateCurrentUserLocalRole(conferenceRoomName));
 
                 if (!this.isLocalAudioMuted()) {

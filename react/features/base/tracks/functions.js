@@ -441,3 +441,42 @@ export function setTrackMuted(track, muted) {
         }
     });
 }
+
+/**
+ * Toggle picture in picture mode for background video.
+ *
+ * @param {Object} state - The redux state.
+ * @returns {boolean}
+ */
+export function togglePictureInPictureMode(state) {
+    const videoTrack = getLocalJitsiVideoTrack(state);
+
+    if (document.pictureInPictureElement) {
+        document.exitPictureInPicture()
+            .catch(error => {
+                // Video failed to leave Picture-in-Picture mode.
+            });
+
+        return false;
+    }
+
+    videoTrack.containers[1].requestPictureInPicture()
+        .catch(error => {
+            // Video failed to enter Picture-in-Picture mode.
+        });
+
+    return true;
+}
+
+/**
+ * Get picture in picture current status.
+ *
+ * @returns {boolean}
+ */
+export function getPictureInPictureStatus() {
+    if (document.pictureInPictureElement) {
+        return true;
+    }
+
+    return false;
+}

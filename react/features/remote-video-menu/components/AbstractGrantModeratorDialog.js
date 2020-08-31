@@ -6,7 +6,7 @@ import {
     createRemoteVideoMenuButtonEvent,
     sendAnalytics
 } from '../../analytics';
-import { grantModerator } from '../../base/participants';
+import {grantModerator, participantRoleChanged} from '../../base/participants';
 
 type Props = {
 
@@ -59,6 +59,7 @@ export default class AbstractGrantModeratorDialog
                 'participant_id': participantID
             }));
 
+        dispatch(participantRoleChanged(participantID, 'moderator'));
         dispatch(grantModerator(participantID));
 
         return true;

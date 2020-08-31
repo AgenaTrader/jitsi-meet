@@ -50,6 +50,17 @@ export const SET_VIDEO_AVAILABLE = 'SET_VIDEO_AVAILABLE';
 export const SET_VIDEO_MUTED = 'SET_VIDEO_MUTED';
 
 /**
+ * The type of (redux) action to set the toggle state of the background video
+ * to a picture in picture mode.
+ *
+ * {
+ *     type: SET_PICTURE_IN_PICTURE_MODE,
+ *     muted: boolean
+ * }
+ */
+export const SET_PICTURE_IN_PICTURE_MODE = 'SET_PICTURE_IN_PICTURE_MODE';
+
+/**
  * The type of (redux) action to store the last video {@link Transform} applied
  * to a stream.
  *
