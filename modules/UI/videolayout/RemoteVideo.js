@@ -148,7 +148,6 @@ export default class RemoteVideo extends SmallVideo {
         const RAISED_HAND_CSS_CLASS = "is-rising-hand";
 
         APP.store.subscribe(() => {
-            console.log(this.id, this.user, this.user.getProperty(RAISED_HAND));
             if (!!this.user.getProperty(RAISED_HAND)) {
                 this.$container.addClass(RAISED_HAND_CSS_CLASS);
             } else {
