@@ -132,6 +132,29 @@ export default class RemoteVideo extends SmallVideo {
         this._stopRemoteControl = this._stopRemoteControl.bind(this);
 
         this.container.onclick = this._onContainerClick;
+
+        this.listenForRaisedHand();
+    }
+
+    /**
+     * Listen for Store changes in order to detect a "raised hand" change.
+     * This will apply a CSS class on a video container in order to change the styling of
+     * the raised hand indicator icon and video background.
+     *
+     * @see https://issues.agenatrader.com/issues/34224
+     */
+    listenForRaisedHand() {
+        const RAISED_HAND = "raisedHand";
+        const RAISED_HAND_CSS_CLASS = "is-rising-hand";
+
+        APP.store.subscribe(() => {
+            console.log(this.id, this.user, this.user.getProperty(RAISED_HAND));
+            if (!!this.user.getProperty(RAISED_HAND)) {
+                this.$container.addClass(RAISED_HAND_CSS_CLASS);
+            } else {
+                this.$container.removeClass(RAISED_HAND_CSS_CLASS);
+            }
+        })
     }
 
     /**

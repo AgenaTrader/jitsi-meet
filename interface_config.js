@@ -189,7 +189,7 @@ var interfaceConfig = {
         // settings button
         sharedvideo: [ 'owner', 'presenter', 'executive' ],
         videobackgroundblur: [ 'owner', 'presenter', 'executive' ],
-        raisehand: [],
+        raisehand: ['owner', 'executive', 'presenter', 'listener'],
         invite: [ 'owner', 'presenter', 'executive' ],
         desktop: [ 'owner', 'presenter', 'executive' ],
         lostconnection: [ 'owner', 'presenter', 'executive' ]
