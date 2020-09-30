@@ -221,15 +221,15 @@ var interfaceConfig = {
      */
 
     TOOLBAR_BUTTONS: [
-    'microphone', 'camera', 'closedcaptions', 'desktop', 'fullscreen',
-    'fodeviceselection', 'hangup', 'profile', 'info',
+        'microphone', 'camera', 'closedcaptions', 'desktop', 'fullscreen',
+        'fodeviceselection', 'hangup', 'profile', 'info',
 
-    // 'chat', 'localrecording', 'recording', 'livestreaming',
-    'etherpad', 'sharedvideo', 'settings', 'raisehand',
-    'videoquality', 'filmstrip', 'invite', 'feedback', 'stats', 'shortcuts',
-    'tileview', 'videobackgroundblur', 'download', 'help', 'mute-everyone',
-    'security', 'toggle-audio', 'toggle-picture'
-],
+        // 'chat', 'localrecording', 'recording', 'livestreaming',
+        'etherpad', 'sharedvideo', 'settings', 'raisehand',
+        'videoquality', 'filmstrip', 'invite', 'feedback', 'stats', 'shortcuts',
+        'tileview', 'videobackgroundblur', 'download', 'help', 'mute-everyone',
+        'security', 'toggle-audio', 'toggle-picture'
+    ],
 
     TOOLBAR_TIMEOUT: 4000,
 
@@ -318,5 +318,19 @@ var interfaceConfig = {
 
     // No configuration value should follow this line.
 };
+
+if ( ! inIframe() ) {
+    // See https://issues.agenatrader.com/issues/34973
+    console.log("Not in iframe. Adding a Chat button to the Toolbar.");
+    interfaceConfig.TOOLBAR_BUTTONS.push('chat');
+}
+
+function inIframe () {
+    try {
+        return window.self !== window.top;
+    } catch (e) {
+        return true;
+    }
+}
 
 /* eslint-enable no-unused-vars, no-var, max-len */

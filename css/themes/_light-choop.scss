@@ -103,7 +103,7 @@ $darkPopupsHoverColor: #575b61;
 // Toolbar
 $secondaryToolbarBg: rgba(0, 0, 0, 0.5);
 $newToolbarSize: 40px;
-$newToolbarSizeWithPadding: calc(#{$newToolbarSize} - 20px);
+$newToolbarSizeWithPadding: calc(#{$newToolbarSize} + 25px);
 $overflowMenuItemHoverColor: #f2f3fb;
 $overflowMenuItemColor: #636465;
 
