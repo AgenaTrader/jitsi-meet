@@ -1,5 +1,13 @@
 server_names_hash_bucket_size 64;
 
+# Remove the possible www prefix that some users might type in the URL bar
+server {
+    listen 80;
+    listen [::]:80;
+    server_name www.jitsi-meet.example.com;
+    return 301 https://jitsi-meet.example.com$request_uri;
+}
+
 server {
     listen 80;
     listen [::]:80;

@@ -36,3 +36,8 @@ sed -i "s/\/usr\/share\/jitsi-meet/\/srv\/$DOMAIN/g" $NGINXCONFIGPATH
 sed -i "s/\/etc\/jitsi\/meet/\/srv\/$DOMAIN/g" $NGINXCONFIGPATH
 
 sudo ln -s $NGINXCONFIGPATH /etc/nginx/sites-enabled/$DOMAIN.conf
+
+# Remove default nginx configuration, so users don't end up there for some reason
+sudo rm /etc/nginx/sites-enabled/default
+
+# TODO: Add a default catch-all config that will redirect to jitsi installation
