@@ -9,7 +9,7 @@ then
 else
     sudo mkdir /etc/prosody
     sudo apt install -y jitsi-meet-prosody
-    cd /etc/prosody
+    cd /etc/prosody || exit
     sudo mkdir certs conf.avail conf.d
 
     sed -i "/plugin_paths/c\-- plugin_paths = { \"\/usr\/local\/lib\/prosody\/modules\" }" /etc/prosody/prosody.cfg.lua

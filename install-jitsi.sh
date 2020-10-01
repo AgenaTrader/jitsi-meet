@@ -90,7 +90,7 @@ case $OPTION in
 
     echo "Start installation required packages: unzip git curl make default-jdk maven gnupg2 apt-transport-https lsof vim jq"
     sudo apt-get update -y
-    sudo apt install -y unzip git curl make default-jdk maven gnupg2 apt-transport-https lsof vim jq
+    sudo apt install -y sudo unzip git curl make default-jdk maven gnupg2 apt-transport-https lsof vim jq
     sudo apt-get update -y
 
     echo 'deb https://download.jitsi.org stable/' >> /etc/apt/sources.list.d/jitsi-stable.list

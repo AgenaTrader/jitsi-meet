@@ -6,6 +6,10 @@ INSTALLPATH=$3
 APPID=$4
 APPSECRET=$5
 
+echo "==========================================="
+echo "Running ./configure_prosody.sh"
+echo "$@"
+echo "==========================================="
 echo ""
 echo "PROSODY $DOMAIN create configuration file"
 
