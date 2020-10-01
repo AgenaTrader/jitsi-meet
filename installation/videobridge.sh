@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# The jitsi-videobridge2 version to install - it needs to be compatible with jicofo version.
+# Make sure to update it if needed.
+JVB_VERSION="2.1-351-g0bfaac1c-1"
 INSTALL_VIDEOBRIDGE=$1
 DOMAIN=$2
 PROSODYPASSWORD=$3
@@ -19,7 +22,7 @@ DefaultTasksMax=65000
 EOF
 
         echo "jitsi-videobridge2 jitsi-videobridge/jvb-hostname string $DOMAIN" | debconf-set-selections
-        apt-get install -y jitsi-videobridge2=2.1-273-g072dd44b-1
+        apt-get install -y jitsi-videobridge2=$JVB_VERSION
     fi
 
     echo "===================> VIDEOBRIDGE change config file <==================="

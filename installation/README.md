@@ -16,5 +16,22 @@ How you get it to the server is up to you.
 0. Copy `install-jitsi.sh` to the server with SCP
 0. Run the `install-jitsi.sh` script and follow the instructions
 0. Install certbot from https://certbot.eff.org/lets-encrypt/debianbuster-nginx
-0. Run `certbot --nginx`
+0. Run `certbot --nginx` (use _infra@agenatrader.com_ as email). Say **yes** to redirects.
+
+## Troubleshooting
+
+First of all, check chrome dev console for possible errors reported by frontend.
+You should also watch following logs:
+- `/var/log/jitsi/jvb.log`
+- `/var/log/jitsi/jicofo.log`
+
+### Conference is Disconnecting on join
+
+Most likely the JVB is dead or not configured properly.
+
+0. Check if `jitsi-videobridge2` service is running
+0. Make sure `jitsi-videobridge2` version is up to date / compatible with jicofo
+   - To check installed version: `apt-cache policy jitsi-videobridge2`
+   - To change the version: update `videobridge.sh` script
+
 
