@@ -47,9 +47,9 @@ fi
 case $OPTION in
   1)
     echo -n "Please enter your prosody password (default: $DEFAULT_PROSODYPASSWORD): "
-    read ppassword
+    read PROSODYPASSWORD
 
-    if [[ "$ppassword" == "" ]]; then
+    if [[ "$PROSODYPASSWORD" == "" ]]; then
       PROSODYPASSWORD=$DEFAULT_PROSODYPASSWORD
       echo "Used default prosody password: $PROSODYPASSWORD"
     fi
