@@ -179,7 +179,6 @@ var interfaceConfig = {
      */
 
     ROLE_PERMISSIONS: {
-        ownerroles: [ 'owner', 'presenter', 'executive' ],
         tiles: [ 'owner', 'presenter', 'executive' ],
         // video: [ 'listener', 'owner', 'presenter', 'executive' ],
         audio: [ 'owner', 'presenter', 'executive' ],

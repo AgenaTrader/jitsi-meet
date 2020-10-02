@@ -656,19 +656,9 @@ export default class RemoteVideo extends SmallVideo {
      */
     changeContainerVisibility() {
         const self = this;
-        const userId = APP.conference.getMyUserId();
-
-        self.showAll = false;
-
-        _verifyUserHasPermissionById(userId, 'ownerroles').then(access => {
-            if (access === true) { // not owner roles
-                self.showAll = true;
-                self.container.style.display = 'block';
-            }
-        });
 
         _verifyUserHasPermissionById(this.id, 'tiles').then(permission => {
-            if (permission === false && self.showAll === false) {
+            if (permission === false) {
                 self.container.style.display = 'none';
             }
         });
