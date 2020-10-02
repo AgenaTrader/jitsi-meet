@@ -1,5 +1,6 @@
 /* global APP */
 
+import { setTileView } from '../../video-layout';
 import JitsiMeetJS, { JitsiTrackErrors, browser } from '../lib-jitsi-meet';
 import { MEDIA_TYPE, setAudioMuted } from '../media';
 import {
@@ -449,21 +450,30 @@ export function setTrackMuted(track, muted) {
  * @returns {boolean}
  */
 export function togglePictureInPictureMode(state) {
-    const videoTrack = getLocalJitsiVideoTrack(state);
+    const { tileViewEnabled } = state['features/video-layout'];
+    const videoBackground = document.getElementById('largeVideo');
 
     if (document.pictureInPictureElement) {
-        document.exitPictureInPicture()
-            .catch(error => {
-                // Video failed to leave Picture-in-Picture mode.
-            });
+        document.exitPictureInPicture();
 
-        return false;
+        return true;
     }
 
-    videoTrack.containers[1].requestPictureInPicture()
-        .catch(error => {
-            // Video failed to enter Picture-in-Picture mode.
+    if (tileViewEnabled) {
+        APP.store.dispatch(setTileView(!tileViewEnabled));
+    }
+
+    if (APP.conference.isLocalVideoMuted()) {
+        videoBackground.addEventListener('loadedmetadata', () => {
+            videoBackground.requestPictureInPicture();
+
+            videoBackground.removeEventListener('loadedmetadata');
         });
+
+        APP.conference.toggleVideoMuted(false /* no UI */);
+    } else {
+        videoBackground.requestPictureInPicture();
+    }
 
     return true;
 }

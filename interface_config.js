@@ -180,7 +180,7 @@ var interfaceConfig = {
 
     ROLE_PERMISSIONS: {
         tiles: [ 'owner', 'presenter', 'executive' ],
-        video: [ 'owner', 'presenter', 'executive' ],
+        // video: [ 'listener', 'owner', 'presenter', 'executive' ],
         audio: [ 'owner', 'presenter', 'executive' ],
         sharing: [ 'owner', 'presenter', 'executive' ],
         makecall: [ 'owner', 'presenter', 'executive' ],
@@ -188,7 +188,7 @@ var interfaceConfig = {
         // settings button
         sharedvideo: [ 'owner', 'presenter', 'executive' ],
         videobackgroundblur: [ 'owner', 'presenter', 'executive' ],
-        raisehand: [],
+        raisehand: ['owner', 'executive', 'presenter', 'listener'],
         invite: [ 'owner', 'presenter', 'executive' ],
         desktop: [ 'owner', 'presenter', 'executive' ],
         lostconnection: [ 'owner', 'presenter', 'executive' ]

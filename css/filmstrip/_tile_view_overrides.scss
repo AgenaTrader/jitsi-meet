@@ -58,4 +58,13 @@
             flex-direction: row-reverse;
         }
     }
+
+    .videocontainer__toptoolbar .indicator.raisehandindicator {
+        @include circle($thumbnailIndicatorSize * 2);
+
+        .indicatoricon svg {
+            width: $thumbnailIndicatorSize * 1.5;
+            height: $thumbnailIndicatorSize * 1.5;
+        }
+    }
 }

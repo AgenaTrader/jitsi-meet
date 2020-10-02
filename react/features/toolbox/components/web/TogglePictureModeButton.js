@@ -39,8 +39,8 @@ type Props = AbstractButtonProps & {
  */
 class TogglePictureModeButton<P: Props> extends AbstractButton<P, *> {
     accessibilityLabel = 'toolbar.accessibilityLabel.togglePicture';
-    icon = IconPictureInPictureOpen;
-    toggledIcon = IconPictureInPictureClose;
+    icon = IconPictureInPictureClose;
+    toggledIcon = IconPictureInPictureOpen;
     label = 'toolbar.disablePictureMode';
     toggledLabel = 'toolbar.enablePictureMode';
     tooltip = 'toolbar.togglePictureMode';
