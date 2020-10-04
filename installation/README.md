@@ -14,9 +14,14 @@ How you get it to the server is up to you.
 
 0. Clone this repo to your PC
 0. Copy `install-jitsi.sh` to the server with SCP
-0. Run the `install-jitsi.sh` script and follow the instructions
+0. Run the `install-jitsi.sh` script and follow the instructions.
+    - You will be asked for a domain name 2 times. Use the same domain.
+    - Prosody installation will ask for a **secret**. This needs to be the same
+      as the JWT secret used by TY or EduPortle installation.
 0. Install certbot from https://certbot.eff.org/lets-encrypt/debianbuster-nginx
 0. Run `certbot --nginx` (use _infra@agenatrader.com_ as email). Say **yes** to redirects.
+0. Configure TokenIssuer `appsettings.json`
+0. Restart TokenIssuer with `service`
 
 ## Troubleshooting
 
