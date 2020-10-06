@@ -319,18 +319,17 @@ var interfaceConfig = {
     // No configuration value should follow this line.
 };
 
-if ( ! inIframe() ) {
-    // See https://issues.agenatrader.com/issues/34973
-    console.log("Not in iframe. Adding a Chat button to the Toolbar.");
-    interfaceConfig.TOOLBAR_BUTTONS.push('chat');
-}
-
-function inIframe () {
-    try {
-        return window.self !== window.top;
-    } catch (e) {
-        return true;
+document.addEventListener('DOMContentLoaded', () => {
+    if ( ! hasJWTProtection() ) {
+        // See https://issues.agenatrader.com/issues/34973
+        console.log("Adding a Chat button to the Toolbar.");
+        interfaceConfig.TOOLBAR_BUTTONS.push('chat');
     }
+})
+
+function hasJWTProtection() {
+    const jwtFeatureState = APP.store.getState()['features/base/jwt'];
+    return !!jwtFeatureState.jwt;
 }
 
 /* eslint-enable no-unused-vars, no-var, max-len */
