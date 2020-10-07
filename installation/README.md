@@ -17,11 +17,16 @@ How you get it to the server is up to you.
 0. Run the `install-jitsi.sh` script and follow the instructions.
     - You will be asked for a domain name 2 times. Use the same domain.
     - Prosody installation will ask for a **secret**. This needs to be the same
-      as the JWT secret used by TY or EduPortle installation.
+      as the JWT secret used by TY or EduPortle installation.**
 0. Install certbot from https://certbot.eff.org/lets-encrypt/debianbuster-nginx
 0. Run `certbot --nginx` (use _infra@agenatrader.com_ as email). Say **yes** to redirects.
-0. Configure TokenIssuer `appsettings.json`
-0. Restart TokenIssuer with `service`
+0. Configure TokenIssuer
+    `vim /var/www/ChoopChat.TokenIssuer/appsettings.json`
+0. Restart TokenIssuer with
+    ` service choopchat.tokenissuer restart`
+
+** for some reason if you set this to anything else than "secret" there is a problem with JWT auth...
+Changint the password later works fine tough.
 
 ## Troubleshooting
 
