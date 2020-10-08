@@ -73,7 +73,14 @@ export function getPropertyValue(
         const value = state['features/base/settings'][propertyName];
 
         if (typeof value !== 'undefined') {
-            return value;
+            /**
+             * FIXME: this is a nasty workaround for making sure conferences start with audio enabled.
+             *  We had a PreJoin page enabled (now disabled) and users ended up with settings that we can't change anywhere now.
+             *  Figure out a better way to handle this case - probably in some conference initialization logic
+             */
+            if ( ! ['startWithAudioMuted', 'startWithVideoMuted'].includes(propertyName)) {
+                return value;
+            }
         }
     }
 

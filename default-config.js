@@ -106,7 +106,16 @@ var config = {
     // inviteServiceCallFlowsUrl: 'https://api.jitsi.net/conferenceinvitecallflows',
     startAudioMuted: 9,
     startVideoMuted: 9,
+
+    /**
+     * @property {boolean} enableUserRolesBasedOnToken
+     * @default false
+     *
+     * Needs to be `true` to enable the invitation form where you can search for people
+     * using the `peopleSearchUrl` endpoint.
+     */
     enableUserRolesBasedOnToken: true,
+
     enableLayerSuspension: true,
     feedbackPercentage: 0,
 
