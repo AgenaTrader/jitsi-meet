@@ -320,7 +320,7 @@ end
 ---@param prefix string
 ---@return boolean
 function string_starts_with(s, prefix)
-    start_pos, end_pos = string.find(s, prefix, 1, true)
+    local start_pos = string.find(s, prefix, 1, true)
     return start_pos ~= nil
 end
 
@@ -330,7 +330,7 @@ end
 ---@return boolean
 function Util:is_tradersyard_room(room_name)
     -- we have a few prefixes we need to check
-    check_room_prefix = { 'group-', 'webinar-', 'friend-chat-' }
+    local check_room_prefix = { 'group-', 'webinar-', 'friend-chat-' }
 
     for _, room_prefix in ipairs(check_room_prefix) do
         if string_starts_with(room_name, room_prefix) then
@@ -353,9 +353,11 @@ function Util:not_traydersyard_meeting (room_address)
     local room, _, _ = jid.split(room_address);
 
     if not self:is_tradersyard_room(room) then
-        module:log("info", "Not traydersyard room - %s - true", room);
+        module:log("info", "CHOOP: Room %s IS NOT a TradersYard room name", room);
         return true;
     end
+
+    module:log("info", "CHOOP: Room %s IS a TradersYard room name", room);
 
     return false;
 end
