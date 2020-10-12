@@ -21,6 +21,7 @@ if parentCtx == nil then
 	return;
 end
 
+---@type TokenUtil
 local token_util = module:require "token/util".new(parentCtx);
 
 -- no token configuration

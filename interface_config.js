@@ -141,9 +141,11 @@ var interfaceConfig = {
      * attempting to join a conference in a mobile Web browser. If
      * {@code undefined}, defaults to {@code true}.
      *
+     * Should be disabled for Choop
+     *
      * @type {boolean}
      */
-    MOBILE_APP_PROMO: true,
+    MOBILE_APP_PROMO: false, // disabled for Choop
 
     NATIVE_APP_NAME: 'Choop Chat',
 

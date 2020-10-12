@@ -1,5 +1,7 @@
 /* eslint-disable no-unused-vars, no-var */
 
+// TODO: merge with upstream config.js so we can have all possible values documented here
+
 var config = {
     hosts: {
         domain: 'choop.chat',
@@ -120,6 +122,18 @@ var config = {
     feedbackPercentage: 0,
 
     prejoinPageEnabled: false,
+
+    /**
+     * Disable deep linking support. Deep links are used to trigger native apps when using a phone.
+     * This needs to be `true` to allow mobile browsers. Otherwise users will be denied access
+     * or presented with a mobile app promo page - this is controlled by interface config `MOBILE_APP_PROMO`.
+     *
+     * For Choop this should be true.
+     * @property {boolean} disableDeepLinking
+     * @default false
+     */
+    disableDeepLinking: true,
+
     e2eping: {
         pingInterval: -1
     },

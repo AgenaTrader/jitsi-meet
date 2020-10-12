@@ -14,13 +14,14 @@ local timer = require "util.timer";
 
 local http_timeout = 30;
 local http_headers = {
-    ["User-Agent"] = "Prosody ("..prosody.version.."; "..prosody.platform..")"
+    ["User-Agent"] = "Prosody (" .. prosody.version .. "; " .. prosody.platform .. ")"
 };
 
 -- TODO: Figure out a less arbitrary default cache size.
 local cacheSize = module:get_option_number("jwt_pubkey_cache_size", 128);
-local cache = require"util.cache".new(cacheSize);
+local cache = require "util.cache".new(cacheSize);
 
+---@class TokenUtil
 local Util = {}
 Util.__index = Util
 
@@ -66,7 +67,7 @@ function Util.new(module)
     if self.muc_domain_base then
         self.muc_domain = module:get_option_string(
             "muc_mapper_domain",
-            self.muc_domain_prefix.."."..self.muc_domain_base);
+            self.muc_domain_prefix .. "." .. self.muc_domain_base);
     end
     -- whether domain name verification is enabled, by default it is disabled
     self.enableDomainVerification = module:get_option_boolean(
@@ -87,10 +88,10 @@ function Util.new(module)
     end
 
     --array of accepted issuers: by default only includes our appId
-    self.acceptedIssuers = module:get_option_array('asap_accepted_issuers',{self.appId})
+    self.acceptedIssuers = module:get_option_array('asap_accepted_issuers', { self.appId })
 
     --array of accepted audiences: by default only includes our appId
-    self.acceptedAudiences = module:get_option_array('asap_accepted_audiences',{'*'})
+    self.acceptedAudiences = module:get_option_array('asap_accepted_audiences', { '*' })
 
     if self.asapKeyServer and not have_async then
         module:log("error", "requires a version of Prosody with util.async");
@@ -111,7 +112,7 @@ function Util:get_public_key(keyId)
     local content = cache:get(keyId);
     if content == nil then
         -- If the key is not found in the cache.
-        module:log("debug", "Cache miss for key: "..keyId);
+        module:log("debug", "Cache miss for key: " .. keyId);
         local code;
         local wait, done = async.waiter();
         local function cb(content_, code_, response_, request_)
@@ -121,8 +122,8 @@ function Util:get_public_key(keyId)
             end
             done();
         end
-        local keyurl = path.join(self.asapKeyServer, hex.to(sha256(keyId))..'.pem');
-        module:log("debug", "Fetching public key from: "..keyurl);
+        local keyurl = path.join(self.asapKeyServer, hex.to(sha256(keyId)) .. '.pem');
+        module:log("debug", "Fetching public key from: " .. keyurl);
 
         -- We hash the key ID to work around some legacy behavior and make
         -- deployment easier. It also helps prevent directory
@@ -150,7 +151,7 @@ function Util:get_public_key(keyId)
         end
     else
         -- If the key is in the cache, use it.
-        module:log("debug", "Cache hit for key: "..keyId);
+        module:log("debug", "Cache hit for key: " .. keyId);
         return content;
     end
 
@@ -261,8 +262,10 @@ function Util:process_and_verify_token(session, room, acceptedIssuers)
     local pubKey;
     if self.asapKeyServer and session.auth_token ~= nil then
         local dotFirst = session.auth_token:find("%.");
-        if not dotFirst then return nil, "Invalid token" end
-        local header, err = json_safe.decode(basexx.from_url64(session.auth_token:sub(1,dotFirst-1)));
+        if not dotFirst then
+            return nil, "Invalid token"
+        end
+        local header, err = json_safe.decode(basexx.from_url64(session.auth_token:sub(1, dotFirst - 1)));
         if err then
             return false, "not-allowed", "bad token format";
         end
@@ -291,19 +294,19 @@ function Util:process_and_verify_token(session, room, acceptedIssuers)
 
         -- Binds the user details to the session if available
         if claims["context"] ~= nil then
-          if claims["context"]["user"] ~= nil then
-            session.jitsi_meet_context_user = claims["context"]["user"];
-          end
+            if claims["context"]["user"] ~= nil then
+                session.jitsi_meet_context_user = claims["context"]["user"];
+            end
 
-          if claims["context"]["group"] ~= nil then
-            -- Binds any group details to the session
-            session.jitsi_meet_context_group = claims["context"]["group"];
-          end
+            if claims["context"]["group"] ~= nil then
+                -- Binds any group details to the session
+                session.jitsi_meet_context_group = claims["context"]["group"];
+            end
 
-          if claims["context"]["features"] ~= nil then
-            -- Binds any features details to the session
-            session.jitsi_meet_context_features = claims["context"]["features"];
-          end
+            if claims["context"]["features"] ~= nil then
+                -- Binds any features details to the session
+                session.jitsi_meet_context_features = claims["context"]["features"];
+            end
         end
         return true;
     else
@@ -311,27 +314,45 @@ function Util:process_and_verify_token(session, room, acceptedIssuers)
     end
 end
 
-function strpos (haystack, needle, offset)
-    local pattern = string.format("(%s)", needle)
-    local i       = string.find (haystack, pattern, (offset or 0))
-
-    return (i ~= nil and i or false)
+--- Check if some string starts with a prefix.
+--- This is a wrapper of string.find doing a plain-text matching.
+---@param s string
+---@param prefix string
+---@return boolean
+function string_starts_with(s, prefix)
+    start_pos, end_pos = string.find(s, prefix, 1, true)
+    return start_pos ~= nil
 end
 
+--- Check if room_name is matching TradersYard room naming schema.
+--- TY rooms should go through process of authroization using JWTs.
+---@param room_name string Just a room name, e.g. "group-240"
+---@return boolean
+function Util:is_tradersyard_room(room_name)
+    -- we have a few prefixes we need to check
+    check_room_prefix = { 'group-', 'webinar-', 'friend-chat-' }
+
+    for _, room_prefix in ipairs(check_room_prefix) do
+        if string_starts_with(room_name, room_prefix) then
+            return true -- TY room name
+        end
+    end
+
+    return false -- NOT a TY like room name
+end
+
+--- Check if the room_address is not like a TY room.
+---@param room_address string A complete JID with room name
+---@return boolean
 function Util:not_traydersyard_meeting (room_address)
-    if room_address == nil
-    then
+    if room_address == nil then
         module:log("info", "Room address is empty");
         return self.allowEmptyToken;
     end
 
+    local room, _, _ = jid.split(room_address);
 
-    local room,_,_ = jid.split(room_address);
-
-    if strpos(room, 'group-') == false
-        and strpos(room, 'webinar-') == false
-        and strpos(room, 'friend-chat-') == false
-    then
+    if not self:is_tradersyard_room(room) then
         module:log("info", "Not traydersyard room - %s - true", room);
         return true;
     end
@@ -358,7 +379,7 @@ function Util:verify_room(session, room_address)
     end
 
     -- extract room name using all chars, except the not allowed ones
-    local room,_,_ = jid.split(room_address);
+    local room, _, _ = jid.split(room_address);
     if room == nil then
         log("error",
             "Unable to get name of the MUC room ? to: %s", room_address);
@@ -426,14 +447,14 @@ function Util:verify_room(session, room_address)
         end
 
         return room_address_to_verify == jid.join(
-            "["..string.lower(subdomain_to_check).."]"..string.lower(room_to_check), self.muc_domain);
+            "[" .. string.lower(subdomain_to_check) .. "]" .. string.lower(room_to_check), self.muc_domain);
     else
         if auth_domain == '*' then
             -- check for wildcard in JWT claim, allow access if found
             subdomain_to_check = self.muc_domain;
         else
             -- no wildcard in JWT claim, so check subdomain against sub in token
-            subdomain_to_check = self.muc_domain_prefix.."."..auth_domain;
+            subdomain_to_check = self.muc_domain_prefix .. "." .. auth_domain;
         end
         -- we do not have a domain part (multidomain is not enabled)
         -- verify with info from the token
