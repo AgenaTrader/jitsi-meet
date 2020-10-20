@@ -12,7 +12,6 @@ import {
 import { JitsiConferenceEvents } from '../lib-jitsi-meet';
 import { MiddlewareRegistry, StateListenerRegistry } from '../redux';
 import { playSound, registerSound, unregisterSound } from '../sounds';
-import { setLocalRole } from './actions';
 import {
     DOMINANT_SPEAKER_CHANGED,
     GRANT_MODERATOR,
@@ -44,10 +43,6 @@ import {
     getParticipantCount,
     getParticipantDisplayName
 } from './functions';
-
-import {
-    getParticipantLocalRoleById
-} from '../participants-roles/functions';
 import { PARTICIPANT_JOINED_FILE, PARTICIPANT_LEFT_FILE, PARTICIPANT_LOST_FILE } from './sounds';
 
 declare var APP: Object;
@@ -282,7 +277,7 @@ function _e2eeUpdated({ dispatch }, conference, participantId, newValue) {
  * @private
  * @returns {Object} The value returned by {@code next(action)}.
  */
-function _localParticipantJoined({ getState, dispatch }, next, action) {
+function _localParticipantJoined({getState, dispatch}, next, action) {
     const result = next(action);
 
     const settings = getState()['features/base/settings'];
@@ -366,17 +361,13 @@ function _maybePlaySounds({ getState, dispatch }, action) {
  */
 function _participantJoinedOrUpdated({ dispatch, getState }, next, action) {
     const { participant: { avatarURL, e2eeEnabled, email, id, local, name, raisedHand } } = action;
+    const {conference} = getState()['features/base/conference'];
 
     // Send an external update of the local participant's raised hand state
     // if a new raised hand state is defined in the action.
     if (typeof raisedHand !== 'undefined') {
         if (local) {
-            const { conference } = getState()['features/base/conference'];
-
-            conference
-                && conference.setLocalParticipantProperty(
-                    'raisedHand',
-                    raisedHand);
+            conference && conference.setLocalParticipantProperty('raisedHand', raisedHand);
         }
     }
 
@@ -384,8 +375,6 @@ function _participantJoinedOrUpdated({ dispatch, getState }, next, action) {
     // if a new state is defined in the action.
     if (typeof e2eeEnabled !== 'undefined') {
         if (local) {
-            const { conference } = getState()['features/base/conference'];
-
             conference && conference.setLocalParticipantProperty('e2eeEnabled', e2eeEnabled);
         }
     }
@@ -409,19 +398,6 @@ function _participantJoinedOrUpdated({ dispatch, getState }, next, action) {
     // Notify external listeners of potential avatarURL changes.
     if (typeof APP === 'object') {
         const currentKnownId = local ? APP.conference.getMyUserId() : id;
-
-        const participant = APP.conference.getParticipantById(currentKnownId);
-
-        if (participant && !participant.localRole) {
-            const userRole = getParticipantLocalRoleById(currentKnownId);
-
-            dispatch(setLocalRole(currentKnownId, 'none'));
-
-            if (userRole) {
-                dispatch(setLocalRole(currentKnownId, userRole));
-            }
-        }
-
         // Force update of local video getting a new id.
         APP.UI.refreshAvatarDisplay(currentKnownId);
     }
@@ -438,7 +414,7 @@ function _participantJoinedOrUpdated({ dispatch, getState }, next, action) {
  * @param {boolean} newValue - The new value of the raise hand status.
  * @returns {void}
  */
-function _raiseHandUpdated({ dispatch, getState }, conference, participantId, newValue) {
+function _raiseHandUpdated({dispatch, getState}, conference, participantId, newValue) {
     const raisedHand = newValue === 'true';
 
     dispatch(participantUpdated({
