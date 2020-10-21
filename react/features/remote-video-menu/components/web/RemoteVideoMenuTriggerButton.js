@@ -19,6 +19,7 @@ import {
     MakeCallButton
 } from './';
 import { _verifyUserHasPermission } from '../../../base/media';
+import TogglePresenterRoleButton from "../../../choop-role-management/components/web/TogglePresenterRoleButton";
 
 declare var $: Object;
 declare var APP: Object;
@@ -223,6 +224,12 @@ class RemoteVideoMenuTriggerButton extends Component<Props> {
                         participantID = { participantID } />
                 );
             }
+
+            buttons.push(
+                <TogglePresenterRoleButton
+                    key = 'toggle-presenter-role'
+                    participantID = { participantID } />
+            );
         }
 
         if (remoteControlState) {
