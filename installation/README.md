@@ -16,10 +16,11 @@ How you get it to the server is up to you.
 0. Copy `install-jitsi.sh` to the server with SCP
 0. Run the `install-jitsi.sh` script and follow the instructions.
     - You will be asked for a domain name 2 times. Use the same domain.
-    - Prosody installation will ask for a **secret**. This needs to be the same
-      as the JWT secret used by TY or EduPortle installation.**
+    - You will be asked for APP ID and APP SECRET - go with the **defaults**. We will change them later.
+    - Prosody installation will ask for a **secret**
 0. Install certbot from https://certbot.eff.org/lets-encrypt/debianbuster-nginx
 0. Run `certbot --nginx` (use _infra@agenatrader.com_ as email). Say **yes** to redirects.
+0. Edit prosody conf and set proper APP_ID and APP_SECRET. `vim /etc/prosody/conf.avail/choop.chat.cfg.lua`
 0. Configure TokenIssuer
     `vim /var/www/ChoopChat.TokenIssuer/appsettings.json`
 0. Restart TokenIssuer with

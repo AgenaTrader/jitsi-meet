@@ -13,4 +13,6 @@ import '../prejoin/middleware';
 import '../shared-video/middleware';
 import '../talk-while-muted/middleware';
 
+import '../choop-role-management/middleware';
+
 import './middlewares.any';

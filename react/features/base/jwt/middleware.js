@@ -36,10 +36,6 @@ MiddlewareRegistry.register(store => next => action => {
         return _setConfigOrLocationURL(store, next, action);
 
     case SET_JWT:
-        if (action.jwt) {
-            APP.store.dispatch(loadParticipantsRoles(action.jwt));
-        }
-
         return _setJWT(store, next, action);
     }
 

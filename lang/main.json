@@ -1,4 +1,15 @@
 {
+    "choop": {
+        "videothumbnail": {
+            "toggleLocalRoleSetPresenter": "Make Presenter",
+            "toggleLocalRoleSetListener": "Make Listener"
+        },
+        "toolbar": {
+            "accessibilityLabel": {
+                "toggleLocalRole": "Change role between listener and presenter"
+            }
+        }
+    },
     "addPeople": {
         "add": "Invite",
         "addContacts": "Invite your contacts",
@@ -676,6 +687,7 @@
             "feedback": "Leave feedback",
             "fullScreen": "Toggle full screen",
             "grantModerator": "Grant Moderator",
+            "togglePresenter": "Grant Moderator",
             "hangup": "Leave the call",
             "help": "Help",
             "invite": "Invite people",
