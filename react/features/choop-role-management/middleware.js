@@ -4,6 +4,7 @@ import {MiddlewareRegistry, StateListenerRegistry} from "../base/redux";
 import {
     getLocalParticipant,
     getParticipantById,
+    muteRemoteParticipant,
     PARTICIPANT_JOINED,
     PARTICIPANT_UPDATED,
     setLocalRole
@@ -12,8 +13,11 @@ import {CHOOP_SET_REMOTE_PARTICIPANT_LOCAL_ROLE} from "./actionTypes";
 import type {Store} from "redux";
 // noinspection ES6PreferShortImport
 import {SET_JWT} from "../base/jwt/actionTypes";
-import {loadParticipantsRoles} from "../base/participants-roles";
-import {getParticipantLocalRoleFromConference} from "./functions";
+import {getParticipantLocalRoleById, loadParticipantsRoles} from "../base/participants-roles";
+import {MEDIA_TYPE, setVideoMuted, VIDEO_MUTISM_AUTHORITY} from "../base/media";
+import {ROLE_LISTENER} from "./actions";
+import {JitsiConferenceEvents} from "../base/lib-jitsi-meet";
+import {CONFERENCE_JOINED} from "../base/conference";
 
 const CHOOP_COMMANDS = {
     CHANGE_ROLE_OF: 'choop_changeRoleOf'
@@ -43,11 +47,20 @@ MiddlewareRegistry.register(store => next => action => {
     switch (action.type) {
         case CHOOP_SET_REMOTE_PARTICIPANT_LOCAL_ROLE: {
             _sendRoleChangeCommand(store, action);
+            // When we move someone from presenter to listener, we should also mute them.
+            // We do not need to check the previous role, because listener should be already muted,
+            // so nothing bad will happen if we mute them again.
+            dispatch(muteRemoteParticipant(action.participantId))
+            // We also want to mute video, but there's no built-in action we can reuse to trigger that for a remote participant.
+            // It will be done in the custom command handler.
             break;
         }
 
         // called only for REMOTE participants joining
         case PARTICIPANT_JOINED: {
+            // FIXME: this does not get picked on the other side for some reason.
+            //  Without a way to announce your local role when someones join we are not able to reliable
+            //  toggle role of more than one person.
             _announceYourLocalRole(store, action);
             break;
         }
@@ -64,7 +77,15 @@ MiddlewareRegistry.register(store => next => action => {
 
     switch (action.type) {
         case PARTICIPANT_UPDATED: {
-            _setParticipantLocalRoleFromRemoteData(store, action);
+            _setParticipantLocalRoleLegacy(store, action);
+            // _setParticipantLocalRoleFromRemoteData(store, action);
+            break;
+        }
+
+        case CONFERENCE_JOINED: {
+            // this event is called when we join the conference,
+            // we can announce our role at this point to the others
+            _announceYourLocalRole(store, action);
             break;
         }
     }
@@ -81,17 +102,24 @@ MiddlewareRegistry.register(store => next => action => {
  * @param action
  * @private
  */
-function _setParticipantLocalRoleFromRemoteData(store, action) {
-    const {dispatch, getState} = store;
-    const {participant} = action;
+function _setParticipantLocalRoleLegacy(store, action) {
 
-    // We lookup the participant again, because we run this function in middleware
-    // after we all the other middlewares executed
-    const participantById = getParticipantById(store.getState(), participant.id)
+    const {dispatch} = store;
+    // IMPORTANT! Action only provides a partial participant data. We need tp lookup the current state anyway.
+    const {participant: partialParticipant} = action;
 
-    if (participantById && !participantById.localRole) {
-        const userRole = getParticipantLocalRoleFromConference(getState(), participantById.id);
-        dispatch(setLocalRole(participantById.id, userRole ?? 'none'));
+    if (typeof APP === 'object') {
+        const currentKnownId = partialParticipant.local ? APP.conference.getMyUserId() : partialParticipant.id;
+
+        // Get current state of participant so we can see if we already have a local role defined.
+        const stateParticipant = getParticipantById(store.getState(), partialParticipant.id);
+        const participantById = APP.conference.getParticipantById(currentKnownId);
+
+        // This should only be done to set the initial role.
+        if (participantById && !stateParticipant.localRole) {
+            const userRole = getParticipantLocalRoleById(currentKnownId);
+            userRole && dispatch(setLocalRole(currentKnownId, userRole ?? "none"));
+        }
     }
 }
 
@@ -171,6 +199,18 @@ function _conferenceStateListener(conference, store) {
 
     conference.addCommandListener(CHOOP_COMMANDS.CHANGE_ROLE_OF, changeRoleOf);
 
+    console.log('[choop] Setup Conference Prop Listener', conference);
+
+    conference.on(JitsiConferenceEvents.PARTICIPANT_PROPERTY_CHANGED, (participant, propertyName, oldValue, newValue) => {
+        switch (propertyName) {
+            case 'localRole':
+                console.log('[choop] local Role updated via prop chage!', participant.getId(), newValue, getState()['features/base/participants'].map(p => p));
+                // TODO: instead of setting property of participant, store the role in some Role Registry that we can refer to later.
+                // dispatch(setLocalRole(participant.getId(), newValue));
+                break;
+        }
+    });
+
     /**
      * Updates local state of the participant who's role is being changed by the command.
      * This can be run for every participant, so everyone is notified of the role change,
@@ -185,6 +225,7 @@ function _conferenceStateListener(conference, store) {
 
         const {value: newRole, attributes} = data;
         const participant = getParticipantById(getState(), attributes.participantId);
+        const localParticipant = getLocalParticipant(getState());
 
         if (!participant) {
             console.log("[choop] Could not get participant");
@@ -194,6 +235,27 @@ function _conferenceStateListener(conference, store) {
         console.log('[choop] Applying role change to participant', newRole, participant);
 
         dispatch(setLocalRole(participant.id, newRole));
+
+        if (localParticipant.id === participant.id) {
+            _muteLocalVideo(store, newRole);
+        }
+    }
+}
+
+function _muteLocalVideo({dispatch, getState}, newRole) {
+
+    if (newRole !== ROLE_LISTENER) return; // leave video as it is, we are not making this person a listener anyway
+
+    // !!! IMPORTANT !!! ==========================================================================
+    // !!! IMPORTANT !!! Only use TRUE for muted! We do not want to enable camera without consent!
+    // !!! IMPORTANT !!! ==========================================================================
+
+    // Make sure we mute both the desktop and video tracks.
+    // Maybe we should use VIDEO_MUTISM_AUTHORITY.USER?
+    dispatch(setVideoMuted(true, MEDIA_TYPE.VIDEO, VIDEO_MUTISM_AUTHORITY.USER));
+
+    if (navigator.product !== 'ReactNative') {
+        dispatch(setVideoMuted(true, MEDIA_TYPE.PRESENTER, VIDEO_MUTISM_AUTHORITY.USER));
     }
 }
 

@@ -26,7 +26,6 @@ export function getParticipantLocalRoleFromConference(state, participantId: stri
         participantId = Number(participant._identity.user.id);
 
         const userRole = roles.find(role => Number(role.id) === participantId);
-        console.log('[choop] ROLE FOUND', userRole);
         return userRole?.role ?? undefined;
     }
 
