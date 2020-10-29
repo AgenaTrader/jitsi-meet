@@ -3,6 +3,18 @@
 // TODO: merge with upstream config.js so we can have all possible values documented here
 
 var config = {
+
+    // Section for ChoopChat custom config
+    choop: {
+        /**
+         * @var {"default" | "edu"}
+         *
+         * "default" - no special mode is specified - usual Jitsi Meet with some Choop flavor
+         * "edu"     - Mode for schools with relatively small classrooms (~30 people).
+         */
+        opMode: 'default',
+    },
+
     hosts: {
         domain: 'choop.chat',
 

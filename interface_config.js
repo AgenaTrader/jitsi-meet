@@ -2,6 +2,11 @@
 /* eslint sort-keys: ["error", "asc", {"caseSensitive": false}] */
 
 var interfaceConfig = {
+
+    CHOOP: {
+        SHOW_CALL_BUTTON: true,
+    },
+
     APP_NAME: 'Choop Chat',
     AUDIO_LEVEL_PRIMARY_COLOR: 'rgba(255,255,255,0.4)',
     AUDIO_LEVEL_SECONDARY_COLOR: 'rgba(255,255,255,0.2)',
