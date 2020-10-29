@@ -157,7 +157,11 @@ export default class RemoteVideo extends SmallVideo {
     }
 
     /**
+     * Create and initialize a Remote Video container.
+     * The container is our root element.
      *
+     * The Remote Video is never removed from the DOM and lives outside of React,
+     * but provides mount points for React.
      */
     addRemoteVideoContainer() {
         this.container = createContainer(this.videoSpanId);
