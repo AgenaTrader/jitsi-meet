@@ -186,19 +186,19 @@ var interfaceConfig = {
      */
 
     ROLE_PERMISSIONS: {
-        tiles: [ 'owner', 'presenter', 'executive' ],
-        video: [ 'owner', 'presenter', 'executive' ],
-        audio: [ 'owner', 'presenter', 'executive' ],
-        sharing: [ 'owner', 'presenter', 'executive' ],
-        makecall: [ 'owner', 'presenter', 'executive' ],
+        tiles: [ 'owner', 'presenter', 'executive', 'temp_presenter' ],
+        video: [ 'owner', 'presenter', 'executive', 'temp_presenter' ],
+        audio: [ 'owner', 'presenter', 'executive', 'temp_presenter' ],
+        sharing: [ 'owner', 'presenter', 'executive', 'temp_presenter' ],
+        makecall: [ 'owner', 'presenter', 'executive' , 'temp_presenter' ],
 
         // settings button
-        sharedvideo: [ 'owner', 'presenter', 'executive' ],
-        videobackgroundblur: [ 'owner', 'presenter', 'executive' ],
-        raisehand: ['owner', 'executive', 'presenter', 'listener'],
-        invite: [ 'owner', 'presenter', 'executive' ],
-        desktop: [ 'owner', 'presenter', 'executive' ],
-        lostconnection: [ 'owner', 'presenter', 'executive' ]
+        sharedvideo: [ 'owner', 'presenter', 'executive', 'temp_presenter' ],
+        videobackgroundblur: [ 'owner', 'presenter', 'executive', 'temp_presenter' ],
+        raisehand: ['owner', 'executive', 'presenter', 'temp_presenter', 'listener'],
+        invite: [ 'owner', 'presenter', 'executive', 'temp_presenter' ],
+        desktop: [ 'owner', 'presenter', 'executive', 'temp_presenter' ],
+        lostconnection: [ 'owner', 'presenter', 'executive', 'temp_presenter' ]
     },
 
     SHOW_DEEP_LINKING_IMAGE: false,
