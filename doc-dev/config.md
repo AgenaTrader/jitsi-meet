@@ -74,4 +74,4 @@ For `interface_config.js` it's `react/features/base/config/interfaceConfigWhitel
 
 For `config.js` it's `react/features/base/config/configWhitelist.js`
 
-
+You can **add custom item** to the whitelist of `config.js` using `react/features/base/config/extraConfigWhitelist.js`.

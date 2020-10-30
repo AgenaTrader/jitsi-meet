@@ -1,4 +1,6 @@
 import {PARTICIPANT_ROLES_STORE_NAME} from "../base/participants-roles/reducer";
+import {ROLE_EXECUTIVE, ROLE_OWNER, ROLE_PRESENTER} from "./actions";
+import {getLocalParticipant} from "../base/participants";
 
 /**
  * Get Participant's local role by inspecting identity data extracted from JWT.
@@ -30,4 +32,25 @@ export function getParticipantLocalRoleFromConference(state, participantId: stri
     }
 
     return undefined;
+}
+
+
+export function isEduMode(state) {
+    const { choop: choopConfig } = state['features/base/config'];
+    const opMode = choopConfig?.opMode ?? null;
+
+    return opMode === "edu";
+}
+
+
+/**
+ * Function used with Edu Mode to figure out whether or not someone might be a Teacher.
+ *
+ * @todo This is not a best place for this function. Move it somewhere else. Some module responsible for modes.
+ * @param state
+ * @returns {boolean}
+ */
+export function isLocalParticipantTeacher(state) {
+    const localParticipant = getLocalParticipant(state)
+    return isEduMode(state) && [ROLE_PRESENTER, ROLE_OWNER, ROLE_EXECUTIVE].includes(localParticipant.localRole)
 }

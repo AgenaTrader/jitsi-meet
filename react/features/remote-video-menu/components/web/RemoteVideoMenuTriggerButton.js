@@ -20,6 +20,7 @@ import {
 } from './';
 import { _verifyUserHasPermission } from '../../../base/media';
 import TogglePresenterRoleButton from "../../../choop-role-management/components/web/TogglePresenterRoleButton";
+import {isLocalParticipantTeacher} from "../../../choop-role-management/functions";
 
 declare var $: Object;
 declare var APP: Object;
@@ -45,6 +46,11 @@ type Props = {
      * Whether or not the participant is a conference moderator.
      */
     _isModerator: boolean,
+
+    /**
+     * Used in Choop Edu Mode. Is current local participant a teacher?
+     */
+    _isTeacher: boolean,
 
     /**
      * A value between 0 and 1 indicating the volume of the participant's
@@ -175,6 +181,7 @@ class RemoteVideoMenuTriggerButton extends Component<Props> {
             _disableKick,
             _disableRemoteMute,
             _isModerator,
+            _isTeacher,
             initialVolumeValue,
             isAudioMuted,
             onRemoteControlToggle,
@@ -224,7 +231,9 @@ class RemoteVideoMenuTriggerButton extends Component<Props> {
                         participantID = { participantID } />
                 );
             }
+        }
 
+        if (_isTeacher) {
             buttons.push(
                 <TogglePresenterRoleButton
                     key = 'toggle-presenter-role'
@@ -287,7 +296,8 @@ function _mapStateToProps(state) {
     return {
         _isModerator: Boolean(participant?.role === PARTICIPANT_ROLE.MODERATOR),
         _disableKick: Boolean(disableKick),
-        _disableRemoteMute: Boolean(disableRemoteMute)
+        _disableRemoteMute: Boolean(disableRemoteMute),
+        _isTeacher: isLocalParticipantTeacher(state),
     };
 }
 

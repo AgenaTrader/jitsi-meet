@@ -186,7 +186,7 @@ var interfaceConfig = {
      */
 
     ROLE_PERMISSIONS: {
-        tiles: [ 'owner', 'presenter', 'executive', 'temp_presenter' ],
+        tiles: [ 'owner', 'presenter', 'executive' ],
         video: [ 'owner', 'presenter', 'executive', 'temp_presenter' ],
         audio: [ 'owner', 'presenter', 'executive', 'temp_presenter' ],
         sharing: [ 'owner', 'presenter', 'executive', 'temp_presenter' ],
