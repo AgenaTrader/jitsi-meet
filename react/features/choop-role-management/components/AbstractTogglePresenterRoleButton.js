@@ -5,6 +5,7 @@ import {AbstractButton} from '../../base/toolbox';
 import {getParticipantById, isLocalParticipantModerator, isParticipantModerator} from "../../base/participants";
 import {ROLE_LISTENER, setRemoteParticipantLocalRoleToListener, setRemoteParticipantLocalRoleToPresenter} from "../actions";
 import {IconCamera} from "../../base/icons";
+import {isLocalParticipantTeacher} from "../functions";
 
 export type Props = AbstractButtonProps & {
 
@@ -61,6 +62,6 @@ export function _mapStateToProps(state: Object, ownProps: Props) {
 
     return {
         participantLocalRole: participant.localRole ?? null,
-        visible: isLocalParticipantModerator(state) && !isParticipantModerator(participant)
+        visible: isLocalParticipantTeacher(state) && !isParticipantModerator(participant),
     };
 }

@@ -1,11 +1,11 @@
 // @flow
 
 import { getPinnedParticipant } from '../base/participants';
-import collapse from '@atlaskit/icon/glyph/editor/collapse';
 import { _checkPermissionByRole } from '../base/media';
 import _ from 'lodash';
 
 import { LAYOUTS } from './constants';
+import {isEduMode} from "../choop-role-management/functions";
 
 declare var APP: Object;
 declare var interfaceConfig: Object;
@@ -56,12 +56,20 @@ export function getTileViewGridDimensions(state: Object, maxColumns: number = ge
     const { iAmRecorder } = state['features/base/config'];
     const { room } = state['features/base/conference'];
 
-    const numberOfParticipants = state['features/base/participants'].filter(
-        participant => (room.indexOf('webinar') === -1 && room.indexOf('group') === -1)
-            || (_.isUndefined(participant.localRole)
-            || _checkPermissionByRole(participant.localRole, 'tiles')
-            || participant.id === APP.conference.getMyUserId())
-    ).length - (iAmRecorder ? 1 : 0);
+    let numberOfParticipants;
+
+    if (isEduMode(state)) {
+        // Edu mode - teacher view
+        numberOfParticipants = state['features/base/participants'].length - (iAmRecorder ? 1 : 0);
+    } else {
+        // webinar mode
+        numberOfParticipants = state['features/base/participants'].filter(
+            participant => (room.indexOf('webinar') === -1 && room.indexOf('group') === -1)
+                || (_.isUndefined(participant.localRole)
+                    || _checkPermissionByRole(participant.localRole, 'tiles')
+                    || participant.id === APP.conference.getMyUserId())
+        ).length - (iAmRecorder ? 1 : 0);
+    }
 
     const { clientWidth, clientHeight } = state['features/base/responsive-ui'];
 

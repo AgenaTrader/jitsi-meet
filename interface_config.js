@@ -2,6 +2,11 @@
 /* eslint sort-keys: ["error", "asc", {"caseSensitive": false}] */
 
 var interfaceConfig = {
+
+    CHOOP: {
+        SHOW_CALL_BUTTON: true,
+    },
+
     APP_NAME: 'Choop Chat',
     AUDIO_LEVEL_PRIMARY_COLOR: 'rgba(255,255,255,0.4)',
     AUDIO_LEVEL_SECONDARY_COLOR: 'rgba(255,255,255,0.2)',
@@ -182,18 +187,18 @@ var interfaceConfig = {
 
     ROLE_PERMISSIONS: {
         tiles: [ 'owner', 'presenter', 'executive' ],
-        video: [ 'owner', 'presenter', 'executive' ],
-        audio: [ 'owner', 'presenter', 'executive' ],
-        sharing: [ 'owner', 'presenter', 'executive' ],
-        makecall: [ 'owner', 'presenter', 'executive' ],
+        video: [ 'owner', 'presenter', 'executive', 'temp_presenter' ],
+        audio: [ 'owner', 'presenter', 'executive', 'temp_presenter' ],
+        sharing: [ 'owner', 'presenter', 'executive', 'temp_presenter' ],
+        makecall: [ 'owner', 'presenter', 'executive' , 'temp_presenter' ],
 
         // settings button
-        sharedvideo: [ 'owner', 'presenter', 'executive' ],
-        videobackgroundblur: [ 'owner', 'presenter', 'executive' ],
-        raisehand: ['owner', 'executive', 'presenter', 'listener'],
-        invite: [ 'owner', 'presenter', 'executive' ],
-        desktop: [ 'owner', 'presenter', 'executive' ],
-        lostconnection: [ 'owner', 'presenter', 'executive' ]
+        sharedvideo: [ 'owner', 'presenter', 'executive', 'temp_presenter' ],
+        videobackgroundblur: [ 'owner', 'presenter', 'executive', 'temp_presenter' ],
+        raisehand: ['owner', 'executive', 'presenter', 'temp_presenter', 'listener'],
+        invite: [ 'owner', 'presenter', 'executive', 'temp_presenter' ],
+        desktop: [ 'owner', 'presenter', 'executive', 'temp_presenter' ],
+        lostconnection: [ 'owner', 'presenter', 'executive', 'temp_presenter' ]
     },
 
     SHOW_DEEP_LINKING_IMAGE: false,

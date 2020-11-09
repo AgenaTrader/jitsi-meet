@@ -1,41 +1,37 @@
 /* global $, APP, interfaceConfig */
 
 /* eslint-disable no-unused-vars */
-import { AtlasKitThemeProvider } from '@atlaskit/theme';
+import {AtlasKitThemeProvider} from '@atlaskit/theme';
 import Logger from 'jitsi-meet-logger';
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { I18nextProvider } from 'react-i18next';
-import { Provider } from 'react-redux';
+import {I18nextProvider} from 'react-i18next';
+import {Provider} from 'react-redux';
 
-import { i18next } from '../../../react/features/base/i18n';
-import {
-    JitsiParticipantConnectionStatus
-} from '../../../react/features/base/lib-jitsi-meet';
+import {i18next} from '../../../react/features/base/i18n';
+import {JitsiParticipantConnectionStatus} from '../../../react/features/base/lib-jitsi-meet';
 import {
     getParticipantDisplayName,
-    getPinnedParticipant, PARTICIPANT_LOST_SOUND_ID,
+    getPinnedParticipant,
+    PARTICIPANT_LOST_SOUND_ID,
     pinParticipant
 } from '../../../react/features/base/participants';
-import { PresenceLabel } from '../../../react/features/presence-status';
+import {PresenceLabel} from '../../../react/features/presence-status';
 import {
     MakeCallButton,
     REMOTE_CONTROL_MENU_STATES,
     RemoteVideoMenuTriggerButton
 } from '../../../react/features/remote-video-menu';
-import { LAYOUTS, getCurrentLayout } from '../../../react/features/video-layout';
+import {getCurrentLayout, LAYOUTS} from '../../../react/features/video-layout';
 /* eslint-enable no-unused-vars */
-
 import SmallVideo from './SmallVideo';
 import UIUtils from '../util/UIUtil';
-import { _verifyUserHasPermissionById } from '../../../react/features/base/media';
+import {_verifyUserHasPermissionById} from '../../../react/features/base/media';
 
-import {
-    NOTIFICATION_TIMEOUT,
-    showNotification
-} from '../../../react/features/notifications';
-import { playSound } from '../../../react/features/base/sounds';
-import { updateAllParticipantAudioVolume } from '../../../react/features/base/settings';
+import {NOTIFICATION_TIMEOUT, showNotification} from '../../../react/features/notifications';
+import {playSound} from '../../../react/features/base/sounds';
+import {updateAllParticipantAudioVolume} from '../../../react/features/base/settings';
+import {isEduMode} from "../../../react/features/choop-role-management/functions";
 
 const logger = Logger.getLogger(__filename);
 
@@ -157,7 +153,11 @@ export default class RemoteVideo extends SmallVideo {
     }
 
     /**
+     * Create and initialize a Remote Video container.
+     * The container is our root element.
      *
+     * The Remote Video is never removed from the DOM and lives outside of React,
+     * but provides mount points for React.
      */
     addRemoteVideoContainer() {
         this.container = createContainer(this.videoSpanId);
@@ -657,11 +657,21 @@ export default class RemoteVideo extends SmallVideo {
     changeContainerVisibility() {
         const self = this;
 
-        _verifyUserHasPermissionById(this.id, 'tiles').then(permission => {
-            if (permission === false) {
-                self.container.style.display = 'none';
-            }
-        });
+        const { getState } = APP.store;
+
+        // FIXME: don't use magic strings, check role permissions of local user
+        if (isEduMode(getState())) {
+            // Do nothing if we are in Edu Mode.
+            //  See: https://xyards.atlassian.net/browse/AY-84
+        } else {
+            // We have a so called "Webinar mode", which is not a real mode right now,
+            // but we should hide tiles of listeners in this mode. This will affect EVERYONE, even moderators!!!
+            _verifyUserHasPermissionById(this.id, 'tiles').then(permission => {
+                if (permission === false) {
+                    self.container.style.display = 'none';
+                }
+            });
+        }
     }
 
     /**
