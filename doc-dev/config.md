@@ -75,3 +75,31 @@ For `interface_config.js` it's `react/features/base/config/interfaceConfigWhitel
 For `config.js` it's `react/features/base/config/configWhitelist.js`
 
 You can **add custom item** to the whitelist of `config.js` using `react/features/base/config/extraConfigWhitelist.js`.
+
+
+Config with URL - external config override
+------------------------------------------
+
+It is possible to override config via URL hash, e.g.
+
+```https://choop.chat/group-240#config.startWithAudioMuted=true&config.choop.opMode="edu"```
+
+You can pass key-value paris in the URL hash, but the values must be JSON encoded.
+
+### Where do we override config?
+
+Config can be overridden by TY/EduPortle. We are passing `startArgs` when opening meeting window.
+
+The `startArgs` are simply a Query String part of the TY/EduPortle URL. For e.g.
+
+```https://tradersyard.com/meeting/join/group-342?startArgs=config.startWithAudioMuted=true```
+
+This is then passed as na argument to Token Issuer,
+
+```
+https://choop.chat/joinRoom?roomName=group-342&tyEnv=DEV&tyToken=TY_TOKEN_VALUE&startArgs=config.startWithAudioMuted=true
+```
+
+.. which returns the actual join url for the conference with JWT token.
+
+If no `startArgs` are passed to Token Issuer, a set of default config overrides will be provided.

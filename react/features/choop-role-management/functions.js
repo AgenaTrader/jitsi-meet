@@ -37,9 +37,7 @@ export function getParticipantLocalRoleFromConference(state, participantId: stri
 
 export function isEduMode(state) {
     const { choop: choopConfig } = state['features/base/config'];
-    const opMode = choopConfig?.opMode ?? null;
-
-    return opMode === "edu";
+    return !!(choopConfig?.eduMode ?? false);
 }
 
 

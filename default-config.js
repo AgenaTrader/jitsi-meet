@@ -11,8 +11,15 @@ var config = {
          *
          * "default" - no special mode is specified - usual Jitsi Meet with some Choop flavor
          * "edu"     - Mode for schools with relatively small classrooms (~30 people).
+         *
+         * IMPORTANT: do not use until we improve support for passing start arguments
          */
         opMode: 'default',
+
+        /**
+         *@var {boolean}
+         */
+        eduMode: false,
     },
 
     hosts: {
