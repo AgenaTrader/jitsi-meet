@@ -3,11 +3,13 @@ echo "Install jicofo"
 DOMAIN=$1
 PROSODYPASSWORD=$2
 
+JICOFO_VERSION='1.0-636-1'
+
 cd ~
 
 if [ ! -d /etc/jitsi/jicofo ]
 then
-  apt-get install -y jicofo
+  apt-get install -y jicofo=$JICOFO_VERSION
 fi
 
 echo "===================> JICOFO change config file <==================="
