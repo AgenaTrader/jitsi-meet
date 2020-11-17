@@ -172,3 +172,11 @@
         color:#f2f2f2 !important;
     }
 }
+
+.toggle-audio-button .toolbox-icon:not(.toggled){
+    background-color: red;
+
+    &:hover {
+        background-color: lighten(red, 20%);
+    }
+}

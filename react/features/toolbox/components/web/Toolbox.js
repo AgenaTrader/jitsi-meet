@@ -1264,6 +1264,7 @@ class Toolbox extends Component<Props, State> {
                             visible = { this._shouldShowButton('mute-everyone') } /> }
                     { buttonsLeft.indexOf('toggle-audio') !== -1
                         && <ToggleAudioButton
+                            className = 'toggle-audio-button'
                             visible = { this._shouldShowButton('toggle-audio') } /> }
                     { buttonsLeft.indexOf('toggle-picture') !== -1
                         && <TogglePictureModeButton
