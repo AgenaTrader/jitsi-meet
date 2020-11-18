@@ -11,6 +11,9 @@ import keyboardshortcut from './modules/keyboardshortcut/keyboardshortcut';
 import remoteControl from './modules/remotecontrol/RemoteControl';
 import translation from './modules/translation/translation';
 
+import * as Sentry from "@sentry/react";
+import { Integrations } from "@sentry/tracing";
+
 window.APP = {
     API,
     conference,
@@ -36,6 +39,26 @@ window.APP = {
     translation,
     UI
 };
+
+const { sentry } = window.config;
+
+// Activate sentry only if the sentry dns is provided in config
+if (sentry?.dns) {
+    Sentry.init({
+        dsn: sentry.dns,
+        integrations: [
+            new Integrations.BrowserTracing(),
+        ],
+
+        // We recommend adjusting this value in production, or using tracesSampler
+        // for finer control
+        tracesSampleRate: sentry.tracesSampleRate,
+        environment: sentry.environment,
+    });
+    console.info('[choop] Sentry initialized');
+} else {
+    console.warn('[choop] Sentry not initialized. Lack of configuration.');
+}
 
 // TODO The execution of the mobile app starts from react/index.native.js.
 // Similarly, the execution of the Web app should start from react/index.web.js

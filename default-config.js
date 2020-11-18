@@ -20,6 +20,13 @@ var config = {
         eduMode: false,
     },
 
+    sentry: {
+        dns: 'https://6882910adf294e39b84fa246ef1886be@o355200.ingest.sentry.io/5521456',
+        // TODO: When we have more users reduce this to a lowe number
+        tracesSampleRate: 0.3,
+        environment: 'development'
+    },
+
     // endregion: Choop
 
     // Configuration
