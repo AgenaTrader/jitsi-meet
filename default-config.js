@@ -181,15 +181,18 @@ var config = {
     // util#browser#usesNewGumFlow. The constraints are independent from
     // this config's resolution value. Defaults to requesting an ideal
     // resolution of 720p.
-    // constraints: {
-    //     video: {
-    //         height: {
-    //             ideal: 720,
-    //             max: 720,
-    //             min: 240
-    //         }
-    //     }
-    // },
+    constraints: {
+        video: {
+            // Make sure we are requesting 16/9 aspect ratio.
+            // With my Logitech C920 I was getting 4/3 without this option.
+            aspectRatio: 16 / 9,
+            height: {
+                ideal: 720,
+                max: 720,
+                min: 240
+            }
+        }
+    },
 
     // Enable / disable simulcast support.
     // disableSimulcast: false,
