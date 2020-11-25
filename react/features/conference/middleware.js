@@ -40,7 +40,7 @@ MiddlewareRegistry.register(store => next => action => {
 
         const quality = reducedUI || room.indexOf('group') !== -1
             ? VIDEO_QUALITY_LEVELS.LOW
-            : VIDEO_QUALITY_LEVELS.STANDARD;
+            : VIDEO_QUALITY_LEVELS.HIGH;
 
         dispatch(setPreferredVideoQuality(quality));
 
