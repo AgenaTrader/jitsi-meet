@@ -1,7 +1,6 @@
 /* eslint-disable no-unused-vars, no-var */
 
 var config = {
-
     // region: Choop
     choop: {
         /**
@@ -12,7 +11,7 @@ var config = {
          *
          * IMPORTANT: do not use until we improve support for passing start arguments
          */
-        opMode: 'default',
+        opMode: "default",
 
         /**
          *@var {boolean}
@@ -21,10 +20,10 @@ var config = {
     },
 
     sentry: {
-        dns: 'https://6882910adf294e39b84fa246ef1886be@o355200.ingest.sentry.io/5521456',
+        dns: "https://6882910adf294e39b84fa246ef1886be@o355200.ingest.sentry.io/5521456",
         // TODO: When we have more users reduce this to a lowe number
         tracesSampleRate: 0.3,
-        environment: 'development'
+        environment: "development",
     },
 
     // endregion: Choop
@@ -38,13 +37,12 @@ var config = {
     // Custom function which given the URL path should return a room name.
     // getroomnode: function (path) { return 'someprefixpossiblybasedonpath'; },
 
-
     // Connection
     //
 
     hosts: {
         // XMPP domain.
-        domain: 'choop.chat',
+        domain: "choop.chat",
 
         // When using authentication, domain for guest users.
         // anonymousdomain: 'guest.example.com',
@@ -64,23 +62,22 @@ var config = {
         // focus: 'focus.choop.chat',
 
         // XMPP MUC domain. FIXME: use XEP-0030 to discover it.
-        muc: 'conference.choop.chat'
+        muc: "conference.choop.chat",
     },
 
     // BOSH URL. FIXME: use XEP-0156 to discover it.
-    bosh: '/http-bind',
+    bosh: "/http-bind",
 
     // Websocket URL
     // websocket: 'wss://jitsi-meet.example.com/xmpp-websocket',
 
     // The name of client node advertised in XEP-0115 'c' stanza
-    clientNode: 'http://jitsi.org/jitsimeet',
+    clientNode: "http://jitsi.org/jitsimeet",
 
     // The real JID of focus participant - can be overridden here
     // Do not change username - FIXME: Make focus username configurable
     // https://github.com/jitsi/jitsi-meet/issues/7376
     // focusUserJid: 'focus@auth.jitsi-meet.example.com',
-
 
     // Testing / experimental features.
     //
@@ -108,7 +105,7 @@ var config = {
         // the probability for this to be enabled.
         //
         // This option seem to be critical for quality of the desktop sharidałong
-        capScreenshareBitrate: 1 // 0 to disable
+        capScreenshareBitrate: 1, // 0 to disable
 
         // Enable callstats only for a percentage of users.
         // This takes a value between 0 and 100 which determines the probability for
@@ -124,15 +121,25 @@ var config = {
     // signalling.
     // webrtcIceTcpDisable: false,
 
-
     // Media
     //
 
     // Audio
 
+    /**
+     * This option is undocumented. It was copied from meet.jit.si config.
+     */
+    stereo: false,
+
     // Disable measuring of audio levels.
     // disableAudioLevels: false,
     // audioLevelsInterval: 200,
+
+    /**
+     * When enabled, user will be notified when he tries to speak while being muted.
+     * @var {boolean}
+     */
+    enableTalkWhileMuted: true,
 
     // Enabling this will run the lib-jitsi-meet no audio detection module which
     // will notify the user if the current selected microphone has no audio
@@ -172,7 +179,6 @@ var config = {
 
     // Sets the preferred resolution (height) for local video. Defaults to 720.
     // resolution: 720,
-    maxFps: 30,
     startBitrate: "800",
 
     // How many participants while in the tile view mode, before the receiving video quality is reduced from HD to SD.
@@ -188,25 +194,31 @@ var config = {
         video: {
             // Make sure we are requesting 16/9 aspect ratio.
             // With my Logitech C920 I was getting 4/3 without this option.
-            aspectRatio: 16 / 9,
+            // aspectRatio: 16 / 9,
             height: {
                 ideal: 720,
                 max: 720,
-                min: 240
-            }
-        }
+                min: 180,
+            },
+            width: {
+                ideal: 1280,
+                max: 1280,
+                min: 320,
+            },
+        },
     },
 
     // Enable / disable simulcast support.
-    // disableSimulcast: false,
+    disableSimulcast: false,
 
     // Enable / disable layer suspension.  If enabled, endpoints whose HD
     // layers are not in use will be suspended (no longer sent) until they
     // are requested again.
     enableLayerSuspension: true,
+    disableSuspendVideo: true,
 
     // Every participant after the Nth will start video muted.
-    // startVideoMuted: 10,
+    startVideoMuted: 10,
 
     // Start calls with video muted. Unlike the option above, this one is only
     // applied locally. FIXME: having these 2 options is confusing.
@@ -228,7 +240,7 @@ var config = {
     // Optional desktop sharing frame rate options. Default value: min:5, max:5.
     desktopSharingFrameRate: {
         min: 5,
-        max: 30
+        max: 10,
     },
 
     // Try to start calls with screen-sharing instead of camera video.
@@ -350,20 +362,20 @@ var config = {
     // },
 
     // Disables or enables RTX (RFC 4588) (defaults to false).
-    // disableRtx: false,
+    disableRtx: false,
 
     // Disables or enables TCC (the default is in Jicofo and set to true)
     // (draft-holmer-rmcat-transport-wide-cc-extensions-01). This setting
     // affects congestion control, it practically enables send-side bandwidth
     // estimations.
-    // enableTcc: true,
+    enableTcc: true,
 
     // Disables or enables REMB (the default is in Jicofo and set to false)
     // (draft-alvestrand-rmcat-remb-03). This setting affects congestion
     // control, it practically enables recv-side bandwidth estimations. When
     // both TCC and REMB are enabled, TCC takes precedence. When both are
     // disabled, then bandwidth estimations are disabled.
-    // enableRemb: false,
+    enableRemb: true,
 
     // Enables ICE restart logic in LJM and displays the page reload overlay on
     // ICE failure. Current disabled by default because it's causing issues with
@@ -390,8 +402,7 @@ var config = {
     // Values can be 'datachannel', 'websocket', true (treat it as
     // 'datachannel'), undefined (treat it as 'datachannel') and false (don't
     // open any channel).
-    openBridgeChannel: 'websocket',
-
+    openBridgeChannel: "websocket",
 
     // UI
     //
@@ -493,7 +504,6 @@ var config = {
     // will not function.
     // disableThirdPartyRequests: false,
 
-
     // Peer-To-Peer mode: used (if enabled) when there are just 2 participants.
     //
 
@@ -507,13 +517,12 @@ var config = {
         enabled: true,
 
         // Use XEP-0215 to fetch STUN and TURN servers.
-        // useStunTurn: true,
+        useStunTurn: true,
 
         // The STUN servers that will be used in the peer to peer connections
         stunServers: [
-
             // { urls: 'stun:jitsi-meet.example.com:3478' },
-            { urls: 'stun:meet-jit-si-turnrelay.jitsi.net:443' }
+            { urls: "stun:meet-jit-si-turnrelay.jitsi.net:443" },
         ],
 
         // Sets the ICE transport policy for the p2p connection. At the time
@@ -530,11 +539,11 @@ var config = {
 
         // Provides a way to set the video codec preference on the p2p connection. Acceptable
         // codec values are 'VP8', 'VP9' and 'H264'.
-        preferredCodec: 'H264',
+        preferredCodec: "H264",
 
         // If set to true, disable H.264 video codec by stripping it out of the
         // SDP. This setting is deprecated, use disabledCodec instead.
-        // disableH264: false,
+        disableH264: true,
 
         // Provides a way to prevent a video codec from being negotiated on the p2p connection.
         // disabledCodec: '',
@@ -572,8 +581,8 @@ var config = {
 
         // Array of script URLs to load as lib-jitsi-meet "analytics handlers".
         scriptURLs: [
-             // "libs/analytics-ga.min.js", // google-analytics
-             // "https://example.com/my-custom-analytics.js"
+            // "libs/analytics-ga.min.js", // google-analytics
+            // "https://example.com/my-custom-analytics.js"
         ],
     },
 
@@ -624,16 +633,16 @@ var config = {
     // },
 
     // Options related to end-to-end (participant to participant) ping.
-    // e2eping: {
-    //   // The interval in milliseconds at which pings will be sent.
-    //   // Defaults to 10000, set to <= 0 to disable.
-    //   pingInterval: 10000,
-    //
-    //   // The interval in milliseconds at which analytics events
-    //   // with the measured RTT will be sent. Defaults to 60000, set
-    //   // to <= 0 to disable.
-    //   analyticsInterval: 60000,
-    //   },
+    e2eping: {
+        // The interval in milliseconds at which pings will be sent.
+        // Defaults to 10000, set to <= 0 to disable.
+        pingInterval: -1,
+
+        // The interval in milliseconds at which analytics events
+        // with the measured RTT will be sent. Defaults to 60000, set
+        // to <= 0 to disable.
+        // analyticsInterval: 60000,
+    },
 
     // If set, will attempt to use the provided video input device label when
     // triggering a screenshare, instead of proceeding through the normal flow
@@ -678,12 +687,12 @@ var config = {
     //    downloadAppsUrl: 'https://docs.example.com/our-apps.html'
     // },
 
-    peopleSearchUrl: '/peopleSearch',
-    inviteServiceUrl: '/conferenceInvite',
-    peopleSearchQueryTypes: [ 'user' /*, 'conferenceRooms'*/ ],
+    peopleSearchUrl: "/peopleSearch",
+    inviteServiceUrl: "/conferenceInvite",
+    peopleSearchQueryTypes: ["user" /*, 'conferenceRooms'*/],
 
-    tokenAuthUrl: '/joinRoom?roomName={room}', // 'https://' + tyHost + '/meeting/join-meeting?room_type={room}',
-    makeCall: '/makeCall?jwt={jwt}&userId={userId}', // 'https://' + tyHost + '/makeCall?jwt={jwt}&=userId={userId}',
+    tokenAuthUrl: "/joinRoom?roomName={room}", // 'https://' + tyHost + '/meeting/join-meeting?room_type={room}',
+    makeCall: "/makeCall?jwt={jwt}&userId={userId}", // 'https://' + tyHost + '/makeCall?jwt={jwt}&=userId={userId}',
 
     // Options related to the remote participant menu.
     // remoteVideoMenu: {
@@ -771,10 +780,9 @@ var config = {
      startBitrate
      */
 
-
     // Allow all above example options to include a trailing comma and
     // prevent fear when commenting out the last value.
-    makeJsonParserHappy: 'even if last key had a trailing comma'
+    makeJsonParserHappy: "even if last key had a trailing comma",
 
     // no configuration value should follow this line.
 };
