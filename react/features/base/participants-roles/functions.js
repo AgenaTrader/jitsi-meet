@@ -1,7 +1,9 @@
-import { doGetJSON } from '../util';
-import { PARTICIPANT_ROLES_STORE_NAME } from './reducer';
+import { doGetJSON } from "../util";
+import { PARTICIPANT_ROLES_STORE_NAME } from "./reducer";
 
 declare var APP: Object;
+
+let getParticipantsPromise;
 
 /**
  * Get roles for participants.
@@ -10,20 +12,18 @@ declare var APP: Object;
  * @returns {Promise<Object>}
  */
 export function getRolesForParticipants(jwt: string): Promise<Object> {
-    return new Promise((resolve, reject) => {
-        doGetJSON(`/getParticipants?jwt=${jwt}`, true)
-            .then(response => {
-                const { data } = response;
+    if (getParticipantsPromise) {
+        return getParticipantsPromise;
+    }
 
-                resolve(data.map(i => {
-                    return {
-                        id: i.Item1,
-                        role: i.Item2
-                    };
-                }) || []);
-            })
-            .catch(() => reject([]));
-    });
+    return (getParticipantsPromise = doGetJSON(`/getParticipants?jwt=${jwt}`, true)
+        .then((response) => {
+            const data = response.data || [];
+            return data.map((i) => {
+                return { id: i.Item1, role: i.Item2 };
+            });
+        })
+        .catch(() => Promise.reject([])));
 }
 
 /**
@@ -42,7 +42,7 @@ export function getParticipantLocalRoleById(userId: string) {
     if (conferenceParticipant && conferenceParticipant._identity) {
         currentUserId = Number(conferenceParticipant._identity.user.id);
 
-        const userRole = roles.find(role => Number(role.id) === currentUserId);
+        const userRole = roles.find((role) => Number(role.id) === currentUserId);
 
         if (userRole) {
             return userRole.role;

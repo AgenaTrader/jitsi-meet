@@ -109,6 +109,9 @@ export function _verifyUserHasPermission(type: string): Boolean {
 
 /**
  * Verifying that the user has permissions for different functionality.
+ * FIXME: When you join a running conference with X-number of participants,
+ *  then getRolesForParticipants gets called X-number of times, which kills our server.
+ *  We only need to run it once.
  *
  * @param {string} userId - user id
  * @param {string} type - permission type: video/audio.
